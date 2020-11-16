@@ -6,6 +6,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import it.tirocinio.application.views.main.MainView;
@@ -30,5 +31,8 @@ public class HelloView extends HorizontalLayout {
             Notification.show("Hello " + name.getValue());
         });
     }
+
+
+
 
 }
