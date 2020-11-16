@@ -20,7 +20,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.backend.service.UtenteService;
-import it.tirocinio.data.Utente;
+import it.tirocinio.entity.Utente;
+
 import com.vaadin.flow.router.RouteAlias;
 
 @Route(value = "hello", layout = MainView.class)
@@ -68,7 +69,7 @@ public class HelloView extends HorizontalLayout implements AfterNavigationObserv
 
 	private void configureGrid() {
 		utenti.setSizeFull();
-		utenti.setColumns("id","nome","passoword","id_ruolo");
+		utenti.setColumns("id","nome","password","id_ruolo");
 		
 		binder = new Binder<>(Utente.class);
 		binder.bindInstanceFields(this);

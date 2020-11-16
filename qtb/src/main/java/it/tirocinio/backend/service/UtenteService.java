@@ -3,8 +3,9 @@ package it.tirocinio.backend.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import it.tirocinio.data.*;
+
 import it.tirocinio.backend.UtenteRepository;
+import it.tirocinio.entity.*;
 
 @Service
 public class UtenteService {

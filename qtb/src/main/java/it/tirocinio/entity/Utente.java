@@ -1,4 +1,4 @@
-package it.tirocinio.data;
+package it.tirocinio.entity;
 import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
