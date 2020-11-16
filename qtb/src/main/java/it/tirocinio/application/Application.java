@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.vaadin.artur.helpers.LaunchUtil;
 
+import com.vaadin.flow.spring.annotation.EnableVaadin;
+
 /**
  * The entry point of the Spring Boot application.
  */
