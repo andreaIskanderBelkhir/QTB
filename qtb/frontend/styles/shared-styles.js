@@ -30,6 +30,10 @@ $_documentContainer.innerHTML = `
   </template>
 </dom-module>
 
+ .Reg-view {
+	 padding: var(--lumo-space-m);
+ }
+
 
 `;
 

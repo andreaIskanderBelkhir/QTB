@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -28,21 +29,19 @@ import com.vaadin.flow.router.RouteAlias;
 @PageTitle("hello")
 @CssImport("./styles/views/hello/hello-view.css")
 @RouteAlias(value = "", layout = MainView.class)
-public class HelloView extends HorizontalLayout implements AfterNavigationObserver {
+public class HelloView extends HorizontalLayout {
 	
-    @Autowired
+
     private UtenteService utenteService;
-    
     private TextField name;
     private Button sayHello;
-    private Grid<Utente> utenti = new Grid<>(Utente.class);
-    private Binder<Utente> binder;
+    Grid<Utente> grid = new Grid<>(Utente.class);
 
     
 
 
-    public HelloView(UtenteService utenteService1) {
-    	this.utenteService=utenteService1;
+    public HelloView(UtenteService utenteService) {
+    	this.utenteService=utenteService;
     	HorizontalLayout hor = new HorizontalLayout();
         setId("hello-view");
         name = new TextField("Your name");
@@ -52,38 +51,27 @@ public class HelloView extends HorizontalLayout implements AfterNavigationObserv
             Notification.show("Hello " + name.getValue());
         });
         hor.add(name, sayHello);
-        add(hor);
-        configureGrid();
-        hor.add(utenti);
-        updategrid();
+        configureGrid(); 
+        add(hor);  
+        add(grid);
+        updateList();
     }
+    
 
-
-
-	private void updategrid() {
-		// TODO Auto-generated method stub
-		utenti.setItems(utenteService.findAll());
+	private void updateList() {
+		grid.setItems(utenteService.findAll());
+		
 	}
+
 
 
 
 	private void configureGrid() {
-		utenti.setSizeFull();
-		utenti.setColumns("id","nome","password","id_ruolo");
 		
-		binder = new Binder<>(Utente.class);
-		binder.bindInstanceFields(this);
-		binder.setBean(new Utente());
-		
+		grid.setWidth("98%");
+
+
 		
 	}
-
-	@Override
-	public void afterNavigation(AfterNavigationEvent event) {
-		// TODO Auto-generated method stub
-		utenti.setItems(utenteService.findAll());
-		
-	}   
-
 
 }

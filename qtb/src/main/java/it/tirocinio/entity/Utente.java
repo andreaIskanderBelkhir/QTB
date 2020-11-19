@@ -1,56 +1,50 @@
 package it.tirocinio.entity;
-import javax.annotation.Generated;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 
 @Entity
-@Table(name="utente")
-public class Utente {
-	private Integer id;
-	private String nome;
+public class Utente  extends AbstractEntity implements Cloneable{
+
+
+	@NotNull
+	@Column(nullable=false,unique=true)
+	private String username;
+	@NotBlank
+	@Column(nullable=false)
 	private String password;
-	private Integer id_ruolo;
+	@NotNull
+	private String ruolo;
+
+	public Utente(){
+		
+	}
 	
-	public Utente(String string, String string2, int int1) {
-		this.nome=string;
-		this.password=string;
-		this.id_ruolo=int1;
+	public String getRuolo() {
+		return ruolo;
 	}
-	public Utente() {
-		// TODO Auto-generated constructor stub
+	public void setRuolo(String ruolo) {
+		this.ruolo = ruolo;
 	}
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	@Column(name="nome",nullable=false)
+
 	public String getNome() {
-		return nome;
+		return username;
 	}
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.username = nome;
 	}
-	@Column(name="password")
+
 	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	@Column(name="id_ruolo")
-	public Integer getId_ruolo() {
-		return id_ruolo;
-	}
-	public void setId_ruolo(Integer id_ruolo) {
-		this.id_ruolo = id_ruolo;
-	}
+
+
 }
