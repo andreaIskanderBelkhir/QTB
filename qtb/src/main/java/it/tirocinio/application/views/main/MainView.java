@@ -22,7 +22,8 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import it.tirocinio.application.views.main.MainView;
-import it.tirocinio.application.views.hello.HelloView;
+import it.tirocinio.application.view.HomePageView;
+import it.tirocinio.application.views.hello.AdminView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -87,7 +88,8 @@ public class MainView extends AppLayout {
 
     private Component[] createMenuItems() {
         return new Tab[] {
-            createTab("hello", HelloView.class)
+        	createTab("Homepage", HomePageView.class),
+            createTab("admin", AdminView.class)
         };
     }
 
