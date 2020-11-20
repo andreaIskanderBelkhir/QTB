@@ -61,6 +61,17 @@ public class UtenteService  {
 		}
 	}
 
+	public Utente findByName(String nome) {
+		// TODO Auto-generated method stub
+		List<Utente> ut=findAll();
+		for(Utente u: ut){
+			if(u.getNome().equals(nome)){
+				return u;
+			}
+		}
+		return null;
+	}
+
 
 
 
