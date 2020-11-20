@@ -1,6 +1,12 @@
 package it.tirocinio.application.views.main;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
@@ -24,6 +30,8 @@ import com.vaadin.flow.theme.Theme;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.application.view.HomePageView;
 import it.tirocinio.application.views.hello.AdminView;
+import it.tirocinio.application.views.hello.ProfessoreView;
+import it.tirocinio.application.views.hello.StudenteView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -35,10 +43,22 @@ public class MainView extends AppLayout {
 
     private final Tabs menu;
     private H1 viewTitle;
+    boolean hasUserRole=false;
+    boolean hasadminRole=false;
+    boolean hasProfRole=false;
 
     public MainView() {
         setPrimarySection(Section.DRAWER);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        this.hasUserRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_USER"));
+        this.hasadminRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+        this.hasProfRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_PROFESSORE"));
+        
         addToNavbar(true, createHeaderContent());
+        
         menu = createMenu();
         addToDrawer(createDrawerContent(menu));
     }
@@ -82,14 +102,35 @@ public class MainView extends AppLayout {
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL);
         tabs.setId("tabs");
-        tabs.add(createMenuItems());
+        if(this.hasUserRole)
+        tabs.add(createMenuItemsUser());
+        else
+        	if(this.hasProfRole)
+        		tabs.add(createMenuItemsProf());
+        	else
+        		if(this.hasadminRole)
+        			tabs.add(createMenuItemsAdmin());
         return tabs;
     }
 
-    private Component[] createMenuItems() {
+    private Component[] createMenuItemsUser() {
         return new Tab[] {
         	createTab("Homepage", HomePageView.class),
-            createTab("admin", AdminView.class)
+        	createTab("studente",StudenteView.class)
+        };
+    }
+    private Component[] createMenuItemsProf() {
+        return new Tab[] {
+        	createTab("Homepage", HomePageView.class),
+        	createTab("professore",ProfessoreView.class)
+        };
+    }
+    private Component[] createMenuItemsAdmin() {
+        return new Tab[] {
+        	createTab("Homepage", HomePageView.class),
+        	createTab("studente",StudenteView.class),
+        	createTab("professore",ProfessoreView.class),
+        	createTab("admin",AdminView.class),
         };
     }
 
