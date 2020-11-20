@@ -133,20 +133,12 @@ public class ProfessoreView extends VerticalLayout{
 	@SuppressWarnings("unchecked")
 	private Checkbox createValited(Grid<Quiz> grid2, Quiz item) {
 		Checkbox check = new Checkbox();
+		check.setValue(item.getAttivato());
 		check.addClickListener(click->{
 		this.quizS.changeValid(item);
 		});
 		return check;
 	}
-
-	/*private Button createQuiz(Grid<Corso> grid2, Corso item) {   
-		Button button =new Button("ADD");
-		button.addClickListener(click->{
-			CREAZIONE EVENTO PER CREARE QUIZ
-		});
-		return button;
-	}
-	 */
 
 
 

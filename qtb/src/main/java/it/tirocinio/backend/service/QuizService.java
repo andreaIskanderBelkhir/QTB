@@ -52,7 +52,7 @@ public class QuizService {
 	}
 	public void changeValid(Quiz q) {
 		quizr.delete(q);
-		q.setAttivato(true);		
+		q.setAttivato(!(q.getAttivato()));		
 		quizr.save(q);
 	}
 	

@@ -32,7 +32,7 @@ public class QuizForm extends FormLayout{
 			Quiz quiz = new Quiz();
 			quiz.setNomeQuiz(nomeQuiz.getValue());
 			quiz.setCorsoAppertenenza(c);
-			quiz.setAttivato(true);
+			quiz.setAttivato(false);
 			binder.setBean(quiz);
 			if(binder.validate().isOk())
 			this.quizS.save(quiz);
