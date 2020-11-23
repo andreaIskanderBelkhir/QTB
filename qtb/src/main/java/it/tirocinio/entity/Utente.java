@@ -5,13 +5,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.ManyToAny;
 
 import it.tirocinio.entity.quiz.Corso;
 
@@ -28,7 +27,7 @@ public class Utente  extends AbstractEntity implements Cloneable{
 	private String password;
 	@NotNull
 	private String ruolo;
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Corso> corsifrequentati;
 	@OneToMany(mappedBy="docente")
 	private List<Corso> corsitenuti;

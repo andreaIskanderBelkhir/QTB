@@ -13,8 +13,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import it.tirocinio.application.views.login.CorsoForm;
-import it.tirocinio.application.views.login.QuizForm;
+import it.tirocinio.application.view.form.CorsoForm;
+import it.tirocinio.application.view.form.QuizForm;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.backend.service.CorsoService;
 import it.tirocinio.backend.service.QuizService;
@@ -58,7 +58,7 @@ public class ProfessoreView extends VerticalLayout{
 			this.nome = ((UserDetails)principal).getUsername();
 		}
 		docente=this.utenteS.findByName(nome);
-		CorsoForm corsoForm = new CorsoForm(this.corsoS,docente);		
+		CorsoForm corsoForm = new CorsoForm(this.corsoS,this.utenteS,docente);		
 		gridQuiz.setVisible(false);
 		corsoForm.setVisible(false);
 		hor.add(nome);

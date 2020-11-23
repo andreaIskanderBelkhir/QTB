@@ -1,18 +1,17 @@
 package it.tirocinio.backend.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import javax.annotation.PostConstruct;
-import it.tirocinio.entity.Utente;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import it.tirocinio.backend.UtenteRepository;
+import it.tirocinio.entity.Utente;
+import it.tirocinio.entity.quiz.Corso;
 
 
 
@@ -48,6 +47,7 @@ public class UtenteService  {
 			admin.setNome("admin");
 			admin.setPassword(passwordencoder.encode("admin"));
 			admin.setRuolo("ADMIN");
+			admin.setCorsifrequentati(new ArrayList<Corso>());
 			Utente prof = new Utente();
 			prof.setNome("prof");
 			prof.setPassword(passwordencoder.encode("sonoilprof"));
@@ -72,6 +72,34 @@ public class UtenteService  {
 		return null;
 	}
 
+	public void AddCorso(Corso c,String utente){
+		List<Corso> corsinew = new ArrayList<>(); 
+		if(c==null){
+			return;
+		}
+		else{
+			List<Utente> co=findAll();
+			for(Utente u:co){
+				if(u.getNome().equals(utente)){
+					if(u.getCorsifrequentati()==null){
+						List<Corso> corsofreqnew=new ArrayList<Corso>();
+						corsofreqnew.add(c);
+						u.setCorsifrequentati(corsofreqnew);
+					}
+					else{
+					corsinew = u.getCorsifrequentati();
+					corsinew.add(c);
+					u.setCorsifrequentati(corsinew);
+					}
+				}
+			}
+		}
+	}
+
+	public List<Corso> findByfreq(Utente studente) {
+		Utente u = findByName(studente.getNome());
+		return u.getCorsifrequentati();
+	}
 
 
 

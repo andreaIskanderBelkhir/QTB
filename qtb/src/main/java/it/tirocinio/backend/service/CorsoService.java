@@ -36,22 +36,20 @@ public class CorsoService {
 		return lista;			
 	}
 	
-	public void addStudente(Utente u,String nomec){
+	public void addStudente(Utente u,Corso c){
 		List<Utente> iscritti = new ArrayList<>(); 
 		if(u==null){
 			return;
 		}
 		else{
-			List<Corso> co=findAll();
-			for(Corso c:co){
-				if(c.getNomeCorso().equals(nomec)){
 					iscritti = c.getUtentifreq();
 					iscritti.add(u);
 					c.setUtentifreq(iscritti);
 				}
-			}
-		}
+
 	}
+	
+	
 	
 	public void save(Corso c){
 		if(c==null){
@@ -60,4 +58,16 @@ public class CorsoService {
 		else
 			this.corsorep.save(c);
 	}
+
+	public boolean partecipa(Corso c, Utente studente) {
+		List<Utente> partecipanti=c.getUtentifreq();
+		Boolean ris=false;
+		for(Utente u:partecipanti){
+			if(u.equals(studente)){
+				return true;
+			}
+		}
+		return ris;
+	}
+
 }

@@ -1,4 +1,4 @@
-package it.tirocinio.application.views.login;
+package it.tirocinio.application.view.form;
 
 
 

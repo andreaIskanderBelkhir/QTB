@@ -1,6 +1,7 @@
 package it.tirocinio.backend.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -55,5 +56,16 @@ public class QuizService {
 		q.setAttivato(!(q.getAttivato()));		
 		quizr.save(q);
 	}
+	public List<Quiz> findAllByCorsoandAttivati(Corso value) {
+		List<Quiz> quizs=findAll();
+		List<Quiz> quiz=new ArrayList<>();
+		for(Quiz q : quizs){
+			if((q.getCorsoAppertenenza().equals(value)) && (q.getAttivato()==true)){
+				quiz.add(q);
+			}
+		}
+		return quiz;
+	}
+	}
 	
-}
+

@@ -13,6 +13,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import it.tirocinio.application.view.form.UtenteDaApprovareForm;
 import it.tirocinio.backend.UtenteRepository;
 import it.tirocinio.backend.service.UtentePendingService;
 import it.tirocinio.backend.service.UtenteService;
