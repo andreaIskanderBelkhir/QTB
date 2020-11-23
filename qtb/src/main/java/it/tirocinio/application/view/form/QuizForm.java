@@ -11,6 +11,7 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.tirocinio.backend.service.QuizService;
 import it.tirocinio.entity.Utente;
 import it.tirocinio.entity.quiz.Corso;
+import it.tirocinio.entity.quiz.Domanda;
 import it.tirocinio.entity.quiz.Quiz;
 
 public class QuizForm extends FormLayout{
@@ -31,8 +32,9 @@ public class QuizForm extends FormLayout{
 		save.addClickListener(e->{
 			Quiz quiz = new Quiz();
 			quiz.setNomeQuiz(nomeQuiz.getValue());
-			quiz.setCorsoAppertenenza(c);
+			quiz.setCorsoAppartenenza(c);
 			quiz.setAttivato(false);
+			quiz.setDomande(new ArrayList<Domanda>());
 			binder.setBean(quiz);
 			if(binder.validate().isOk())
 			this.quizS.save(quiz);

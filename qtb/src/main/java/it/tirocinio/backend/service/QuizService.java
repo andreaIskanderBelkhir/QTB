@@ -37,7 +37,7 @@ public class QuizService {
 		List<Quiz> quizs=findAll();
 		List<Quiz> quiz=new ArrayList<>();
 		for(Quiz q : quizs){
-			if(q.getCorsoAppertenenza().equals(c)){
+			if(q.getCorsoAppartenenza().equals(c)){
 				quiz.add(q);
 			}
 		}
@@ -60,7 +60,7 @@ public class QuizService {
 		List<Quiz> quizs=findAll();
 		List<Quiz> quiz=new ArrayList<>();
 		for(Quiz q : quizs){
-			if((q.getCorsoAppertenenza().equals(value)) && (q.getAttivato()==true)){
+			if((q.getCorsoAppartenenza().equals(value)) && (q.getAttivato()==true)){
 				quiz.add(q);
 			}
 		}

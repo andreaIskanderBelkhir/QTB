@@ -1,8 +1,11 @@
 package it.tirocinio.entity.quiz;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import it.tirocinio.entity.AbstractEntity;
 
@@ -19,6 +22,25 @@ public class Quiz extends AbstractEntity implements Cloneable {
 	
 	private Boolean attivato;
 	
+
+	@OneToMany(mappedBy="quizapparteneza")
+	private List<Domanda> domande;
+	
+	
+	
+	
+	public Corso getCorsoAppartenenza() {
+		return corsoAppartenenza;
+	}
+	public void setCorsoAppartenenza(Corso corsoAppartenenza) {
+		this.corsoAppartenenza = corsoAppartenenza;
+	}
+	public List<Domanda> getDomande() {
+		return domande;
+	}
+	public void setDomande(List<Domanda> domande) {
+		this.domande = domande;
+	}
 	
 	public Boolean getAttivato() {
 		return attivato;
@@ -32,10 +54,6 @@ public class Quiz extends AbstractEntity implements Cloneable {
 	public void setNomeQuiz(String nomeQuiz) {
 		this.nomeQuiz = nomeQuiz;
 	}
-	public Corso getCorsoAppertenenza() {
-		return corsoAppartenenza;
-	}
-	public void setCorsoAppertenenza(Corso corsoAppertenenza) {
-		this.corsoAppartenenza = corsoAppertenenza;
+
 	} 
-}
+

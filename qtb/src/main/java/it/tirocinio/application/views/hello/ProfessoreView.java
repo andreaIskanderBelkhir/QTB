@@ -17,11 +17,12 @@ import it.tirocinio.application.view.form.CorsoForm;
 import it.tirocinio.application.view.form.QuizForm;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.backend.service.CorsoService;
+import it.tirocinio.backend.service.DomandaService;
 import it.tirocinio.backend.service.QuizService;
 import it.tirocinio.backend.service.UtenteService;
 import it.tirocinio.entity.Utente;
-
 import it.tirocinio.entity.quiz.Corso;
+import it.tirocinio.entity.quiz.Domanda;
 import it.tirocinio.entity.quiz.Quiz;
 
 @Route(value = "professore", layout = MainView.class)
@@ -34,17 +35,22 @@ public class ProfessoreView extends VerticalLayout{
 	private CorsoService corsoS;
 	private UtenteService utenteS;
 	private QuizService quizS;
+	private DomandaService domandaS;
 	Grid<Corso> gridtenuti = new Grid<>(Corso.class);
 	Grid<Quiz> gridQuiz=new Grid<>(Quiz.class);
+	Grid<Domanda> gridDomande=new Grid<>(Domanda.class);
 	private Corso corso;
 
 	private QuizForm quizForm;
 	private Div div2 =new Div();
+	private Div div3 =new Div();
 	HorizontalLayout horiz= new HorizontalLayout();
 	Button creazioneQbutton= new Button("vuoi aggiungere un quiz per questo corso?",e->this.quizForm.setVisible(true));
+	Button creazioneDbutton = new Button("vuoi aggiungere una domanda?");
 
 
-	public ProfessoreView(CorsoService s, UtenteService u,QuizService q){
+	public ProfessoreView(CorsoService s, UtenteService u,QuizService q,DomandaService d){
+		this.domandaS=d;
 		this.corsoS=s;
 		this.utenteS=u;
 		this.quizS=q;
@@ -60,6 +66,7 @@ public class ProfessoreView extends VerticalLayout{
 		docente=this.utenteS.findByName(nome);
 		CorsoForm corsoForm = new CorsoForm(this.corsoS,this.utenteS,docente);		
 		gridQuiz.setVisible(false);
+		gridDomande.setVisible(false);
 		corsoForm.setVisible(false);
 		hor.add(nome);
 		add(hor);
@@ -67,7 +74,7 @@ public class ProfessoreView extends VerticalLayout{
 		div1.add(gridtenuti);
 		updateGridCorsi();
 		Button creazioneCbutton = new Button("vuoi aggiungere un corso?",e->corsoForm.setVisible(true));
-
+		
 		div1.add(creazioneCbutton,corsoForm);
 		
 		horiz.add(div1);
@@ -101,21 +108,14 @@ public class ProfessoreView extends VerticalLayout{
 		}
 		else
 		{
-			
+			gridDomande.setVisible(false);
+			creazioneDbutton.setVisible(false);
 			gridQuiz.setItems(this.quizS.findAllByCorso(c));
 		
 			gridQuiz.setColumns("nomeQuiz");
-			gridQuiz.addColumn(quiz-> {
-				Corso corso=quiz.getCorsoAppertenenza();
-				if(corso==null)
-				{
-					return"";
-				}
-				else{
-					return corso.getNomeCorso();}
-			}).setHeader("corsoApparteneza");
 			gridQuiz.setWidth("98%");
 			gridQuiz.addComponentColumn(item-> createValited(gridQuiz,item)).setHeader("attivato");
+			gridQuiz.asSingleSelect().addValueChangeListener(event->updateGridDomande(event.getValue()));
 			gridQuiz.setVisible(true);
 			if(this.quizForm==null){
 				
@@ -129,6 +129,24 @@ public class ProfessoreView extends VerticalLayout{
 			horiz.add(div2);
 		}
 	}
+
+	private void updateGridDomande(Quiz q) {
+		// TODO Auto-generated method stub
+		if(q==null){
+			return;
+		}
+		else
+		{
+			creazioneDbutton.setVisible(true);
+			gridDomande.setItems(this.domandaS.findByQuiz(q));
+			gridDomande.setColumns("descrizione");
+			gridDomande.setWidth("98%");
+			gridDomande.setVisible(true);
+			div3.add(gridDomande,creazioneDbutton);
+			horiz.add(div3);
+		}
+	}
+
 
 	@SuppressWarnings("unchecked")
 	private Checkbox createValited(Grid<Quiz> grid2, Quiz item) {
