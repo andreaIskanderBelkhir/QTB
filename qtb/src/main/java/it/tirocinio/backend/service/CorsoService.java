@@ -42,9 +42,24 @@ public class CorsoService {
 			return;
 		}
 		else{
-					iscritti = c.getUtentifreq();
-					iscritti.add(u);
-					c.setUtentifreq(iscritti);
+			for(Corso cor:findAll()){
+				if(cor.equals(c)){
+					if(c.getUtentifreq()==null){
+						List<Utente> iscrittinew =new ArrayList<>();
+						iscrittinew.add(u);
+						c.setUtentifreq(iscrittinew);
+						this.corsorep.save(c);
+					}
+					else
+					{
+						iscritti = c.getUtentifreq();
+						iscritti.add(u);
+						c.setUtentifreq(iscritti);
+						this.corsorep.save(c);
+					}
+				}
+			}
+
 				}
 
 	}

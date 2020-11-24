@@ -36,7 +36,7 @@ public class IscrizioneCorsoForm extends FormLayout {
 			}
 			else{
 			corsoS.addStudente(studente, nomeCorso.getValue());
-			utenteS.AddCorso(nomeCorso.getValue(), studente.getNome());
+			utenteS.AddCorso(nomeCorso.getValue(), studente);
 			Notification.show("ti sei iscritto");
 			}
 		});

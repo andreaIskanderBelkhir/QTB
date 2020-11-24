@@ -20,9 +20,11 @@ public class UtenteService  {
 
 	private final UtenteRepository utenteRepository;
 	private PasswordEncoder passwordencoder;
+	private CorsoService corsoS;
 
-	public UtenteService(UtenteRepository userRepository,PasswordEncoder pe) {
+	public UtenteService(UtenteRepository userRepository,PasswordEncoder pe,CorsoService c) {
 		this.utenteRepository = userRepository;
+		this.corsoS=c;
 		this.passwordencoder=pe;
 	}
 
@@ -47,7 +49,6 @@ public class UtenteService  {
 			admin.setNome("admin");
 			admin.setPassword(passwordencoder.encode("admin"));
 			admin.setRuolo("ADMIN");
-			admin.setCorsifrequentati(new ArrayList<Corso>());
 			Utente prof = new Utente();
 			prof.setNome("prof");
 			prof.setPassword(passwordencoder.encode("sonoilprof"));
@@ -72,24 +73,28 @@ public class UtenteService  {
 		return null;
 	}
 
-	public void AddCorso(Corso c,String utente){
+	public void AddCorso(Corso c,Utente utente){
 		List<Corso> corsinew = new ArrayList<>(); 
 		if(c==null){
 			return;
 		}
 		else{
-			List<Utente> co=findAll();
-			for(Utente u:co){
-				if(u.getNome().equals(utente)){
-					if(u.getCorsifrequentati()==null){
-						List<Corso> corsofreqnew=new ArrayList<Corso>();
+			
+			for(Utente u:findAll()){
+				if(u.equals(utente)){
+					if(utente.getCorsifrequentati()==null){
+						List<Corso> corsofreqnew=new ArrayList<>();
 						corsofreqnew.add(c);
-						u.setCorsifrequentati(corsofreqnew);
+						utente.setCorsifrequentati(corsofreqnew);
+						this.corsoS.addStudente(utente,c);
+						this.utenteRepository.save(utente);
 					}
 					else{
-					corsinew = u.getCorsifrequentati();
+					corsinew = utente.getCorsifrequentati();
 					corsinew.add(c);
-					u.setCorsifrequentati(corsinew);
+					utente.setCorsifrequentati(corsinew);
+					this.corsoS.addStudente(utente,c);
+					this.utenteRepository.save(utente);
 					}
 				}
 			}

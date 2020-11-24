@@ -2,6 +2,7 @@ package it.tirocinio.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,7 @@ public class Utente  extends AbstractEntity implements Cloneable{
 	private String password;
 	@NotNull
 	private String ruolo;
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	private List<Corso> corsifrequentati;
 	@OneToMany(mappedBy="docente")
 	private List<Corso> corsitenuti;

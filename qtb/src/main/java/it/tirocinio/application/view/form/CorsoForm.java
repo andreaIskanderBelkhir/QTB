@@ -34,14 +34,12 @@ public class CorsoForm extends FormLayout {
 		save.addClickListener(e->{
 			Corso corso=new Corso();
 			corso.setNomeCorso(nomeCorso.getValue());
-			corso.setDocente(nomed);
-			List<Utente> ut=new ArrayList<Utente>();
-			ut.add(nomed);
-			corso.setUtentifreq(ut);
-			
+			corso.setDocente(nomed);	
 			binder.setBean(corso);
-			if(binder.validate().isOk())
+			if(binder.validate().isOk()){		
 			this.corsoS.save(corso);
+			this.utenteS.AddCorso(corso,nomed);		
+			}
 			else
 				Notification.show("error");
 		});
