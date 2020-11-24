@@ -19,7 +19,7 @@ import it.tirocinio.entity.quiz.Risposta;
 
 public class DomandaForm extends FormLayout{
 	TextArea descrizione = new TextArea("Descrizione domanda");
-	TextField rispostaGiusta =new TextField("inserire risposta giusta");
+	TextField rispostaEsatta =new TextField("inserire risposta giusta");
 	TextField rispostasbagliata1 =new TextField("inserire risposta sbagliata 1");
 	TextField rispostasbagliata2 =new TextField("inserire risposta sbagliata 2");
 	TextField rispostasbagliata3 =new TextField("inserire risposta sbagliata 3");
@@ -44,7 +44,7 @@ public class DomandaForm extends FormLayout{
 		
 		binder.forField(descrizione).withValidator(new StringLengthValidator(
 				"Please add the descrizione", 1, null)).bind(Domanda::getDescrizione,Domanda::setDescrizione);
-		binder2.forField(rispostaGiusta).withValidator(new StringLengthValidator(
+		binder2.forField(rispostaEsatta).withValidator(new StringLengthValidator(
 				"Please add the risposta", 1, null)).bind(Risposta::getDescrizione,Risposta::setDescrizione);
 		binder2.forField(rispostasbagliata1).withValidator(new StringLengthValidator(
 				"Please add the risposta", 1, null)).bind(Risposta::getDescrizione,Risposta::setDescrizione);
@@ -68,14 +68,14 @@ public class DomandaForm extends FormLayout{
 			}
 		});
 		
-		add(descrizione,rispostaGiusta,rispostasbagliata1,rispostasbagliata2,rispostasbagliata3,save);
+		add(descrizione,rispostaEsatta,rispostasbagliata1,rispostasbagliata2,rispostasbagliata3,save);
 		
 	}
 
 	private  List<Risposta> impostaRisposte(Domanda domanda) {
 		List<Risposta> risposte= new ArrayList<Risposta>();
 		this.rispostagiusta=new Risposta();
-		rispostagiusta.setDescrizione(rispostagiusta.getDescrizione());
+		rispostagiusta.setDescrizione(rispostaEsatta.getValue());
 		rispostagiusta.setDomandaApparteneza(domanda);
 		rispostagiusta.setGiusta(true);
 		risposte.add(rispostagiusta);

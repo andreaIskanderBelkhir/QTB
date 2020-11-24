@@ -52,9 +52,13 @@ public class QuizService {
 			this.quizr.save(z);
 	}
 	public void changeValid(Quiz q) {
-		quizr.delete(q);
-		q.setAttivato(!(q.getAttivato()));		
-		quizr.save(q);
+		
+		if(q.getAttivato()==true){
+			q.setAttivato(false);
+		}
+		else
+			q.setAttivato(true);
+		this.quizr.save(q);
 	}
 	public List<Quiz> findAllByCorsoandAttivati(Corso value) {
 		List<Quiz> quizs=findAll();

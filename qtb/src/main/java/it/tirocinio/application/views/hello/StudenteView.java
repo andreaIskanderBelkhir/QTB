@@ -36,10 +36,6 @@ public class StudenteView extends VerticalLayout {
 	Grid<Corso> gridcorsi = new Grid<>(Corso.class);
 	Grid<Quiz> gridQuiz = new Grid<>(Quiz.class);
 	
-	
-	
-	
-	
 	/**
 	 * @param u
 	 * @param c
@@ -58,6 +54,8 @@ public class StudenteView extends VerticalLayout {
 	    	}
 		studente=this.utenteS.findByName(nome);
 		List<Corso> corsi=studente.getCorsifrequentati();
+		configureGridCorsi();
+		gridcorsi.setItems(corsi);
 		iscrizioneCorsoForm= new IscrizioneCorsoForm(this.corsoS, this.utenteS,studente);
 		iscrizioneCorsoForm.setVisible(false);
 		hor.add("ciao ");
@@ -71,8 +69,7 @@ public class StudenteView extends VerticalLayout {
 		HorizontalLayout hor2= new HorizontalLayout();
 		hor2.add(gridcorsi,gridQuiz);
 		div2.add(hor2);
-		configureGridCorsi();
-		gridcorsi.setItems(corsi);
+
 		add(div1,div2);
 		
 	}
