@@ -85,4 +85,12 @@ public class CorsoService {
 		return ris;
 	}
 
+	public boolean corsoNonEsistente(Corso corso) {
+		for(Corso c:findAll()){
+			if(c.getNomeCorso().equals(corso.getNomeCorso()))
+				return false;
+		}
+		return true;
+	}
+
 }

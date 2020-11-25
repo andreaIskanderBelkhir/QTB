@@ -73,16 +73,13 @@ public class ProfessoreView extends VerticalLayout{
 		gridQuiz.setVisible(false);
 		gridDomande.setVisible(false);
 		corsoForm.setVisible(false);
-		
 		hor.add(nome);
 		add(hor);
 		configureGridCorsi();
 		div1.add(gridtenuti);
 		updateGridCorsi();
 		Button creazioneCbutton = new Button("vuoi aggiungere un corso?",e->corsoForm.setVisible(true));
-		
 		div1.add(creazioneCbutton,corsoForm);
-		
 		horiz.add(div1);
 		add(horiz);
 
@@ -131,6 +128,13 @@ public class ProfessoreView extends VerticalLayout{
 			this.quizForm=new QuizForm(this.quizS,c);
 			
 			this.quizForm.setVisible(false);
+			this.gridDomande.setVisible(false);
+			if(this.domandaForm==null){
+				
+			}
+			else{
+			this.domandaForm.setVisible(false);
+			}
 			div2.add(gridQuiz,creazioneQbutton,quizForm);
 			horiz.add(div2);
 		}

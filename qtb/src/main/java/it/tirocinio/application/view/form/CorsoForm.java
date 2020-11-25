@@ -3,13 +3,18 @@ package it.tirocinio.application.view.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.Alert;
+
+import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 
+import it.tirocinio.application.views.hello.ProfessoreView;
 import it.tirocinio.backend.service.CorsoService;
 import it.tirocinio.backend.service.UtenteService;
 import it.tirocinio.entity.Utente;
@@ -25,6 +30,9 @@ public class CorsoForm extends FormLayout {
 	public CorsoForm(CorsoService c,UtenteService u,Utente nomed){
 		this.corsoS=c;
 		this.utenteS=u;
+		Notification notification = new Notification(
+		        "è stato aggiunto ti prego di aggiornare la pagina ", 3000,
+		        Position.TOP_CENTER);
 		addClassName("Reg-view");
 		setMaxWidth("500px");
 		getStyle().set("margin","0 auto");
@@ -36,14 +44,18 @@ public class CorsoForm extends FormLayout {
 			corso.setNomeCorso(nomeCorso.getValue());
 			corso.setDocente(nomed);	
 			binder.setBean(corso);
-			if(binder.validate().isOk()){		
+			if((binder.validate().isOk()) && this.corsoS.corsoNonEsistente(corso)){	
 			this.corsoS.save(corso);
-			this.utenteS.AddCorso(corso,nomed);		
+			this.utenteS.AddCorso(corso,nomed);	
+			notification.open();
+			
 			}
 			else
-				Notification.show("error");
+				Notification.show("error inserire un corso valido");
 		});
 		add(nomeCorso,save);
 		
 	}
 }
+
+

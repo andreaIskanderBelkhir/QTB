@@ -14,14 +14,14 @@ import it.tirocinio.entity.quiz.Quiz;
 @Service
 public class QuizService {
 	private QuizRepository quizr;
-	
+
 	public QuizService(QuizRepository r){
 		this.quizr=r;
 	}
 	public List<Quiz> findAll(){
 		return this.quizr.findAll();
 	}
-	
+
 	public List<Quiz> findAllAttivati(Boolean b){
 		List<Quiz> quizs=findAll();
 		List<Quiz> quiz=new ArrayList<>();
@@ -32,7 +32,7 @@ public class QuizService {
 		}
 		return quiz;
 	}
-	
+
 	public List<Quiz> findAllByCorso(Corso c){
 		List<Quiz> quizs=findAll();
 		List<Quiz> quiz=new ArrayList<>();
@@ -43,7 +43,7 @@ public class QuizService {
 		}
 		return quiz;
 	}
-	
+
 	public void save(Quiz z){
 		if(z==null){
 			return;
@@ -52,7 +52,7 @@ public class QuizService {
 			this.quizr.save(z);
 	}
 	public void changeValid(Quiz q) {
-		
+
 		if(q.getAttivato()==true){
 			q.setAttivato(false);
 		}
@@ -70,6 +70,13 @@ public class QuizService {
 		}
 		return quiz;
 	}
+	public boolean quizNonEsistente(Quiz quiz) {
+		for(Quiz c:findAll()){
+			if(c.getNomeQuiz().equals(quiz.getNomeQuiz()))
+				return false;
+		}
+		return true;
 	}
-	
+}
+
 

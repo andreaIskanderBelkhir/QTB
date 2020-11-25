@@ -41,4 +41,12 @@ public class DomandaService {
 		}
 		return lista;		
 	}
+
+	public boolean domandaNonEsiste(Domanda domanda) {
+		for(Domanda c:findAll()){
+			if(c.getDescrizione().equals(domanda.getDescrizione()))
+				return false;
+		}
+		return true;
+	}
 }

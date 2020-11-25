@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -32,16 +34,19 @@ public class DomandaForm extends FormLayout{
 	private Risposta risposta2;
 	private Risposta risposta3;
 	private Risposta rispostagiusta;
-	
+
 	public DomandaForm(DomandaService d,RispostaService r,Quiz q){
 		this.domandaS=d;
 		this.rispostaS=r;
+		Notification notification = new Notification(
+				"è stato aggiunto ti prego di aggiornare la pagina o cliccare su un altro corso", 3000,
+				Position.TOP_CENTER);
 		addClassName("Reg-view");
 		setMaxWidth("500px");
 		getStyle().set("margin","0 auto");
 		binder.bindInstanceFields(this);
 		binder2.bindInstanceFields(this);
-		
+
 		binder.forField(descrizione).withValidator(new StringLengthValidator(
 				"Please add the descrizione", 1, null)).bind(Domanda::getDescrizione,Domanda::setDescrizione);
 		binder2.forField(rispostaEsatta).withValidator(new StringLengthValidator(
@@ -59,26 +64,56 @@ public class DomandaForm extends FormLayout{
 			List<Risposta> risposte=impostaRisposte(domanda);
 			domanda.setRisposte(risposte);
 			binder.setBean(domanda);
-			if(binder.validate().isOk()){
-				this.domandaS.save(domanda);
-				this.rispostaS.save(this.rispostagiusta);
-				this.rispostaS.save(this.risposta1);
-				this.rispostaS.save(this.risposta2);
-				this.rispostaS.save(this.risposta3);
+			if((binder2.validate().isOk())&&(binder.validate().isOk())&& (this.domandaS.domandaNonEsiste(domanda))){
+				if(domandeUniche()){
+					this.domandaS.save(domanda);
+					this.rispostaS.save(this.rispostagiusta);
+					this.rispostaS.save(this.risposta1);
+					this.rispostaS.save(this.risposta2);
+					this.rispostaS.save(this.risposta3);
+					notification.open();
+				}
+				else
+					Notification.show("alcune risposte sono uguali, cambiale");
 			}
+			else
+				Notification.show("error inserire una domanda valida con una descrizione unica");
 		});
-		
+
 		add(descrizione,rispostaEsatta,rispostasbagliata1,rispostasbagliata2,rispostasbagliata3,save);
-		
+
+	}
+
+	private boolean domandeUniche() {
+		boolean b=true;
+		if( this.risposta1.getDescrizione().equals(this.risposta2.getDescrizione())){
+			b=false;
+		}
+		if( this.risposta3.getDescrizione().equals(this.risposta2.getDescrizione())){
+			b=false;
+		}
+		if( this.risposta1.getDescrizione().equals(this.rispostagiusta.getDescrizione())){
+			b=false;
+		}
+		if( this.risposta1.getDescrizione().equals(this.risposta3.getDescrizione())){
+			b=false;
+		}
+		if( this.risposta3.getDescrizione().equals(this.rispostagiusta.getDescrizione())){
+			b=false;
+		}
+		if( this.rispostagiusta.getDescrizione().equals(this.risposta2.getDescrizione())){
+			b=false;
+		}
+		return b;
 	}
 
 	private  List<Risposta> impostaRisposte(Domanda domanda) {
 		List<Risposta> risposte= new ArrayList<Risposta>();
 		this.rispostagiusta=new Risposta();
-		rispostagiusta.setDescrizione(rispostaEsatta.getValue());
-		rispostagiusta.setDomandaApparteneza(domanda);
-		rispostagiusta.setGiusta(true);
-		risposte.add(rispostagiusta);
+		this.rispostagiusta.setDescrizione(rispostaEsatta.getValue());
+		this.rispostagiusta.setDomandaApparteneza(domanda);
+		this.rispostagiusta.setGiusta(true);
+		risposte.add(this.rispostagiusta);
 		this.risposta1=new Risposta();
 		risposta1.setDescrizione(rispostasbagliata1.getValue());
 		risposta1.setDomandaApparteneza(domanda);
@@ -95,8 +130,8 @@ public class DomandaForm extends FormLayout{
 		risposta3.setGiusta(false);
 		risposte.add(risposta3);
 		return risposte;
-		
-		
-		
+
+
+
 	}
 }
