@@ -12,10 +12,14 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -46,6 +50,7 @@ public class MainView extends AppLayout {
     boolean hasUserRole=false;
     boolean hasadminRole=false;
     boolean hasProfRole=false;
+    private String nome;
 
     public MainView() {
         setPrimarySection(Section.DRAWER);
@@ -56,6 +61,12 @@ public class MainView extends AppLayout {
                 .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
         this.hasProfRole = authentication.getAuthorities().stream()
                 .anyMatch(r -> r.getAuthority().equals("ROLE_PROFESSORE"));
+        
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if ( principal instanceof UserDetails){
+			this.nome = ((UserDetails)principal).getUsername();
+		}
+        
         
         addToNavbar(true, createHeaderContent());
         
@@ -73,10 +84,16 @@ public class MainView extends AppLayout {
         layout.add(new DrawerToggle());
         viewTitle = new H1();
         layout.add(viewTitle);
-        Anchor logout = new Anchor("/logout","logout  ");
+        Anchor logout = new Anchor("/logout");
+        Button buttonLogout =new Button("logout",new Icon(VaadinIcon.CLOSE));
+        buttonLogout.setIconAfterText(true);
+        logout.add(buttonLogout);
         layout.expand(viewTitle);
-        
-        layout.add(new Image("images/user.svg", "Avatar"));
+        Div div1 = new Div();      
+        div1.add("Username : ");
+        div1.add(this.nome + "  ");
+        layout.add(div1);
+        layout.add(new Image("images/user.png", "Avatar"));
         layout.add(logout);
         return layout;
     }
@@ -116,20 +133,20 @@ public class MainView extends AppLayout {
     private Component[] createMenuItemsUser() {
         return new Tab[] {
         	createTab("Homepage", HomePageView.class),
-        	createTab("studente",StudenteView.class)
+        	createTab("gestione-iscrizioni",StudenteView.class)
         };
     }
     private Component[] createMenuItemsProf() {
         return new Tab[] {
         	createTab("Homepage", HomePageView.class),
-        	createTab("professore",ProfessoreView.class)
+        	createTab("gestione-corsi",ProfessoreView.class)
         };
     }
     private Component[] createMenuItemsAdmin() {
         return new Tab[] {
         	createTab("Homepage", HomePageView.class),
-        	createTab("studente",StudenteView.class),
-        	createTab("professore",ProfessoreView.class),
+        	createTab("gestione-iscrizioni",StudenteView.class),
+        	createTab("gestione-corsi",ProfessoreView.class),
         	createTab("admin",AdminView.class),
         };
     }

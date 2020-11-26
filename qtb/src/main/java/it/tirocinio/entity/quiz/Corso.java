@@ -21,8 +21,10 @@ public class Corso extends AbstractEntity implements Cloneable{
 	private String nomeCorso;
 	@ManyToMany(fetch = FetchType.EAGER,mappedBy="corsifrequentati")
 	private List<Utente> utentifreq;
-    @ManyToOne
+
+	@ManyToOne
 	private Utente docente;
+    private String descrizioneCorso;
     
     @OneToMany(mappedBy="corsoAppartenenza")
     private List<Quiz> quizDelcorso;
@@ -38,6 +40,13 @@ public class Corso extends AbstractEntity implements Cloneable{
 
 	public String getNomeCorso() {
 		return nomeCorso;
+	}
+    public String getDescrizioneCorso() {
+		return descrizioneCorso;
+	}
+
+	public void setDescrizioneCorso(String descrizioneCorso) {
+	 this.descrizioneCorso = descrizioneCorso;
 	}
 
 	public List<Utente> getUtentifreq() {

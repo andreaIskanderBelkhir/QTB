@@ -4,7 +4,7 @@
 #header img {
   border-radius: 50%;
   height: var(--lumo-size-s);
-  margin-left: auto;
+  margin-left: var(--lumo-space-m);
   margin-right: var(--lumo-space-m);
   overflow: hidden;
   background-color: var(--lumo-contrast);

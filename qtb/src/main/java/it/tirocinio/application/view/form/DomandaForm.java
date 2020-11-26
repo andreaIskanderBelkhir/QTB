@@ -59,7 +59,7 @@ public class DomandaForm extends FormLayout{
 				"Please add the risposta", 1, null)).bind(Risposta::getDescrizione,Risposta::setDescrizione);
 		save.addClickListener(e->{
 			Domanda domanda = new Domanda();
-			domanda.setDescrizione(descrizione.getValue());
+			domanda.setDescrizione(descrizione.getValue().trim());
 			domanda.setQuizapparteneza(q);
 			List<Risposta> risposte=impostaRisposte(domanda);
 			domanda.setRisposte(risposte);
@@ -110,22 +110,22 @@ public class DomandaForm extends FormLayout{
 	private  List<Risposta> impostaRisposte(Domanda domanda) {
 		List<Risposta> risposte= new ArrayList<Risposta>();
 		this.rispostagiusta=new Risposta();
-		this.rispostagiusta.setDescrizione(rispostaEsatta.getValue());
+		this.rispostagiusta.setDescrizione(rispostaEsatta.getValue().trim());
 		this.rispostagiusta.setDomandaApparteneza(domanda);
 		this.rispostagiusta.setGiusta(true);
 		risposte.add(this.rispostagiusta);
 		this.risposta1=new Risposta();
-		risposta1.setDescrizione(rispostasbagliata1.getValue());
+		risposta1.setDescrizione(rispostasbagliata1.getValue().trim());
 		risposta1.setDomandaApparteneza(domanda);
 		risposta1.setGiusta(false);
 		risposte.add(risposta1);
 		this.risposta2=new Risposta();
-		risposta2.setDescrizione(rispostasbagliata2.getValue());
+		risposta2.setDescrizione(rispostasbagliata2.getValue().trim());
 		risposta2.setDomandaApparteneza(domanda);
 		risposta2.setGiusta(false);
 		risposte.add(risposta2);
 		this.risposta3=new Risposta();
-		risposta3.setDescrizione(rispostasbagliata3.getValue());
+		risposta3.setDescrizione(rispostasbagliata3.getValue().trim());
 		risposta3.setDomandaApparteneza(domanda);
 		risposta3.setGiusta(false);
 		risposte.add(risposta3);

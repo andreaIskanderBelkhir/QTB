@@ -6,9 +6,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -24,7 +28,7 @@ import it.tirocinio.entity.quiz.Corso;
 import it.tirocinio.entity.quiz.Quiz;
 
 @Route(value = "studente", layout = MainView.class)
-@PageTitle("studentePage")
+@PageTitle("Corsi dello Studente")
 @CssImport("./styles/views/hello/hello-view.css")
 public class StudenteView extends VerticalLayout {
 	private UtenteService utenteS ;
@@ -45,9 +49,9 @@ public class StudenteView extends VerticalLayout {
 		this.quizS=q;
 		this.corsoS=c;
 		HorizontalLayout hor = new HorizontalLayout();
-		Div div1 = new Div();
 		Div div2 = new Div();
-		setPadding(true);
+		setSizeFull();
+
 		  Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		    if ( principal instanceof UserDetails){
 			  this.nome = ((UserDetails)principal).getUsername();
@@ -58,19 +62,25 @@ public class StudenteView extends VerticalLayout {
 		gridcorsi.setItems(corsi);
 		iscrizioneCorsoForm= new IscrizioneCorsoForm(this.corsoS, this.utenteS,studente);
 		iscrizioneCorsoForm.setVisible(false);
-		hor.add("ciao ");
-		hor.add(studente.getNome());
-		
+
+		H3 h=new H3("");
 		Button buttonaddCorso = new Button("isciviti ad un corso",e->iscrizioneCorsoForm.setVisible(true));
-			
-		div1.add(hor,buttonaddCorso,iscrizioneCorsoForm);
+		buttonaddCorso.setIcon(new Icon(VaadinIcon.PLUS));
+		buttonaddCorso.setIconAfterText(true);
+		buttonaddCorso.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		hor.setId("prof-navbar");
+		hor.add(h);
+		hor.expand(h);
+		hor.add(buttonaddCorso);
+		add(hor);
+		
 		div2.setSizeFull();
 		div2.add("i tuoi corsi : ");
 		HorizontalLayout hor2= new HorizontalLayout();
 		hor2.add(gridcorsi,gridQuiz);
 		div2.add(hor2);
 
-		add(div1,div2);
+		add(iscrizioneCorsoForm,div2);
 		
 	}
 

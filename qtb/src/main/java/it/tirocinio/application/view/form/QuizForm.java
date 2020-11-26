@@ -36,7 +36,7 @@ public class QuizForm extends FormLayout{
 				"Please add the nome", 1, null)).bind(Quiz::getNomeQuiz,Quiz::setNomeQuiz);
 		save.addClickListener(e->{
 			Quiz quiz = new Quiz();
-			quiz.setNomeQuiz(nomeQuiz.getValue());
+			quiz.setNomeQuiz(nomeQuiz.getValue().trim());
 			quiz.setCorsoAppartenenza(c);
 			quiz.setAttivato(false);
 			quiz.setDomande(new ArrayList<Domanda>());

@@ -7,9 +7,11 @@ import org.openqa.selenium.Alert;
 
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
@@ -22,7 +24,9 @@ import it.tirocinio.entity.quiz.Corso;
 
 public class CorsoForm extends FormLayout {
 	TextField nomeCorso = new TextField("nome Corso");
+	TextArea descrizioneCorso = new TextArea("Descrivi brevemente il corso");
 	Button save = new Button("save");
+	Button cancella = new Button("cancella");
 	Binder<Corso> binder =new Binder<>(Corso.class);
 	private CorsoService corsoS;
 	private UtenteService utenteS;
@@ -39,9 +43,12 @@ public class CorsoForm extends FormLayout {
 		binder.bindInstanceFields(this);
 		binder.forField(nomeCorso).withValidator(new StringLengthValidator(
 				"Please add the nome", 1, null)).bind(Corso::getNomeCorso,Corso::setNomeCorso);
+		binder.forField(descrizioneCorso).bind(Corso::getDescrizioneCorso,Corso::setDescrizioneCorso);
+		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickListener(e->{
 			Corso corso=new Corso();
-			corso.setNomeCorso(nomeCorso.getValue());
+			corso.setNomeCorso(nomeCorso.getValue().trim());
+			corso.setDescrizioneCorso(descrizioneCorso.getValue().toString());
 			corso.setDocente(nomed);	
 			binder.setBean(corso);
 			if((binder.validate().isOk()) && this.corsoS.corsoNonEsistente(corso)){	
@@ -53,7 +60,12 @@ public class CorsoForm extends FormLayout {
 			else
 				Notification.show("error inserire un corso valido");
 		});
-		add(nomeCorso,save);
+		cancella.addThemeVariants(ButtonVariant.LUMO_ERROR);
+		 cancella.addClickListener(e->{
+			 nomeCorso.setValue("");
+			 descrizioneCorso.setValue("");
+		 });
+		add(nomeCorso,descrizioneCorso,save,cancella);
 		
 	}
 }

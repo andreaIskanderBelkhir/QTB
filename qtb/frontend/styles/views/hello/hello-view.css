@@ -3,3 +3,11 @@ hello-view,
   display: block;
   padding: 1em;
 }
+
+#prof-navbar{
+	height:50px;
+	width:100%;
+	background-color: #606a94;
+	
+}
+

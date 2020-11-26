@@ -10,6 +10,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -17,12 +18,18 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 
+import ch.qos.logback.core.net.LoginAuthenticator;
+import it.tirocinio.application.views.login.LoginView;
 import it.tirocinio.backend.service.UtentePendingService;
 import it.tirocinio.entity.UtentePending;
 
 
-
+@Route(value="sign-in")
+@PageTitle("registrazione")
 @CssImport("./styles/views/hello/hello-view.css")
 public class UtenteDaApprovareForm extends FormLayout{
 
@@ -31,6 +38,7 @@ public class UtenteDaApprovareForm extends FormLayout{
 	TextArea descrizione = new TextArea("motivo per registrazione?");
 	Button save = new Button();
 	Button delete = new Button();
+	Button tornab = new Button();
 	Binder<UtentePending> binder = new Binder<>(UtentePending.class);
 	private UtentePendingService UtPS;
 
@@ -73,6 +81,10 @@ public class UtenteDaApprovareForm extends FormLayout{
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickShortcut(Key.ENTER);
 		delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+		tornab.setText("torna al login");
+		Anchor anchor = new Anchor();
+		anchor.setHref("login");
+		anchor.add(tornab);
 		Dialog dialog = new Dialog();
 		dialog.add(new Paragraph("è stata inviata la richiesta."));
 		dialog.add(new Paragraph("verra informato tramite email per i dati da accesso"));
@@ -81,9 +93,9 @@ public class UtenteDaApprovareForm extends FormLayout{
 		dialog.setHeight("150px");
 		save.addClickListener(click->{
 			UtentePending utente = new UtentePending();
-			utente.setNome(nome.getValue());
-			utente.setEmail(email.getValue());
-			utente.setDescizione(descrizione.getValue());
+			utente.setNome(nome.getValue().trim());
+			utente.setEmail(email.getValue().trim());
+			utente.setDescizione(descrizione.getValue().toString());
 			utente.setAttivato(false);
 			binder.setBean(utente);
 			if(binder.validate().isOk()){
@@ -101,7 +113,7 @@ public class UtenteDaApprovareForm extends FormLayout{
 			descrizione.setValue("");
 		});
 		binder.addStatusChangeListener(evt->save.setEnabled(binder.isValid()));
-		return new HorizontalLayout(save,delete);
+		return new HorizontalLayout(save,delete,anchor);
 
 	}
 
