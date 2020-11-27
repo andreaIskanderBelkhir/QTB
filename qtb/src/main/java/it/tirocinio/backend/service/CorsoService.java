@@ -1,6 +1,7 @@
 package it.tirocinio.backend.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +24,14 @@ public class CorsoService {
 	
 	public List<Corso> findAll(){
 		return this.corsorep.findAll();
+	}
+	public List<Corso> findAll(String value) {
+		if(value==null||value.isEmpty()){
+		return this.corsorep.findAll();
+		}
+		else{
+			return this.corsorep.search(value);
+		}
 	}
 	
 	public List<Corso> findbyDocente(String nome){
@@ -92,5 +101,18 @@ public class CorsoService {
 		}
 		return true;
 	}
+
+	public void modificaCorso(Corso corso, Corso corsovecchio) {
+		this.corsorep.delete(corsovecchio);
+		this.save(corso);
+		
+	}
+
+	public void elimina(Corso value) {
+		this.corsorep.delete(value);
+		
+	}
+
+
 
 }

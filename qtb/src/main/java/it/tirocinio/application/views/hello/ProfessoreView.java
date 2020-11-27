@@ -4,18 +4,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import it.tirocinio.application.view.form.CorsoForm;
+import it.tirocinio.application.views.main.ActionBar;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.backend.service.CorsoService;
 import it.tirocinio.backend.service.DomandaService;
@@ -38,9 +38,7 @@ public class ProfessoreView extends VerticalLayout{
 	private DomandaService domandaS;
 	private RispostaService rispostaS;
 	Grid<Corso> gridtenuti = new Grid<>(Corso.class);
-
 	private Corso corso;
-
 	HorizontalLayout horiz= new HorizontalLayout();
 
 	public ProfessoreView(CorsoService s, UtenteService u,QuizService q,DomandaService d,RispostaService r){
@@ -49,48 +47,51 @@ public class ProfessoreView extends VerticalLayout{
 		this.corsoS=s;
 		this.utenteS=u;
 		this.quizS=q;
-		HorizontalLayout hor = new HorizontalLayout();
 		setSizeFull();
-		hor.setId("prof-navbar");
-		H3 h=new H3("");
-        hor.add(h);
-		hor.expand(h);
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if ( principal instanceof UserDetails){
 			this.nome = ((UserDetails)principal).getUsername();
 		}	
 		docente=this.utenteS.findByName(nome);
 		CorsoForm corsoForm = new CorsoForm(this.corsoS,this.utenteS,docente);		
-		corsoForm.setVisible(false);
-		
-		horiz.setSizeFull();
-		horiz.setSpacing(true);
-		Button creazioneCbutton = new Button("Nuovo",e->corsoForm.setVisible(true));
-		creazioneCbutton.setIcon(new Icon(VaadinIcon.PLUS));
-		creazioneCbutton.setIconAfterText(true);
-		creazioneCbutton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		hor.add(creazioneCbutton);
-		add(hor);
+		Button eliminaCbutton= new Button("Elimina",e->corsoForm.Elimina());
+		Button creazioneCbutton = new Button("Nuovo",e->corsoForm.Nuovo());
+		Button modificaCbutton=new Button("Modifica",e->corsoForm.Modifica());
+		TextField filter = new TextField();
+		configureFilter(filter);
+		ActionBar navbar=new ActionBar(creazioneCbutton,filter);
+		navbar.AddButtonAtActionBar(modificaCbutton);
+		navbar.AddButtonAtActionBar(eliminaCbutton);
+		add(navbar);
 		if(docente.getRuolo().equals("PROFESSORE")){
-		configureGridCorsiDocente();    
-		updateGridCorsiDocente();
+			configureGridCorsiDocente();    
+			updateGridCorsiDocente();
 		}
 		else
 		{
 			configureGridCorsiAdmin();
-			updateGridCorsiAdmin();
+			updateGridCorsiAdmin(filter);
 		}
-
-		horiz.add(gridtenuti,corsoForm);
+		gridtenuti.setVisible(true);
+		horiz.setSizeFull();
+		horiz.add(gridtenuti);
 		add(horiz);
-		
+		add(corsoForm);
+
 
 	}
 
 
-	private void updateGridCorsiAdmin() {
-		gridtenuti.setItems(this.corsoS.findAll());
+	private void configureFilter(TextField filter) {
+		filter.setValueChangeMode(ValueChangeMode.LAZY);
+		filter.addValueChangeListener(e->updateGridCorsiAdmin(filter));
 		
+	}
+
+
+	private void updateGridCorsiAdmin(TextField filter) {
+		gridtenuti.setItems(this.corsoS.findAll(filter.getValue()));
+
 	}
 
 
@@ -106,8 +107,8 @@ public class ProfessoreView extends VerticalLayout{
 			return docente==null ? "-": docente.getNome();
 		}).setHeader("Docente del corso");
 		gridtenuti.getColumns().forEach(c->c.setAutoWidth(true));
-		
-		
+
+
 	}
 
 
@@ -125,7 +126,7 @@ public class ProfessoreView extends VerticalLayout{
 		gridtenuti.removeColumnByKey("quizDelcorso");
 		gridtenuti.setColumns("nomeCorso","descrizioneCorso");		
 		gridtenuti.getColumns().forEach(c->c.setAutoWidth(true));
-		
+
 
 	}
 

@@ -8,6 +8,7 @@ hello-view,
 	height:50px;
 	width:100%;
 	background-color: #606a94;
-	
+	border:1px;
+	border-style: solid;
 }
 

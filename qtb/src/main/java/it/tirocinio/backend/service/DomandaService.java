@@ -44,7 +44,7 @@ public class DomandaService {
 
 	public boolean domandaNonEsiste(Domanda domanda) {
 		for(Domanda c:findAll()){
-			if(c.getDescrizione().equals(domanda.getDescrizione()))
+			if(c.getNomedomanda().equals(domanda.getNomedomanda()))
 				return false;
 		}
 		return true;

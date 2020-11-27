@@ -35,6 +35,7 @@ import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.application.view.HomePageView;
 import it.tirocinio.application.views.hello.AdminView;
 import it.tirocinio.application.views.hello.ProfessoreView;
+import it.tirocinio.application.views.hello.QuizView;
 import it.tirocinio.application.views.hello.StudenteView;
 
 /**
@@ -133,21 +134,24 @@ public class MainView extends AppLayout {
     private Component[] createMenuItemsUser() {
         return new Tab[] {
         	createTab("Homepage", HomePageView.class),
-        	createTab("gestione-iscrizioni",StudenteView.class)
+        	createTab("Gestione Iscrizioni",StudenteView.class)
         };
     }
     private Component[] createMenuItemsProf() {
         return new Tab[] {
         	createTab("Homepage", HomePageView.class),
-        	createTab("gestione-corsi",ProfessoreView.class)
+        	createTab("Gestione Corsi",ProfessoreView.class),
+        	createTab("Gestione Test",QuizView.class),
         };
     }
     private Component[] createMenuItemsAdmin() {
         return new Tab[] {
         	createTab("Homepage", HomePageView.class),
-        	createTab("gestione-iscrizioni",StudenteView.class),
-        	createTab("gestione-corsi",ProfessoreView.class),
-        	createTab("admin",AdminView.class),
+        	createTab("Gestione Iscrizioni",StudenteView.class),
+        	createTab("Gestione Corsi",ProfessoreView.class),
+        	createTab("Gestione Test",QuizView.class),
+        	createTab("admin",AdminView.class)
+        	
         };
     }
 

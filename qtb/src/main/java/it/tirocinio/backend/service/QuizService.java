@@ -8,15 +8,18 @@ import org.springframework.stereotype.Service;
 
 import it.tirocinio.backend.CorsoRepository;
 import it.tirocinio.backend.QuizRepository;
+import it.tirocinio.entity.Utente;
 import it.tirocinio.entity.quiz.Corso;
 import it.tirocinio.entity.quiz.Quiz;
 
 @Service
 public class QuizService {
 	private QuizRepository quizr;
+	private CorsoRepository corsor;
 
-	public QuizService(QuizRepository r){
+	public QuizService(QuizRepository r,CorsoRepository c){
 		this.quizr=r;
+		this.corsor=c;
 	}
 	public List<Quiz> findAll(){
 		return this.quizr.findAll();
@@ -76,6 +79,23 @@ public class QuizService {
 				return false;
 		}
 		return true;
+	}
+	public List<Quiz> findAllByDocente(Utente docente) {
+		List<Quiz> possibili = new ArrayList<>();
+		List<Corso> co= this.corsor.findAll();
+		List<Corso> corsideldoc = new ArrayList<>();
+		for(Corso c:co){
+			if(c.getDocente().equals(docente)){
+				corsideldoc.add(c);
+			}
+		}
+		for(Corso cor:corsideldoc){
+			for(Quiz q:findAll()){
+				if(q.getCorsoAppartenenza().equals(cor))
+					possibili.add(q);
+			}
+		}
+      return possibili;
 	}
 }
 

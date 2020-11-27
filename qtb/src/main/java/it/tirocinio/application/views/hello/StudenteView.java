@@ -15,10 +15,12 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import it.tirocinio.application.view.form.IscrizioneCorsoForm;
+import it.tirocinio.application.views.main.ActionBar;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.backend.service.CorsoService;
 import it.tirocinio.backend.service.QuizService;
@@ -48,10 +50,9 @@ public class StudenteView extends VerticalLayout {
 		this.utenteS=u;
 		this.quizS=q;
 		this.corsoS=c;
-		HorizontalLayout hor = new HorizontalLayout();
+
 		Div div2 = new Div();
 		setSizeFull();
-
 		  Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		    if ( principal instanceof UserDetails){
 			  this.nome = ((UserDetails)principal).getUsername();
@@ -61,19 +62,10 @@ public class StudenteView extends VerticalLayout {
 		configureGridCorsi();
 		gridcorsi.setItems(corsi);
 		iscrizioneCorsoForm= new IscrizioneCorsoForm(this.corsoS, this.utenteS,studente);
-		iscrizioneCorsoForm.setVisible(false);
-
-		H3 h=new H3("");
+		iscrizioneCorsoForm.setVisible(false);		
 		Button buttonaddCorso = new Button("isciviti ad un corso",e->iscrizioneCorsoForm.setVisible(true));
-		buttonaddCorso.setIcon(new Icon(VaadinIcon.PLUS));
-		buttonaddCorso.setIconAfterText(true);
-		buttonaddCorso.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		hor.setId("prof-navbar");
-		hor.add(h);
-		hor.expand(h);
-		hor.add(buttonaddCorso);
-		add(hor);
-		
+		ActionBar navbar=new ActionBar(buttonaddCorso);
+		add(navbar);
 		div2.setSizeFull();
 		div2.add("i tuoi corsi : ");
 		HorizontalLayout hor2= new HorizontalLayout();
