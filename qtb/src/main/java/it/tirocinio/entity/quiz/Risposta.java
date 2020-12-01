@@ -11,7 +11,7 @@ import it.tirocinio.entity.AbstractEntity;
 public class Risposta extends AbstractEntity implements Cloneable  {
 
 	@Column(nullable=false)
-	private String descrizione ;
+	private String risposta ;
 	
 
 	@ManyToOne
@@ -19,12 +19,13 @@ public class Risposta extends AbstractEntity implements Cloneable  {
 	
 	private Boolean giusta;
 	
-	public String getDescrizione() {
-		return descrizione;
+
+	public String getRisposta() {
+		return risposta;
 	}
 
-	public void setDescrizione(String descrizione) {
-		this.descrizione = descrizione;
+	public void setRisposta(String risposta) {
+		this.risposta = risposta;
 	}
 
 	public Domanda getDomandaApparteneza() {

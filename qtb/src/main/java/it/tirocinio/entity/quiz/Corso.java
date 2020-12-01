@@ -26,7 +26,7 @@ public class Corso extends AbstractEntity implements Cloneable{
 	private Utente docente;
     private String descrizioneCorso;
     
-    @OneToMany(mappedBy="corsoAppartenenza",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="corsoAppartenenza",fetch = FetchType.EAGER, cascade = CascadeType.ALL,orphanRemoval=true)
     private List<Quiz> quizDelcorso;
     
 

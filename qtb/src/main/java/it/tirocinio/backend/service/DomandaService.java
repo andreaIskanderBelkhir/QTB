@@ -10,6 +10,7 @@ import it.tirocinio.backend.QuizRepository;
 import it.tirocinio.entity.quiz.Corso;
 import it.tirocinio.entity.quiz.Domanda;
 import it.tirocinio.entity.quiz.Quiz;
+import it.tirocinio.entity.quiz.Risposta;
 
 @Service
 public class DomandaService {
@@ -48,5 +49,21 @@ public class DomandaService {
 				return false;
 		}
 		return true;
+	}
+
+	public void modificaDomanda(Domanda domanda, Domanda value) {
+		this.domandaR.delete(value);
+		this.save(domanda);
+		
+	}
+
+	public void elimina(Domanda value) {
+		this.domandaR.delete(value);
+		
+	}
+
+	public void eliminaRisposta(Domanda domanda, Risposta risposta) {
+	domanda.getRisposte().remove(risposta);
+		
 	}
 }

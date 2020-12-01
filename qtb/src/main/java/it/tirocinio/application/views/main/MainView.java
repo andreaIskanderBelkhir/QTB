@@ -34,6 +34,7 @@ import com.vaadin.flow.theme.Theme;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.application.view.HomePageView;
 import it.tirocinio.application.views.hello.AdminView;
+import it.tirocinio.application.views.hello.DomandeView;
 import it.tirocinio.application.views.hello.ProfessoreView;
 import it.tirocinio.application.views.hello.QuizView;
 import it.tirocinio.application.views.hello.StudenteView;
@@ -142,6 +143,7 @@ public class MainView extends AppLayout {
         	createTab("Homepage", HomePageView.class),
         	createTab("Gestione Corsi",ProfessoreView.class),
         	createTab("Gestione Test",QuizView.class),
+        	createTab("Gestione Domande",DomandeView.class)
         };
     }
     private Component[] createMenuItemsAdmin() {
@@ -150,8 +152,8 @@ public class MainView extends AppLayout {
         	createTab("Gestione Iscrizioni",StudenteView.class),
         	createTab("Gestione Corsi",ProfessoreView.class),
         	createTab("Gestione Test",QuizView.class),
-        	createTab("admin",AdminView.class)
-        	
+        	createTab("Gestione Domande",DomandeView.class),
+        	createTab("admin",AdminView.class),
         };
     }
 

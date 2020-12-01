@@ -42,5 +42,14 @@ public class RispostaService {
 		}
 		return lista;		
 	}
+	public void modifica(Risposta risposta, Risposta value) {
+		this.rispostaR.delete(value);
+		this.save(risposta);
+		
+	}
+	public void elimina(Risposta value) {
+		this.rispostaR.delete(value);
+		
+	}
 	
 }

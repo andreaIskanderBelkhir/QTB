@@ -52,10 +52,10 @@ public class ProfessoreView extends VerticalLayout{
 		if ( principal instanceof UserDetails){
 			this.nome = ((UserDetails)principal).getUsername();
 		}	
-		docente=this.utenteS.findByName(nome);
+		this.docente=this.utenteS.findByName(nome);
 		CorsoForm corsoForm = new CorsoForm(this.corsoS,this.utenteS,docente);		
 		Button eliminaCbutton= new Button("Elimina",e->corsoForm.Elimina());
-		Button creazioneCbutton = new Button("Nuovo",e->corsoForm.Nuovo());
+		Button creazioneCbutton = new Button("Nuovo",e->corsoForm.Nuovo(gridtenuti));
 		Button modificaCbutton=new Button("Modifica",e->corsoForm.Modifica());
 		TextField filter = new TextField();
 		configureFilter(filter);
@@ -65,7 +65,7 @@ public class ProfessoreView extends VerticalLayout{
 		add(navbar);
 		if(docente.getRuolo().equals("PROFESSORE")){
 			configureGridCorsiDocente();    
-			updateGridCorsiDocente();
+			updateGridCorsiDocente(filter);
 		}
 		else
 		{
@@ -84,14 +84,22 @@ public class ProfessoreView extends VerticalLayout{
 
 	private void configureFilter(TextField filter) {
 		filter.setValueChangeMode(ValueChangeMode.LAZY);
-		filter.addValueChangeListener(e->updateGridCorsiAdmin(filter));
-		
+		filter.addValueChangeListener(e->{
+			if(this.docente.getRuolo().equals("ADMIN")){
+				updateGridCorsiAdmin(filter);
+			}
+			else{
+				updateGridCorsiDocente(filter);
+			}
+
+
+		});
+
 	}
 
 
 	private void updateGridCorsiAdmin(TextField filter) {
 		gridtenuti.setItems(this.corsoS.findAll(filter.getValue()));
-
 	}
 
 
@@ -112,8 +120,8 @@ public class ProfessoreView extends VerticalLayout{
 	}
 
 
-	private void updateGridCorsiDocente() {
-		gridtenuti.setItems(this.corsoS.findbyDocente(nome));
+	private void updateGridCorsiDocente(TextField filter) {
+		gridtenuti.setItems(this.corsoS.findbyDocente(docente,filter));
 
 	}
 

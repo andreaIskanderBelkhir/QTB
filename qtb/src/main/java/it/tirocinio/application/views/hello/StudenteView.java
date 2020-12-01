@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
@@ -18,6 +19,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.Router;
+import com.vaadin.ui.UI;
 
 import it.tirocinio.application.view.form.IscrizioneCorsoForm;
 import it.tirocinio.application.views.main.ActionBar;
@@ -60,11 +63,13 @@ public class StudenteView extends VerticalLayout {
 		studente=this.utenteS.findByName(nome);
 		List<Corso> corsi=studente.getCorsifrequentati();
 		configureGridCorsi();
+		configureGridQuiz();
 		gridcorsi.setItems(corsi);
 		iscrizioneCorsoForm= new IscrizioneCorsoForm(this.corsoS, this.utenteS,studente);
 		iscrizioneCorsoForm.setVisible(false);		
 		Button buttonaddCorso = new Button("isciviti ad un corso",e->iscrizioneCorsoForm.setVisible(true));
-		ActionBar navbar=new ActionBar(buttonaddCorso);
+		H3 h=new H3("");
+		ActionBar navbar=new ActionBar(buttonaddCorso,h);
 		add(navbar);
 		div2.setSizeFull();
 		div2.add("i tuoi corsi : ");
@@ -77,6 +82,22 @@ public class StudenteView extends VerticalLayout {
 	}
 
 	
+	private void configureGridQuiz() {
+		gridQuiz.addComponentColumn(item-> createLink(gridQuiz,item)).setHeader("Effetua");
+	
+	}
+
+
+	private Anchor createLink(Grid<Quiz> gridQuiz2, Quiz item) {
+		String a=new String("svolgimento/"+ item.getId().toString());
+		Anchor link=new Anchor(a);
+		Button button = new Button("Svolgi",new Icon(VaadinIcon.ARROW_FORWARD));
+		button.setIconAfterText(true);
+		link.add(button);
+		return link;
+	}
+
+
 	private void configureGridCorsi() {
 		gridcorsi.removeColumnByKey("id");
 		gridcorsi.removeColumnByKey("utentifreq");

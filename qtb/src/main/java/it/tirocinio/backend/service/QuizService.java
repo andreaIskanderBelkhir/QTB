@@ -5,12 +5,16 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.tirocinio.backend.CorsoRepository;
 import it.tirocinio.backend.QuizRepository;
 import it.tirocinio.entity.Utente;
 import it.tirocinio.entity.quiz.Corso;
+import it.tirocinio.entity.quiz.Domanda;
 import it.tirocinio.entity.quiz.Quiz;
+
 
 @Service
 public class QuizService {
@@ -82,20 +86,39 @@ public class QuizService {
 	}
 	public List<Quiz> findAllByDocente(Utente docente) {
 		List<Quiz> possibili = new ArrayList<>();
-		List<Corso> co= this.corsor.findAll();
-		List<Corso> corsideldoc = new ArrayList<>();
-		for(Corso c:co){
-			if(c.getDocente().equals(docente)){
-				corsideldoc.add(c);
-			}
-		}
+		List<Corso> corsideldoc = docente.getCorsifrequentati();
 		for(Corso cor:corsideldoc){
-			for(Quiz q:findAll()){
-				if(q.getCorsoAppartenenza().equals(cor))
-					possibili.add(q);
+			if(cor.getDocente().equals(docente)){
+				for(Quiz q:findAll()){
+					if(q.getCorsoAppartenenza().equals(cor))
+						possibili.add(q);
+				}
 			}
 		}
-      return possibili;
+		return possibili;
+	}
+	public void modificaQuiz(Quiz quiz, Quiz valueVecchio) {
+
+		this.quizr.delete(valueVecchio);
+		this.save(quiz);
+
+	}
+	public void elimina(Quiz value) {
+		this.quizr.delete(value);
+
+	}
+
+	public void eliminaDomanda(Quiz quiz, Domanda value) {
+	quiz.getDomande().remove(value);
+		
+	}
+	public Quiz findById(String para) {
+		for(Quiz q:findAll()){
+			if(q.getId().toString().equals(para)){
+				return q;
+			}
+		}
+		return null;
 	}
 }
 

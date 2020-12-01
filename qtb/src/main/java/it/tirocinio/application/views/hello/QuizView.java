@@ -5,9 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -42,6 +42,7 @@ public class QuizView extends VerticalLayout{
 	Grid<Domanda> griddomanda= new Grid<>(Domanda.class);
 	HorizontalLayout hor=new HorizontalLayout();
 	HorizontalLayout hor2=new HorizontalLayout();
+	ComboBox<Corso> corsi;
 	private DomandaForm domandaform;
 	private Button creazioneDbutton;
 
@@ -58,48 +59,40 @@ public class QuizView extends VerticalLayout{
 			this.nome = ((UserDetails)principal).getUsername();
 		}	
 		docente=this.utenteS.findByName(nome);
-		QuizForm quizForm = new QuizForm(this.quizS,this.corsoS,this.docente);
-		quizForm.setVisible(false);
-		if(!(this.quizS.findAllByDocente(docente).isEmpty())){
-			this.domandaform=new DomandaForm(this.domandaS, this.corsoS, docente);
-			this.domandaform.setVisible(false);
-			this.creazioneDbutton = new Button("Nuova domanda",e->domandaform.setVisible(true));
-		}
-		Button creazioneQbutton = new Button("Nuovo",e->quizForm.setVisible(true));
-		ActionBar navbar2=new ActionBar(creazioneQbutton);
-		if(this.creazioneDbutton==null){
-			add(navbar2);
-		}
-		else
-			navbar2.AddButtonAtActionBar(this.creazioneDbutton);
+		QuizForm quizForm = new QuizForm(this.quizS,this.corsoS,this.utenteS,this.docente);
+		corsi=new ComboBox<>();
+		corsi.setItemLabelGenerator(Corso::getNomeCorso);
+		corsi.setItems(this.corsoS.findbyDocente(docente));
+		corsi.addValueChangeListener(e->{
+			UpdateGridQ();
+		});
+		Button creazioneQbutton = new Button("Nuovo",e->quizForm.Nuovo());
+		Button modificaQbutton = new Button("Modifica",e->quizForm.Modifica());
+		Button eliminaQbutton = new Button("Elimina",e->quizForm.Elimina());
+		ActionBar navbar2=new ActionBar(creazioneQbutton,corsi);
+		navbar2.AddButtonAtActionBar(modificaQbutton);
+		navbar2.AddButtonAtActionBar(eliminaQbutton);
 		add(navbar2);
 		hor.setHeight("100%");
 		hor.setWidthFull();
 		ConfigureGridQ();
 		UpdateGridQ();
 		gridquiz.setSizeFull();
-		hor.add(gridquiz,quizForm);
+		add(quizForm);
+		hor.add(gridquiz);
 		add(hor);
-		hor2.setHeight("50%");
-		hor2.setWidthFull();
-		ConfigureGridD();
-		if(this.domandaform==null){
-			hor2.add(griddomanda);
-		}
-		else{
-			add("clicca su un quiz per vedere le sue domande");
-			hor2.add(griddomanda,domandaform);
-		}
-		add(hor2);
+
 	}
 
 
 	private void UpdateGridQ() {
+		if(corsi.getValue()==null){
 		gridquiz.setItems(this.quizS.findAllByDocente(this.docente));
-
-	}
-	private void UpdateGridD(Quiz quiz) {
-		griddomanda.setItems(this.domandaS.findByQuiz(quiz));
+		}
+		else
+		{
+			gridquiz.setItems(this.quizS.findAllByCorso(corsi.getValue()));
+		}
 
 	}
 
@@ -112,14 +105,6 @@ public class QuizView extends VerticalLayout{
 			return corso==null ? "-": corso.getNomeCorso();
 		}).setHeader("corso del quiz");
 		gridquiz.addComponentColumn(item-> createValited(gridquiz,item)).setHeader("attivato");
-		gridquiz.asSingleSelect().addValueChangeListener(event->UpdateGridD(event.getValue()));
-
-	}
-	private void ConfigureGridD() {
-		griddomanda.setColumns("nomedomanda","descrizionedomanda");
-		griddomanda.setWidth("98%");
-		griddomanda.getColumns().forEach(c->c.setAutoWidth(true));
-
 
 	}
 

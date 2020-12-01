@@ -30,7 +30,7 @@ public class Utente  extends AbstractEntity implements Cloneable{
 	private String ruolo;
 	@ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	private List<Corso> corsifrequentati;
-	@OneToMany(mappedBy="docente")
+	@OneToMany(mappedBy="docente",fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	private List<Corso> corsitenuti;
 
 	public List<Corso> getCorsifrequentati() {

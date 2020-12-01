@@ -1,11 +1,16 @@
 package it.tirocinio.entity.quiz;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import it.tirocinio.entity.AbstractEntity;
 
@@ -15,14 +20,16 @@ public class Domanda extends AbstractEntity implements Cloneable {
 	private String nomedomanda;
 
 	private String descrizionedomanda;
+	
 	@ManyToOne
 	private Quiz quizapparteneza;
 
-	@OneToMany(mappedBy="domandaApparteneza")
-	private List<Risposta> risposte;
+	@OneToMany(mappedBy="domandaApparteneza",fetch=FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
+	private Set<Risposta> risposte;
 
 
-	public List<Risposta> getRisposte() {
+	public Set<Risposta> getRisposte() {
 		return risposte;
 	}
 	public String getNomedomanda() {
@@ -37,7 +44,7 @@ public class Domanda extends AbstractEntity implements Cloneable {
 	public void setDescrizionedomanda(String descrizionedomanda) {
 		this.descrizionedomanda = descrizionedomanda;
 	}
-	public void setRisposte(List<Risposta> risposte) {
+	public void setRisposte(Set<Risposta> risposte) {
 		this.risposte = risposte;
 	}
 

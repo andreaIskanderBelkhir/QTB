@@ -9,9 +9,11 @@ import javax.annotation.PostConstruct;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import it.tirocinio.backend.CorsoRepository;
 import it.tirocinio.backend.UtenteRepository;
 import it.tirocinio.entity.Utente;
 import it.tirocinio.entity.quiz.Corso;
+import it.tirocinio.entity.quiz.Quiz;
 
 
 
@@ -20,10 +22,12 @@ public class UtenteService  {
 
 	private final UtenteRepository utenteRepository;
 	private PasswordEncoder passwordencoder;
+	private CorsoRepository corsoR;
 	private CorsoService corsoS;
 
-	public UtenteService(UtenteRepository userRepository,PasswordEncoder pe,CorsoService c) {
+	public UtenteService(UtenteRepository userRepository,PasswordEncoder pe,CorsoService c,CorsoRepository cr) {
 		this.utenteRepository = userRepository;
+		this.corsoR=cr;
 		this.corsoS=c;
 		this.passwordencoder=pe;
 	}
@@ -127,17 +131,41 @@ public class UtenteService  {
 				this.utenteRepository.save(u);
 			}
 		}
-		
+
 	}
+
+
 
 	public void DeleteCorsoperdoc(Corso value) {
 		Utente doc=value.getDocente();
+		this.utenteRepository.delete(doc);
 		doc.getCorsifrequentati().remove(value);
+		this.utenteRepository.save(doc);
+	}
+
+	private void DeleteQuizperdoc(Quiz value) {
+		Utente doc=value.getCorsoAppartenenza().getDocente();
+		for(Corso c:doc.getCorsifrequentati()){
+			if(c.equals(value.getCorsoAppartenenza())){
+				this.utenteRepository.delete(doc);
+				c.getQuizDelcorso().remove(value);
+				this.utenteRepository.save(doc);
+			}
+
+		}
+
+	}
+	public void eliminaQuiz(Quiz value) {
+		this.corsoS.eliminaQuiz(value);
+		this.DeleteQuizperdoc(value);
 
 	}
 
 
-
-
-
 }
+
+
+
+
+
+
