@@ -120,6 +120,10 @@ public class QuizService {
 		}
 		return null;
 	}
+	public void eliminaDomande(Quiz value) {
+		
+		
+	}
 }
 
 

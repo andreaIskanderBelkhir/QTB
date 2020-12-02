@@ -12,6 +12,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -39,9 +40,6 @@ public class QuizForm extends FormLayout{
 		this.utenteS=us;
 		this.docente=u;
 		this.corsoS=cs;
-		
-		
-
 	}
 	
 	public void Nuovo(){
@@ -52,6 +50,7 @@ public class QuizForm extends FormLayout{
 		TextField nomeQuiz = new TextField("nome Quiz");
 		Button save = new Button("save");
 		Button cancella = new Button("cancella");
+		NumberField numberField = new NumberField("tempo a disposizione in minuti(se non inserito 60 minuti)");
 		ComboBox<Corso> nomeCorso= new ComboBox<>();
 		
 		Notification notification = new Notification(
@@ -67,6 +66,14 @@ public class QuizForm extends FormLayout{
 		save.setText("save");
 		save.addClickListener(e->{
 			Quiz quiz = new Quiz();
+			if(numberField.getValue()==null)
+			{
+				quiz.setTempo("3600");
+			}
+			else{
+				 double tmp=numberField.getValue()*60;
+				quiz.setTempo(String.valueOf(tmp));
+			}
 			quiz.setNomeQuiz(nomeQuiz.getValue().trim());
 			quiz.setCorsoAppartenenza(nomeCorso.getValue());
 			quiz.setAttivato(false);
@@ -87,7 +94,7 @@ public class QuizForm extends FormLayout{
 			nomeQuiz.setValue("");
 			dialog.close();
 		});
-		formlayout.add(nomeCorso,nomeQuiz,save,cancella);
+		formlayout.add(nomeCorso,nomeQuiz,numberField,save,cancella);
 		dialog.add(formlayout);
 		add(dialog);
 		dialog.open();
@@ -192,11 +199,15 @@ public class QuizForm extends FormLayout{
 				Quiz quiz=nomeQuizmodifica.getValue();
 				binder.setBean(quiz);
 				if(binder.validate().isOk()){
+					if(nomeQuizmodifica.getValue().getDomande().isEmpty()){
 					this.corsoS.eliminaQuiz(nomeQuizmodifica.getValue());		
 					this.quizS.elimina(nomeQuizmodifica.getValue());				
 					notification.open();
 					dialog.close();
 					binder.removeBean();
+					}
+					else
+						Notification.show("elimina prima le domande per favore");
 				}
 				else{
 					Notification.show("error inserire un corso valido");

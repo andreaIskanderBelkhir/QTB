@@ -16,14 +16,17 @@ import it.tirocinio.entity.quiz.Quiz;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 @CssImport("./styles/views/hello/hello-view.css")
 public class ActionBar extends HorizontalLayout {
+	private HorizontalLayout h=new HorizontalLayout();
+	private H3 numerocambio;
 
 	public ActionBar(Button button,H3 h){
 		setId("prof-navbar");
 		setPadding(true);
+		this.h.add(h);
 		h.getStyle().set("color", "#ffffff");
 		setVerticalComponentAlignment(Alignment.CENTER,h);
-        add(h);
-    	button.setIcon(new Icon(VaadinIcon.PLUS));
+		add(this.h);
+		button.setIcon(new Icon(VaadinIcon.PLUS));
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		button.getElement().getStyle().set("margin-left", "auto");
 		setVerticalComponentAlignment(Alignment.CENTER,button);
@@ -35,8 +38,8 @@ public class ActionBar extends HorizontalLayout {
 		setVerticalComponentAlignment(Alignment.CENTER,filter);
 		filter.getStyle().set("background-color", "#ffffff");
 		filter.setPlaceholder("cerca corso");
-        add(filter);
-    	button.setIcon(new Icon(VaadinIcon.PLUS));
+		add(filter);
+		button.setIcon(new Icon(VaadinIcon.PLUS));
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		button.getElement().getStyle().set("margin-left", "auto");
 		setVerticalComponentAlignment(Alignment.CENTER,button);
@@ -49,8 +52,8 @@ public class ActionBar extends HorizontalLayout {
 		h3.getStyle().set("color", "#ffffff");
 		setVerticalComponentAlignment(Alignment.CENTER,corsi,h3);
 		corsi.getStyle().set("background-color", "#ffffff");	
-        add(h3,corsi);
-    	button.setIcon(new Icon(VaadinIcon.PLUS));
+		add(h3,corsi);
+		button.setIcon(new Icon(VaadinIcon.PLUS));
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		button.getElement().getStyle().set("margin-left", "auto");
 		setVerticalComponentAlignment(Alignment.CENTER,button);
@@ -63,17 +66,30 @@ public class ActionBar extends HorizontalLayout {
 		h3.getStyle().set("color", "#ffffff");
 		setVerticalComponentAlignment(Alignment.CENTER,quizs,h3);
 		quizs.getStyle().set("background-color", "#ffffff");	
-        add(h3,quizs);
-    	button.setIcon(new Icon(VaadinIcon.PLUS));
+		add(h3,quizs);
+		button.setIcon(new Icon(VaadinIcon.PLUS));
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		button.getElement().getStyle().set("margin-left", "auto");
 		setVerticalComponentAlignment(Alignment.CENTER,button);
 		add(button);
 	}
 	public void AddButtonAtActionBar(Button button){
-    	button.setIcon(new Icon(VaadinIcon.PLUS));
+		button.setIcon(new Icon(VaadinIcon.PLUS));
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);		
 		setVerticalComponentAlignment(Alignment.CENTER,button);
 		add(button);
+	}
+	public void updateNdomanda(int numero) {
+		String a = String.valueOf(numero);
+		if(!(numerocambio==null)){
+			this.h.remove(numerocambio);
+		}
+		if(numero!=0){
+			numerocambio = new H3(a);
+			this.numerocambio.getStyle().set("color", "#ffffff");
+			setVerticalComponentAlignment(Alignment.CENTER,this.numerocambio);
+			this.h.add(this.numerocambio);
+		}
+
 	}
 }

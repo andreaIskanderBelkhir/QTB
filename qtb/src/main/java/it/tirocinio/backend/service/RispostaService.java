@@ -2,6 +2,7 @@ package it.tirocinio.backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,12 @@ public class RispostaService {
 	}
 	public void elimina(Risposta value) {
 		this.rispostaR.delete(value);
+		
+	}
+	public void eliminatutte(Set<Risposta> risposte) {
+		for(Risposta r : risposte){
+			elimina(r);
+		}
 		
 	}
 	

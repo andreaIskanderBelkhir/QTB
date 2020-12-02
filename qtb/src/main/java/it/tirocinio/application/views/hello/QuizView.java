@@ -87,14 +87,14 @@ public class QuizView extends VerticalLayout{
 
 	private void UpdateGridQ() {
 		if(corsi.getValue()==null){
-		gridquiz.setItems(this.quizS.findAllByDocente(this.docente));
-		}
-		else
-		{
-			gridquiz.setItems(this.quizS.findAllByCorso(corsi.getValue()));
-		}
+			gridquiz.setItems(this.quizS.findAllByDocente(this.docente));
+			}
+			else
+			{
+				gridquiz.setItems(this.quizS.findAllByCorso(corsi.getValue()));
+			}
 
-	}
+		}
 
 
 	private void ConfigureGridQ() {

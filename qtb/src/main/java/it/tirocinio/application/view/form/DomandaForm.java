@@ -70,14 +70,14 @@ public class DomandaForm extends FormLayout{
 			TextField descrizione= new TextField("Testo Domanda");
 			Button save = new Button("save");
 			Button cancella = new Button("cancella");
-			
+
 			Notification notification = new Notification(
 					"è stato aggiunto ti prego di aggiornare la pagina o cliccare su un altro corso", 3000,
 					Position.TOP_CENTER);
 			addClassName("Reg-view");
 			setMaxWidth("500px");
 			getStyle().set("margin","0 auto");
-			
+
 			binder.forField(nomeDomanda).withValidator(new StringLengthValidator(
 					"Please add the nome", 1, null)).bind(Domanda::getNomedomanda,Domanda::setNomedomanda);
 			binder.forField(descrizione).withValidator(new StringLengthValidator(
@@ -95,6 +95,7 @@ public class DomandaForm extends FormLayout{
 					this.domandaS.save(domanda);
 					notification.open();
 					dialog.close();
+					binder.removeBean();
 				}
 				else
 					Notification.show("error inserire una domanda valido");
@@ -182,7 +183,7 @@ public class DomandaForm extends FormLayout{
 
 	private void updateid(Domanda value, TextField id) {
 		if(value==null){
-			
+
 		}
 		else{
 			id.setValue(value.getId().toString());
@@ -214,9 +215,15 @@ public class DomandaForm extends FormLayout{
 				if(!(nomeDomandamodifica.getValue()==null)){
 					binder.setBean(nomeDomandamodifica.getValue());
 					if(binder.validate().isOk()){
-						this.quizS.eliminaDomanda(quiz,nomeDomandamodifica.getValue());
+						if(!(nomeDomandamodifica.getValue().getRisposte().isEmpty())){
+							Notification.show("elimina prima le domande grazie");
+						}
+						else{
+						this.quizS.eliminaDomanda(quiz,nomeDomandamodifica.getValue());					
 						this.domandaS.elimina(nomeDomandamodifica.getValue());
 						notification.open();
+						}
+						
 						dialog.close();
 						binder.removeBean();
 					}
@@ -238,10 +245,10 @@ public class DomandaForm extends FormLayout{
 			add(dialog);
 			dialog.open();
 		}
-	
 
-	else
-		Notification.show("scegliere un corso prima");
-}
+
+		else
+			Notification.show("scegliere un corso prima");
+	}
 
 }
