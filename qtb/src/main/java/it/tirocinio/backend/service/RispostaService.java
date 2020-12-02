@@ -57,5 +57,4 @@ public class RispostaService {
 			elimina(r);
 		}	
 	}
-	
 }
