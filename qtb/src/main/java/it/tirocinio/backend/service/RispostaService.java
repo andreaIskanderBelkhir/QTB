@@ -55,8 +55,7 @@ public class RispostaService {
 	public void eliminatutte(Set<Risposta> risposte) {
 		for(Risposta r : risposte){
 			elimina(r);
-		}
-		
+		}	
 	}
 	
 }
