@@ -1,9 +1,12 @@
 package it.tirocinio.backend.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
+import com.vaadin.ui.Notification;
 
 import it.tirocinio.backend.DomandaRepository;
 import it.tirocinio.backend.QuizRepository;
@@ -51,8 +54,8 @@ public class DomandaService {
 		return true;
 	}
 
-	public void modificaDomanda(Domanda domanda, Domanda value) {
-		this.domandaR.delete(value);
+	public void modificaDomanda(Domanda domanda, Domanda domandavecchia) {
+		this.elimina(domandavecchia);
 		this.save(domanda);
 		
 	}
@@ -63,7 +66,21 @@ public class DomandaService {
 	}
 
 	public void eliminaRisposta(Domanda domanda, Risposta risposta) {
-	domanda.getRisposte().remove(risposta);
+		for(Domanda d:findAll()){
+			if(d.equals(domanda))
+				d.getRisposte().remove(risposta);
+		}
 		
+	}
+
+	public List<Risposta> findRisposte(Domanda value) {
+		
+		List<Risposta>lista= new ArrayList<>();
+		for(Domanda dom:findAll()){
+			if(dom.equals(value))
+				lista.addAll(dom.getRisposte());
+		}
+
+		return lista;	
 	}
 }

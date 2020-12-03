@@ -38,6 +38,7 @@ public class QuizView extends VerticalLayout{
 	private QuizService quizS;
 	private DomandaService domandaS;
 	private RispostaService rispostaS;
+	private Quiz quiz;
 	Grid<Quiz> gridquiz = new Grid<>(Quiz.class);
 	Grid<Domanda> griddomanda= new Grid<>(Domanda.class);
 	HorizontalLayout hor=new HorizontalLayout();
@@ -66,9 +67,9 @@ public class QuizView extends VerticalLayout{
 		corsi.addValueChangeListener(e->{
 			UpdateGridQ();
 		});
-		Button creazioneQbutton = new Button("Nuovo",e->quizForm.Nuovo());
-		Button modificaQbutton = new Button("Modifica",e->quizForm.Modifica());
-		Button eliminaQbutton = new Button("Elimina",e->quizForm.Elimina());
+		Button creazioneQbutton = new Button("Nuovo",e->quizForm.Nuovo(gridquiz,corsi.getValue()));
+		Button modificaQbutton = new Button("Modifica",e->quizForm.Modifica(gridquiz,quiz));
+		Button eliminaQbutton = new Button("Elimina",e->quizForm.Elimina(gridquiz, quiz));
 		ActionBar navbar2=new ActionBar(creazioneQbutton,corsi);
 		navbar2.AddButtonAtActionBar(modificaQbutton);
 		navbar2.AddButtonAtActionBar(eliminaQbutton);
@@ -98,14 +99,19 @@ public class QuizView extends VerticalLayout{
 
 
 	private void ConfigureGridQ() {
-		gridquiz.setColumns("nomeQuiz");
+		gridquiz.setColumns("id","nomeQuiz");
 		gridquiz.setWidth("98%");
 		gridquiz.addColumn(quiz->{
 			Corso corso= quiz.getCorsoAppartenenza();
 			return corso==null ? "-": corso.getNomeCorso();
 		}).setHeader("corso del quiz");
+		gridquiz.addColumn(quiz->{
+			return quiz.getTempo();
+		}).setHeader("minuti a disposizione");
 		gridquiz.addComponentColumn(item-> createValited(gridquiz,item)).setHeader("attivato");
-
+		gridquiz.asSingleSelect().addValueChangeListener(event->{
+			this.quiz=event.getValue();
+		});
 	}
 
 

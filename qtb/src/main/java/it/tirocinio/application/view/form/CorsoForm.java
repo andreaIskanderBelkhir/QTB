@@ -3,12 +3,14 @@ package it.tirocinio.application.view.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
@@ -47,31 +49,17 @@ public class CorsoForm extends HorizontalLayout {
 		Dialog dialog = new Dialog();
 		dialog.setCloseOnEsc(false);
 		dialog.setCloseOnOutsideClick(false);
-		Dialog dialogchiusura = new Dialog();
-		dialogchiusura.setCloseOnEsc(false);
-		dialogchiusura.setCloseOnOutsideClick(false);
-		H1 h1 = new H1("E' necessario riavviare la pagina");
-		dialogchiusura.add(h1);
-		Button save = new Button();
-		Button cancella = new Button("cancella");
+		dialog.setWidth("50%");
 		TextField nomeCorso = new TextField();
-		H3 hnome=new H3("inserisci nome corso : ");
-		HorizontalLayout hor1=new HorizontalLayout();
+		H3 hnome=new H3("Nome : ");
 		TextArea descrizioneCorso = new TextArea();
-		H3 hdesc =new H3("inserisci descrizione corso : ");
-		HorizontalLayout hor2=new HorizontalLayout();
-		Notification notification = new Notification(
-				"è stato aggiunto ti prego di aggiornare la pagina ", 3000,
-				Position.TOP_CENTER);
-		addClassName("Reg-view");
-		setMaxWidth("500px");
-		getStyle().set("margin","0 auto");
-
+		H3 hdesc =new H3("Descrizione : ");
+		Button save = new Button("Salva");
+		Button cancella = new Button("Cancella");
 		binder.forField(nomeCorso).withValidator(new StringLengthValidator(
 				"Please add the nome", 1, null)).bind(Corso::getNomeCorso,Corso::setNomeCorso);
 		binder.forField(descrizioneCorso).bind(Corso::getDescrizioneCorso,Corso::setDescrizioneCorso);
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		save.setText("save");
 		save.addClickListener(e->{
 			Corso corso=new Corso();
 			corso.setNomeCorso(nomeCorso.getValue().trim());
@@ -95,124 +83,95 @@ public class CorsoForm extends HorizontalLayout {
 			descrizioneCorso.setValue("");
 			dialog.close();
 		});
-		HorizontalLayout pulsanti = new HorizontalLayout();
-		H3 h=new H3("");
-		pulsanti.add(h,save,cancella);
-		pulsanti.setPadding(true);
-		pulsanti.expand(h);
-		save.getElement().getStyle().set("margin-left", "auto");
-		
-		
-		hor1.add(hnome,nomeCorso);
-		hor1.setVerticalComponentAlignment(Alignment.CENTER,hnome,nomeCorso);
-		hor2.add(hdesc,descrizioneCorso);
-		vert.add(hor1,hor2,pulsanti);
+
+		HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
+		creaTitoloform(vert,"Crea un corso");
+		creaRigaform(vert,hnome,nomeCorso);
+		creaRigaform(vert,hdesc,descrizioneCorso);
+		vert.add(pulsanti);
 		vert.setHorizontalComponentAlignment(Alignment.END,pulsanti);
-	
 		dialog.add(vert);
-		add(dialog,dialogchiusura);
+		add(dialog);
 		dialog.open();
 	}
 
-	public void Modifica(){
-		FormLayout formlayout=new FormLayout();
-		Dialog dialog = new Dialog();
-		dialog.setCloseOnEsc(false);
-		dialog.setCloseOnOutsideClick(false);
-		Button save = new Button();
-		Button cancella = new Button("cancella");
-		TextField id = new TextField("id corso");
-		id.setPattern("[0-9.,]*");
-		id.setEnabled(false);
-		TextField nomeCorso = new TextField("nome Corso");
-		TextArea descrizioneCorso = new TextArea("Descrivi brevemente il corso");
-		Notification notification = new Notification(
-				"è stato modificato ti prego di aggiornare la pagina ", 3000,
-				Position.TOP_CENTER);
-		addClassName("Reg-view");
-		setMaxWidth("500px");
-		getStyle().set("margin","0 auto");
-		ComboBox<Corso> nomeCorsomodifica= new ComboBox<>();
-		nomeCorsomodifica.setLabel("scegli il corso da modificare");
-		List<Corso> corsi= this.corsoS.findbyDocente(docente);
-		nomeCorsomodifica.setItemLabelGenerator(Corso::getNomeCorso);
-		nomeCorsomodifica.setItems(corsi);
-		nomeCorsomodifica.addValueChangeListener(e->updateid(nomeCorsomodifica.getValue(),id));
-		binder.forField(nomeCorso).withValidator(new StringLengthValidator(
-				"Please add the nome", 1, null)).bind(Corso::getNomeCorso,Corso::setNomeCorso);
-		binder.forField(descrizioneCorso).bind(Corso::getDescrizioneCorso,Corso::setDescrizioneCorso);
-		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		save.setText("modifica");		
-		save.addClickListener(e->{
-			if((!(nomeCorsomodifica.getValue()==null))){
-				Corso corso=nomeCorsomodifica.getValue();
-				corso.setNomeCorso(nomeCorso.getValue().trim());
-				corso.setDescrizioneCorso(descrizioneCorso.getValue().toString());
-				binder.setBean(corso);
-				if((binder.validate().isOk())){	
-					this.corsoS.modificaCorso(corso,nomeCorsomodifica.getValue());			
-					notification.open();
-					dialog.close();
-					binder.removeBean();
 
+	public void Modifica(Grid<Corso> gridtenuti,Corso corso){
+		if(!(corso==null)){
+			VerticalLayout ver =new VerticalLayout();
+			Dialog dialog = new Dialog();
+			dialog.setWidth("50%");
+			dialog.setCloseOnEsc(false);
+			dialog.setCloseOnOutsideClick(false);
+			H3 hnome=new H3("Nome : ");
+			TextField nomeCorso = new TextField();
+			nomeCorso.setValue(corso.getNomeCorso());
+			H3 hdesc=new H3("Descrizione : ");
+			TextArea descrizioneCorso = new TextArea();
+			descrizioneCorso.setValue(corso.getDescrizioneCorso());
+			Button save = new Button("Salva");
+			Button cancella = new Button("Cancella");
+			binder.forField(nomeCorso).withValidator(new StringLengthValidator(
+					"Please add the nome", 1, null)).bind(Corso::getNomeCorso,Corso::setNomeCorso);
+			binder.forField(descrizioneCorso).bind(Corso::getDescrizioneCorso,Corso::setDescrizioneCorso);
+			save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);	
+			save.addClickListener(e->{
+				Corso corsomodificato=corso;
+				corsomodificato.setNomeCorso(nomeCorso.getValue().trim());
+				corsomodificato.setDescrizioneCorso(descrizioneCorso.getValue().toString());
+				binder.setBean(corsomodificato);
+				if((binder.validate().isOk())){	
+					this.corsoS.modificaCorso(corsomodificato,corso);			
+					dialog.close();
+					gridtenuti.setItems(this.corsoS.findbyDocente(docente));
+					binder.removeBean();
 				}
 				else
 					Notification.show("error inserire un corso valido");
-			}
-			else
-				Notification.show("error inserire un corso valido");
-		});
-		cancella.addThemeVariants(ButtonVariant.LUMO_ERROR);
-		cancella.addClickListener(e->{
-			nomeCorso.setValue("");
-			descrizioneCorso.setValue("");
-			dialog.close();
-		});		
-		formlayout.add(nomeCorsomodifica,id,nomeCorso,descrizioneCorso,save,cancella);
-		dialog.add(formlayout);
-		add(dialog);
-		dialog.open();
+			});
+			cancella.addThemeVariants(ButtonVariant.LUMO_ERROR);
+			cancella.addClickListener(e->{
+				nomeCorso.setValue("");
+				descrizioneCorso.setValue("");
+				dialog.close();
+			});		
+			HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
+			creaTitoloform(ver,"Modifica il corso con ID : ",corso);
+			creaRigaform(ver,hnome,nomeCorso);
+			creaRigaform(ver,hdesc,descrizioneCorso);
+			ver.add(pulsanti);
+			ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
+			dialog.add(ver);
+			add(dialog);
+			dialog.open();
+		}
+		else
+			Notification.show("clicca sul  corso prima");
+	}
 
-	}
-	private void updateid(Corso value, TextField id) {
-		if(value==null){
-			
-		}
-		else{
-			id.setValue(value.getId().toString());
-		}
-	}
-	public void Elimina() {
-		FormLayout formlayout=new FormLayout();
+	public void Elimina(Grid<Corso> gridtenuti,Corso corso) {
+		VerticalLayout ver = new VerticalLayout();
 		Dialog dialog = new Dialog();
+		dialog.setWidth("50%");
 		dialog.setCloseOnEsc(false);
 		dialog.setCloseOnOutsideClick(false);
-		Button save = new Button();
-		Button cancella = new Button("cancella");
-		Notification notification = new Notification(
-				"è stato eliminato ti prego di aggiornare la pagina ", 3000,
-				Position.TOP_CENTER);
-		addClassName("Reg-view");
-		setMaxWidth("500px");
-		getStyle().set("margin","0 auto");
-		ComboBox<Corso> nomeCorsomodifica= new ComboBox<>();
-		nomeCorsomodifica.setLabel("scegli il corso da eliminare");
-		List<Corso> corsi= this.corsoS.findbyDocente(docente);
-		nomeCorsomodifica.setItemLabelGenerator(Corso::getNomeCorso);
-		nomeCorsomodifica.setItems(corsi);
+		Button save = new Button("Elimina");
+		Button cancella = new Button("Cancella");
 		save.addThemeVariants(ButtonVariant.LUMO_ERROR);
-		save.setText("elimina");
 		save.addClickListener(e->{
-			if(!(nomeCorsomodifica.getValue()==null)){
-				Corso corso=nomeCorsomodifica.getValue();
+			if(!(corso==null)){
 				binder.setBean(corso);
 				if(binder.validate().isOk()){					
-					this.utenteS.DeleteCorsoperdoc(nomeCorsomodifica.getValue());
-					this.utenteS.DeleteCorso(nomeCorsomodifica.getValue());				
-					this.corsoS.elimina(nomeCorsomodifica.getValue());				
-					notification.open();
-					dialog.close();
-					binder.removeBean();
+					if(corso.getQuizDelcorso().isEmpty()){
+						this.utenteS.DeleteCorsoperdoc(corso);
+						this.utenteS.DeleteCorso(corso);				
+						this.corsoS.elimina(corso);				
+						dialog.close();
+						gridtenuti.setItems(this.corsoS.findbyDocente(docente));
+						binder.removeBean();
+					}
+					else
+						Notification.show("elimina i quiz prima");
 				}
 				else{
 					Notification.show("error inserire un corso valido");
@@ -227,10 +186,56 @@ public class CorsoForm extends HorizontalLayout {
 		cancella.addClickListener(e->{
 			dialog.close();
 		});	
-		formlayout.add(nomeCorsomodifica,save,cancella);
-		dialog.add(formlayout);
-		add(dialog);
+		HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
+		creaTitoloform(ver,"Eliminare il corso con ID : ",corso);
+		ver.add(pulsanti);
+		ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
+		dialog.add(ver);
 		dialog.open();
+	}
+
+
+	HorizontalLayout creazionePulsanti(Button save,Button cancella){
+		HorizontalLayout pulsanti = new HorizontalLayout();
+		H3 h=new H3("");
+		pulsanti.add(h,save,cancella);
+		pulsanti.setPadding(true);
+		pulsanti.expand(h);
+		save.getElement().getStyle().set("margin-left", "auto");
+		return pulsanti;
+	}
+
+
+	void creaRigaform(VerticalLayout ver, H3 string, Component component){
+		HorizontalLayout h= new HorizontalLayout();
+		Div div1=new Div();
+		Div div2=new Div();
+		h.setWidth("395px");
+		h.setMargin(false);
+		h.setSpacing(true);
+		h.setVerticalComponentAlignment(Alignment.CENTER,div1,div2);    
+		h.expand(div1);
+		div1.add(string);
+		component.getElement().getStyle().set("margin-left", "auto");
+		div2.add(component);	
+		div1.getElement().getStyle().set("margin-right", "60px");
+		h.setAlignItems(Alignment.CENTER);
+		h.add(div1,div2);
+		ver.add(h);
+	}
+	private void creaTitoloform(VerticalLayout vert, String string) {
+		H1 h=new H1(string);
+		vert.setHorizontalComponentAlignment(Alignment.CENTER,h);
+		vert.add(h);
+
+	}
+
+	private void creaTitoloform(VerticalLayout ver, String string, Corso corso) {
+		H1 h=new H1(string);
+		h.add(String.valueOf(corso.getId()));
+		ver.setHorizontalComponentAlignment(Alignment.CENTER,h);
+		ver.add(h);
+
 	}
 }
 

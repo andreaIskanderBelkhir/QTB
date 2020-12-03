@@ -3,14 +3,22 @@ package it.tirocinio.application.view.form;
 import java.util.HashSet;
 import java.util.List;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -45,38 +53,33 @@ public class RispostaForm extends FormLayout{
 	}
 
 
-	public  void Nuovo(Quiz quiz) {
-		if(!(quiz==null)){
-			FormLayout formlayout=new FormLayout();
+	public  void Nuovo(Quiz quiz, Domanda domanda, Grid<Risposta> gridrisposta) {
+		if((!(quiz==null))&&(!(domanda==null))){
+			VerticalLayout ver = new VerticalLayout();
 			Dialog dialog = new Dialog();
+			dialog.setWidth("50%");
 			dialog.setCloseOnEsc(false);
 			dialog.setCloseOnOutsideClick(false);
-			TextField nomeRisposta = new TextField("Risposta");
-			Checkbox giusto = new Checkbox("è giusta?");
+			TextField nomeRisposta = new TextField();
+			H3 hnome = new H3("Nome : ");
+			H3 hgiusto=new H3("Giusta ? ");
+			Checkbox giusto = new Checkbox();
 			giusto.setValue(false);
-			Button save = new Button("save");
-			Button cancella = new Button("cancella");
-			ComboBox<Domanda> nomeDomanda= new ComboBox<>();
-			Notification notification = new Notification(
-					"è stato aggiunto ti prego di aggiornare la pagina ", 3000,
-					Position.TOP_CENTER);
-			addClassName("Reg-view");
-			setMaxWidth("500px");
-			getStyle().set("margin","0 auto");
-			PopulateBox(nomeDomanda,quiz);
+			Button save = new Button("Salva");
+			Button cancella = new Button("Cancella");
 			binder.forField(nomeRisposta).withValidator(new StringLengthValidator(
 					"Please add the risposta", 1, null)).bind(Risposta::getRisposta,Risposta::setRisposta);
 			save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-			save.setText("save");
 			save.addClickListener(e->{
 				Risposta risposta = new Risposta();
 				risposta.setRisposta(nomeRisposta.getValue());
-				risposta.setDomandaApparteneza(nomeDomanda.getValue());
+				risposta.setDomandaApparteneza(domanda);
 				risposta.setGiusta(giusto.getValue());
+				domanda.getRisposte().add(risposta);
 				binder.setBean(risposta);
 				if(binder.validate().isOk()){
 					this.rispostaS.save(risposta);
-					notification.open();
+					gridrisposta.setItems(this.domandaS.findRisposte(domanda));
 					dialog.close();
 					binder.removeBean();
 				}
@@ -89,147 +92,152 @@ public class RispostaForm extends FormLayout{
 				nomeRisposta.setValue("");
 				dialog.close();
 			});
-			formlayout.add(nomeDomanda,nomeRisposta,giusto,save,cancella);
-			dialog.add(formlayout);
+			HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
+			creaTitoloform(ver,"Crea una risposta");
+			creaRigaform(ver,hnome,nomeRisposta);
+			creaRigaform(ver,hgiusto,giusto);
+			ver.add(pulsanti);
+			ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
+			dialog.add(ver);
 			add(dialog);
 			dialog.open();
 		}
 		else
-			Notification.show("scegliere un corso prima");
+			Notification.show("scegliere un test e una domanda prima");
 	}
 
 
-	private void PopulateBox(ComboBox<Domanda> nomeDomanda,Quiz quiz) {
-		nomeDomanda.setLabel("scegli su quale domanda");
-		List<Domanda> domande= this.domandaS.findByQuiz(quiz);
-		nomeDomanda.setItemLabelGenerator(Domanda::getNomedomanda);
-		nomeDomanda.setItems(domande);	
 
-	}
-
-
-	public  void Modifica(Quiz quiz) {
-		FormLayout formlayout=new FormLayout();
+	public  void Modifica(Quiz quiz, Risposta rispostavecchia, Grid<Risposta> gridrisposta) {
+		if(!(rispostavecchia==null)){
+		VerticalLayout ver = new VerticalLayout();
 		Dialog dialog = new Dialog();
+		dialog.setWidth("50%");
 		dialog.setCloseOnEsc(false);
 		dialog.setCloseOnOutsideClick(false);
-		Button save = new Button();
-		Button cancella = new Button("cancella");
-		TextField nomeRisposta = new TextField("Risposta");
-		Checkbox giusto = new Checkbox("è giusta?");
-		TextField id = new TextField("id Risposta");
-		id.setPattern("[0-9.,]*");
-		id.setEnabled(false);
-		Notification notification = new Notification(
-				"è stato modificato ti prego di aggiornare la pagina ", 3000,
-				Position.TOP_CENTER);
-		addClassName("Reg-view");
-		setMaxWidth("500px");
-		getStyle().set("margin","0 auto");
-		ComboBox<Domanda> domande=new ComboBox<>();
-		ComboBox<Risposta> risposte=new ComboBox<>();
-		PopulateBox(domande,quiz);
-		domande.addValueChangeListener(e->PopulateBoxRisposte(risposte,domande.getValue()));
+		Button save = new Button("Salva");
+		Button cancella = new Button("Cancella");
+		H3 hnome =new H3("Nome : ");
+		H3 hgiusto=new H3("Giusta ? ");
+		TextField nomeRisposta = new TextField();
+		nomeRisposta.setValue(rispostavecchia.getRisposta());
+		Checkbox giusto = new Checkbox();
+		giusto.setValue(rispostavecchia.getGiusta());
 		binder.forField(nomeRisposta).withValidator(new StringLengthValidator(
 				"Please add the risposta", 1, null)).bind(Risposta::getRisposta,Risposta::setRisposta);
-		risposte.addValueChangeListener(e->updateid(risposte.getValue(),id));
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		save.setText("modifica");	
-		save.addClickListener(e->{
-			if(!(risposte.getValue()==null)){
-				Risposta risposta=risposte.getValue();
+		save.addClickListener(e->{			
+				Risposta risposta=rispostavecchia;
 				risposta.setRisposta(nomeRisposta.getValue());
 				risposta.setGiusta(giusto.getValue());
 				binder.setBean(risposta);
 				if((binder.validate().isOk())){	
-					this.rispostaS.modifica(risposta,risposte.getValue());		
-					notification.open();
+					this.rispostaS.modifica(risposta,rispostavecchia);	
+					gridrisposta.setItems(this.domandaS.findRisposte(risposta.getDomandaApparteneza()));
 					dialog.close();
 					binder.removeBean();
 				}
 				else
-					Notification.show("error inserire una risposta valido");
-			}
-			else
-				Notification.show("error inserire una risposta valido");		
+					Notification.show("error inserire una risposta valido");	
 		});
 		cancella.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		cancella.addClickListener(e->{
 			nomeRisposta.setValue("");
 			dialog.close();
 		});		
-		formlayout.add(domande,risposte,id,nomeRisposta,giusto,save,cancella);
-		dialog.add(formlayout);
+		HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
+		creaTitoloform(ver,"Modifica la risposta con ID : ",rispostavecchia);
+		creaRigaform(ver,hnome,nomeRisposta);
+		creaRigaform(ver,hgiusto,giusto);
+		ver.add(pulsanti);
+		ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
+		dialog.add(ver);
 		add(dialog);
 		dialog.open();
-
+		}
+		else
+			Notification.show("clicca su una risposta prima");
 	}
 
-
-
-
-	private void updateid(Risposta value, TextField id) {
-		if(value==null){
-
-		}
-		else{
-			id.setValue(value.getId().toString());
-		}
-	}
-
-
-	private void PopulateBoxRisposte(ComboBox<Risposta> risposte, Domanda value) {
-		risposte.setLabel("scegli quale risposta");
-		if(!(value==null)){
-			risposte.setItemLabelGenerator(Risposta::getRisposta);
-			risposte.setItems(this.rispostaS.findByDomanda(value));
-		}
-
-	}
-
-
-	public  void Elimina(Quiz quiz) {
-		FormLayout formlayout=new FormLayout();
+	public  void Elimina(Grid<Risposta> gridrisposta,Risposta risposta) {
+		if(!(risposta==null)){
+		VerticalLayout ver = new VerticalLayout();
 		Dialog dialog = new Dialog();
+		dialog.setWidth("50%");
 		dialog.setCloseOnEsc(false);
 		dialog.setCloseOnOutsideClick(false);
-		Button save = new Button();
-		Button cancella = new Button("cancella");
-		Notification notification = new Notification(
-				"è stato modificato ti prego di aggiornare la pagina ", 3000,
-				Position.TOP_CENTER);
-		addClassName("Reg-view");
-		setMaxWidth("500px");
-		getStyle().set("margin","0 auto");
-		ComboBox<Domanda> domande=new ComboBox<>();
-		ComboBox<Risposta> risposte=new ComboBox<>();
-		PopulateBox(domande,quiz);
-		domande.addValueChangeListener(e->PopulateBoxRisposte(risposte,domande.getValue()));
+		Button save = new Button("Elimina");
+		Button cancella = new Button("Cancella");
 		save.addThemeVariants(ButtonVariant.LUMO_ERROR);
-		save.setText("elimina");	
 		save.addClickListener(e->{
-			if(!(risposte.getValue()==null)){
-				binder.setBean(risposte.getValue());
+				binder.setBean(risposta);
 				if((binder.validate().isOk())){	
-					this.domandaS.eliminaRisposta(domande.getValue(),risposte.getValue());
-					this.rispostaS.elimina(risposte.getValue());
-					notification.open();
+					this.domandaS.eliminaRisposta(risposta.getDomandaApparteneza(),risposta);
+					this.rispostaS.elimina(risposta);
+					gridrisposta.setItems(this.domandaS.findRisposte(risposta.getDomandaApparteneza()));
 					dialog.close();
 					binder.removeBean();
 				}
 				else
-					Notification.show("error inserire una risposta valido");
-			}
-			else
-				Notification.show("error inserire una risposta valido");		
+					Notification.show("error inserire una risposta valido");	
 		});
 		cancella.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
 		cancella.addClickListener(e->{	
 			dialog.close();
 		});		
-		formlayout.add(domande,risposte,save,cancella);
-		dialog.add(formlayout);
+		HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
+		creaTitoloform(ver,"Eliminare la risposta con ID : ",risposta);
+		ver.add(pulsanti);
+		ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
+		dialog.add(ver);
 		add(dialog);
 		dialog.open();
+		}
+		else
+			Notification.show("scegli la risposta prima");
+	}
+	
+	
+	HorizontalLayout creazionePulsanti(Button save,Button cancella){
+		HorizontalLayout pulsanti = new HorizontalLayout();
+		H3 h=new H3("");
+		pulsanti.add(h,save,cancella);
+		pulsanti.setPadding(true);
+		pulsanti.expand(h);
+		save.getElement().getStyle().set("margin-left", "auto");
+		return pulsanti;
+	}
+
+
+	void creaRigaform(VerticalLayout ver, H3 string, Component component){
+		HorizontalLayout h= new HorizontalLayout();
+		Div div1=new Div();
+		Div div2=new Div();
+		h.setWidth("395px");
+		h.setMargin(false);
+		h.setSpacing(true);
+		h.setVerticalComponentAlignment(Alignment.CENTER,div1,div2);    
+		h.expand(div1);
+		div1.add(string);
+		component.getElement().getStyle().set("margin-left", "auto");
+		div2.add(component);	
+		div1.getElement().getStyle().set("margin-right", "60px");
+		h.setAlignItems(Alignment.CENTER);
+		h.add(div1,div2);
+		ver.add(h);
+	}
+	private void creaTitoloform(VerticalLayout vert, String string) {
+		H1 h=new H1(string);
+		vert.setHorizontalComponentAlignment(Alignment.CENTER,h);
+		vert.add(h);
+
+	}
+
+	private void creaTitoloform(VerticalLayout ver, String string, Risposta id) {
+		H1 h=new H1(string);
+		h.add(String.valueOf(id.getId()));
+		ver.setHorizontalComponentAlignment(Alignment.CENTER,h);
+		ver.add(h);
+
 	}
 }

@@ -98,7 +98,6 @@ public class QuizService {
 		return possibili;
 	}
 	public void modificaQuiz(Quiz quiz, Quiz valueVecchio) {
-
 		this.quizr.delete(valueVecchio);
 		this.save(quiz);
 

@@ -33,6 +33,7 @@ import it.tirocinio.entity.quiz.Risposta;
 @PageTitle("Gestione delle domande")
 @CssImport("./styles/views/hello/hello-view.css")
 public class DomandeView extends VerticalLayout {
+	private Risposta risposta;
 	private String nome ;
 	private Utente docente;
 	private CorsoService corsoS;
@@ -40,6 +41,7 @@ public class DomandeView extends VerticalLayout {
 	private QuizService quizS;
 	private DomandaService domandaS;
 	private RispostaService rispostaS;
+	Domanda domanda;
 	HorizontalLayout hor=new HorizontalLayout();
 	Grid<Domanda> griddomanda= new Grid<>(Domanda.class);
 	Grid<Risposta> gridrisposta= new Grid<>(Risposta.class);
@@ -66,9 +68,9 @@ public class DomandeView extends VerticalLayout {
 			UpdateGridD();
 		});
 		DomandaForm domandaForm=new DomandaForm(domandaS, corsoS, quizS, docente);
-		Button creazioneDbutton = new Button("Nuovo",e->domandaForm.Nuovo(quizs.getValue()));
-		Button modificaDbutton = new Button("Modifica",e->domandaForm.Modifica(quizs.getValue()));
-		Button eliminaDbutton = new Button("Elimina",e->domandaForm.Elimina(quizs.getValue()));
+		Button creazioneDbutton = new Button("Nuovo",e->domandaForm.Nuovo(quizs.getValue(),griddomanda));
+		Button modificaDbutton = new Button("Modifica",e->domandaForm.Modifica(griddomanda,this.domanda));
+		Button eliminaDbutton = new Button("Elimina",e->domandaForm.Elimina(quizs.getValue(),this.domanda,griddomanda));
 		ActionBar navbar2=new ActionBar(creazioneDbutton,quizs,1);
 		navbar2.AddButtonAtActionBar(modificaDbutton);
 		navbar2.AddButtonAtActionBar(eliminaDbutton);
@@ -84,9 +86,9 @@ public class DomandeView extends VerticalLayout {
 		Div div2 =new Div();
 		div2.setSizeFull();
 		RispostaForm rispostaForm = new RispostaForm(quizS, corsoS, domandaS, rispostaS, utenteS);
-		Button creazioneRbutton = new Button("Nuovo",e->rispostaForm.Nuovo(quizs.getValue()));
-		Button modificaRbutton = new Button("Modifica",e->rispostaForm.Modifica(quizs.getValue()));
-		Button eliminaRbutton = new Button("Elimina",e->rispostaForm.Elimina(quizs.getValue()));
+		Button creazioneRbutton = new Button("Nuovo",e->rispostaForm.Nuovo(quizs.getValue(),this.domanda,gridrisposta));
+		Button modificaRbutton = new Button("Modifica",e->rispostaForm.Modifica(quizs.getValue(),this.risposta,gridrisposta));
+		Button eliminaRbutton = new Button("Elimina",e->rispostaForm.Elimina(gridrisposta,this.risposta));
 		H3 h3=new H3("Risposte : ");
 		ActionBar navbarRisposte=new ActionBar(creazioneRbutton,h3);
 		navbarRisposte.AddButtonAtActionBar(modificaRbutton);
@@ -100,8 +102,11 @@ public class DomandeView extends VerticalLayout {
 	}
 
 	private void ConfigureGridR() {
-		gridrisposta.setColumns("risposta");
+		gridrisposta.setColumns("id","risposta");
 		gridrisposta.addComponentColumn(item-> createCheck(gridrisposta,item)).setHeader("Corretta");	
+		gridrisposta.asSingleSelect().addValueChangeListener(event->{
+			this.risposta=event.getValue();	
+		});
 	}
 
 	private Checkbox createCheck(Grid<Risposta> gridrisposta2, Risposta item) {
@@ -121,9 +126,18 @@ public class DomandeView extends VerticalLayout {
 			}	
 	}
 	private void ConfigureGridD() {
-		griddomanda.setColumns("nomedomanda","descrizionedomanda");
+		griddomanda.setColumns("id");
+		griddomanda.addColumn(domanda->{
+			return domanda.getNomedomanda();
+		}).setHeader("Nome");
+		griddomanda.addColumn(domanda->{
+			return domanda.getDescrizionedomanda();
+		}).setHeader("Testo");
 		griddomanda.setWidth("98%");
-		griddomanda.asSingleSelect().addValueChangeListener(event->updateGridR(event.getValue()));
+		griddomanda.asSingleSelect().addValueChangeListener(event->{
+		this.domanda=event.getValue();	
+		updateGridR(event.getValue());
+		});
 	}
 
 	private void updateGridR(Domanda value) {
@@ -131,7 +145,7 @@ public class DomandeView extends VerticalLayout {
 			
 		}
 		else{
-			gridrisposta.setItems(this.rispostaS.findByDomanda(value));
+			gridrisposta.setItems(this.domandaS.findRisposte(value));
 		}
 	}
 }

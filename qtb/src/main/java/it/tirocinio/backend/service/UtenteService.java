@@ -138,9 +138,7 @@ public class UtenteService  {
 
 	public void DeleteCorsoperdoc(Corso value) {
 		Utente doc=value.getDocente();
-		this.utenteRepository.delete(doc);
 		doc.getCorsifrequentati().remove(value);
-		this.utenteRepository.save(doc);
 	}
 
 	private void DeleteQuizperdoc(Quiz value) {

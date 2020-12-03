@@ -25,7 +25,7 @@ public class Quiz extends AbstractEntity implements Cloneable {
 	@ManyToOne
 	private Corso corsoAppartenenza;
 
-	private String tempo;
+	private double tempo;
 	private Boolean attivato;
 	
 	@OneToMany(mappedBy="quizapparteneza",fetch=FetchType.EAGER)
@@ -35,11 +35,11 @@ public class Quiz extends AbstractEntity implements Cloneable {
 	
 	
 	
-	public String getTempo() {
+	public double getTempo() {
 		return tempo;
 	}
-	public void setTempo(String tempo) {
-		this.tempo = tempo;
+	public void setTempo(Double double1) {
+		this.tempo = double1;
 	}
 	public Corso getCorsoAppartenenza() {
 		return corsoAppartenenza;

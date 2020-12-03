@@ -54,9 +54,9 @@ public class ProfessoreView extends VerticalLayout{
 		}	
 		this.docente=this.utenteS.findByName(nome);
 		CorsoForm corsoForm = new CorsoForm(this.corsoS,this.utenteS,docente);		
-		Button eliminaCbutton= new Button("Elimina",e->corsoForm.Elimina());
+		Button eliminaCbutton= new Button("Elimina",e->corsoForm.Elimina(gridtenuti, corso));
 		Button creazioneCbutton = new Button("Nuovo",e->corsoForm.Nuovo(gridtenuti));
-		Button modificaCbutton=new Button("Modifica",e->corsoForm.Modifica());
+		Button modificaCbutton=new Button("Modifica",e->corsoForm.Modifica(gridtenuti,this.corso));
 		TextField filter = new TextField();
 		configureFilter(filter);
 		ActionBar navbar=new ActionBar(creazioneCbutton,filter);
@@ -105,16 +105,18 @@ public class ProfessoreView extends VerticalLayout{
 
 	private void configureGridCorsiAdmin() {
 		gridtenuti.setSizeFull();
-		gridtenuti.removeColumnByKey("id");
 		gridtenuti.removeColumnByKey("utentifreq");
 		gridtenuti.removeColumnByKey("docente");
 		gridtenuti.removeColumnByKey("quizDelcorso");
-		gridtenuti.setColumns("nomeCorso","descrizioneCorso");	
+		gridtenuti.setColumns("id","nomeCorso","descrizioneCorso");	
 		gridtenuti.addColumn(corso->{
 			Utente docente= corso.getDocente();
 			return docente==null ? "-": docente.getNome();
 		}).setHeader("Docente del corso");
 		gridtenuti.getColumns().forEach(c->c.setAutoWidth(true));
+		gridtenuti.asSingleSelect().addValueChangeListener(event->{
+			this.corso=event.getValue();
+		});
 
 
 	}
@@ -128,13 +130,15 @@ public class ProfessoreView extends VerticalLayout{
 
 	private void configureGridCorsiDocente() {
 		gridtenuti.setSizeFull();
-		gridtenuti.removeColumnByKey("id");
+
 		gridtenuti.removeColumnByKey("utentifreq");
 		gridtenuti.removeColumnByKey("docente");
 		gridtenuti.removeColumnByKey("quizDelcorso");
-		gridtenuti.setColumns("nomeCorso","descrizioneCorso");		
+		gridtenuti.setColumns("id","nomeCorso","descrizioneCorso");		
 		gridtenuti.getColumns().forEach(c->c.setAutoWidth(true));
-
+		gridtenuti.asSingleSelect().addValueChangeListener(event->{
+			this.corso=event.getValue();
+		});
 
 	}
 

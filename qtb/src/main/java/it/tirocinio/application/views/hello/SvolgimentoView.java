@@ -87,7 +87,8 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			domande.addAll(this.quiz.getDomande());
 			rispostedate=new Risposta[domande.size()];
 			if(!(domande.isEmpty())){
-				timer = new SimpleTimer(new BigDecimal(this.quiz.getTempo()));
+				String tempo=String.valueOf(quiz.getTempo()*60);
+				timer = new SimpleTimer(new BigDecimal(tempo));
 				timer.setHours(true);
 				timer.start();
 				timer.addTimerEndEvent(e->{
