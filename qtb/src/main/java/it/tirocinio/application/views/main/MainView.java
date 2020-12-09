@@ -96,6 +96,7 @@ public class MainView extends AppLayout {
         div1.add(this.nome + "  ");
         layout.add(div1);
         layout.add(new Image("images/user.png", "Avatar"));
+ 
         layout.add(logout);
         return layout;
     }

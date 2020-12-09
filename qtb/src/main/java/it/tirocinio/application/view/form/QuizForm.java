@@ -15,10 +15,13 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -41,6 +44,7 @@ public class QuizForm extends FormLayout{
 	private CorsoService corsoS;
 	private UtenteService utenteS;
 	private Utente docente;
+	private Boolean tempModalita;
 
 
 	public QuizForm(QuizService q,CorsoService cs,UtenteService us,Utente u){
@@ -57,40 +61,100 @@ public class QuizForm extends FormLayout{
 			dialog.setCloseOnEsc(false);
 			dialog.setCloseOnOutsideClick(false);
 			dialog.setWidth("50%");
+			tempModalita=false;
 			H3 hnome=new H3("Nome : ");	
 			TextField nomeQuiz = new TextField();
 			Button save = new Button("Salva");
 			Button cancella = new Button("Cancella");
 			H3 htempo=new H3("Tempo a diposizione : ");
 			NumberField numberField = new NumberField();
+			H3 hgiusto=new H3("Valore risposta esatta : ");
+			NumberField numbergiusto = new NumberField();
+			H3 hsbagliata=new H3("Valore risposta sbagliata : ");
+			NumberField numbersbagliata= new NumberField();
 			numberField.setValue((double) 60);
+			numbergiusto.setValue((double) 1);
+			numbersbagliata.setValue((double) 0.5);
+			H3 hsogliaValore=new H3("Valore Soglia : ");
+			H3 hsogliaPercentuale=new H3("Valore Soglia (0~100)% : ");
+			RadioButtonGroup<String> modalita= new RadioButtonGroup<>();
+			modalita.setItems("valore","percentuale");
+			modalita.setValue("valore");
+			H3 hmodalita =new H3("Modalità di superamento : ");		
+			NumberField numberSoglia = new NumberField();
+			NumberField numberPercentuale = new NumberField();
+			numberPercentuale.setPrefixComponent(new Icon(VaadinIcon.BOOK_PERCENT));
+			numberPercentuale.setMin(0);
+			numberPercentuale.setMax(100);
+			hsogliaPercentuale.setVisible(false);
+			numberPercentuale.setVisible(false);
+			modalita.addValueChangeListener(e->{
+				if(e.getValue().equals("percentuale")){
+					tempModalita=true;
+					hsogliaPercentuale.setVisible(true);
+					numberPercentuale.setVisible(true);
+					hsogliaValore.setVisible(false);
+					hgiusto.setVisible(false);
+					hsbagliata.setVisible(false);
+					numberSoglia.setVisible(false);
+					numbergiusto.setVisible(false);
+					numbersbagliata.setVisible(false);
+
+				}
+				else
+				{
+					tempModalita=false;
+					hsogliaPercentuale.setVisible(false);
+					numberPercentuale.setVisible(false);
+					hsogliaValore.setVisible(true);
+					hgiusto.setVisible(true);
+					hsbagliata.setVisible(true);
+					numberSoglia.setVisible(true);
+					numbergiusto.setVisible(true);
+					numbersbagliata.setVisible(true);
+				}
+			});
 			binder.forField(nomeQuiz).withValidator(new StringLengthValidator(
 					"Please add the nome", 1, null)).bind(Quiz::getNomeQuiz,Quiz::setNomeQuiz);
 			save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 			save.addClickListener(e->{
-				Quiz quiz = new Quiz();
-				if(numberField.getValue()==null)
-				{
-					quiz.setTempo((double) 60);
-				}
-				else{
+				if((!(numberSoglia.isEmpty())) || (!(numberPercentuale.isEmpty()))){
+					Quiz quiz = new Quiz();
+					if(numberField.getValue()==null)
+					{
+						quiz.setTempo((double) 60);
+					}
+					else{
 
-					quiz.setTempo(numberField.getValue());
+						quiz.setTempo(numberField.getValue());
+					}
+					quiz.setNomeQuiz(nomeQuiz.getValue().trim());
+					quiz.setCorsoAppartenenza(corso);
+					quiz.setAttivato(false);
+					quiz.setDomande(new HashSet<Domanda>());
+					quiz.setValoreGiusta(numbergiusto.getValue());
+					quiz.setValoreSbagliata(numbersbagliata.getValue());
+					quiz.setModalitaPercentuale(tempModalita);	
+					if(tempModalita){
+						quiz.setSogliaPercentuale(numberPercentuale.getValue());
+					}
+					else
+						quiz.setSoglia(numberSoglia.getValue());
+
+					binder.setBean(quiz);
+					if((binder.validate().isOk())&& this.quizS.quizNonEsistente(quiz)){
+
+						this.quizS.save(quiz);
+						gridquiz.setItems(this.quizS.findAllByDocente(this.docente));
+						dialog.close();
+						binder.removeBean();
+					}
+					else
+						Notification.show("error inserire un quiz valido");
 				}
-				quiz.setNomeQuiz(nomeQuiz.getValue().trim());
-				quiz.setCorsoAppartenenza(corso);
-				quiz.setAttivato(false);
-				quiz.setDomande(new HashSet<Domanda>());
-				binder.setBean(quiz);
-				if((binder.validate().isOk())&& this.quizS.quizNonEsistente(quiz)){
-					this.quizS.save(quiz);
-					gridquiz.setItems(this.quizS.findAllByDocente(this.docente));
-					dialog.close();
-					binder.removeBean();
-				}
+
 				else
-					Notification.show("error inserire un quiz valido");
-
+					Notification.show("inserire una soglia");
 			});
 			cancella.addThemeVariants(ButtonVariant.LUMO_ERROR);
 			cancella.addClickListener(e->{
@@ -101,6 +165,12 @@ public class QuizForm extends FormLayout{
 			creaTitoloform(ver,"Crea un test");
 			creaRigaform(ver,hnome,nomeQuiz);
 			creaRigaform(ver,htempo,numberField);
+			creaRigaform(ver,hmodalita,modalita);
+			creaRigaform(ver, hgiusto,numbergiusto);
+			creaRigaform(ver, hsbagliata, numbersbagliata);
+			creaRigaform(ver, hsogliaValore,numberSoglia);
+			creaRigaform(ver, hsogliaPercentuale,numberPercentuale);
+
 			ver.add(pulsanti);
 			ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
 			dialog.add(ver);

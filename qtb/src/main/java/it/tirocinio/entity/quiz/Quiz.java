@@ -16,25 +16,63 @@ import it.tirocinio.entity.AbstractEntity;
 
 @Entity
 public class Quiz extends AbstractEntity implements Cloneable {
-	
-	
+
+
 	@Column(nullable=false,unique=true)
 	private String nomeQuiz;
-	
-	
+
+
 	@ManyToOne
 	private Corso corsoAppartenenza;
 
 	private double tempo;
 	private Boolean attivato;
-	
+
 	@OneToMany(mappedBy="quizapparteneza",fetch=FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private Set<Domanda> domande;
-	
-	
-	
-	
+
+	private double valoreGiusta;
+	private double valoreSbagliata;
+	private Boolean modalitaPercentuale;
+	private double soglia;
+	private double sogliaPercentuale;
+
+
+	public Boolean getModalitaPercentuale() {
+		return modalitaPercentuale;
+	}
+	public void setModalitaPercentuale(Boolean modalitaPercentuale) {
+		this.modalitaPercentuale = modalitaPercentuale;
+	}
+	public double getSoglia() {
+		return soglia;
+	}
+	public void setSoglia(double soglia) {
+		this.soglia = soglia;
+	}
+	public double getSogliaPercentuale() {
+		return sogliaPercentuale;
+	}
+	public void setSogliaPercentuale(double sogliaPercentuale) {
+		this.sogliaPercentuale = sogliaPercentuale;
+	}
+	public void setTempo(double tempo) {
+		this.tempo = tempo;
+	}
+
+	public double getValoreGiusta() {
+		return valoreGiusta;
+	}
+	public void setValoreGiusta(double valoreGiusta) {
+		this.valoreGiusta = valoreGiusta;
+	}
+	public double getValoreSbagliata() {
+		return valoreSbagliata;
+	}
+	public void setValoreSbagliata(double valoreSbagliata) {
+		this.valoreSbagliata = valoreSbagliata;
+	}
 	public double getTempo() {
 		return tempo;
 	}
@@ -53,7 +91,7 @@ public class Quiz extends AbstractEntity implements Cloneable {
 	public void setDomande(Set<Domanda> domande) {
 		this.domande = domande;
 	}
-	
+
 	public Boolean getAttivato() {
 		return attivato;
 	}
@@ -67,5 +105,5 @@ public class Quiz extends AbstractEntity implements Cloneable {
 		this.nomeQuiz = nomeQuiz;
 	}
 
-	} 
+} 
 

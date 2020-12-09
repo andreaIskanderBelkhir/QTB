@@ -1,5 +1,6 @@
 package it.tirocinio.application.views.main;
 
+import com.flowingcode.vaadin.addons.simpletimer.SimpleTimer;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -70,6 +71,24 @@ public class ActionBar extends HorizontalLayout {
 		button.setIcon(new Icon(VaadinIcon.PLUS));
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		button.getElement().getStyle().set("margin-left", "auto");
+		setVerticalComponentAlignment(Alignment.CENTER,button);
+		add(button);
+	}
+	public ActionBar(Button button, H3 h, SimpleTimer timer) {
+		setId("prof-navbar");
+		setPadding(true);
+		this.h.add(h);
+		h.getStyle().set("color", "#ffffff");
+		timer.setHours(true);	
+		timer.setFractions(false);
+		timer.getStyle().set("color", "#ffffff");
+		timer.getStyle().set("font-size", "var(--lumo-font-size-xl)");
+		setVerticalComponentAlignment(Alignment.CENTER,h,timer);
+		timer.getElement().getStyle().set("margin-left", "auto");
+		add(this.h);
+		add(timer);
+		button.setIcon(new Icon(VaadinIcon.PLUS));
+		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		setVerticalComponentAlignment(Alignment.CENTER,button);
 		add(button);
 	}

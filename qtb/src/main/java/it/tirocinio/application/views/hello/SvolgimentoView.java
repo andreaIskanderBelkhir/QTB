@@ -2,12 +2,18 @@ package it.tirocinio.application.views.hello;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.exec.DaemonExecutor;
+import org.jsoup.select.Evaluator.IsEmpty;
 
 import com.flowingcode.vaadin.addons.simpletimer.SimpleTimer;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
@@ -27,6 +33,7 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import elemental.events.Event;
 import it.tirocinio.application.views.main.ActionBar;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.backend.service.CorsoService;
@@ -49,14 +56,17 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 	private Button successivo;
 	private Button consegna;
 	private List<Domanda> domande;
-	private Risposta[] rispostedate;
+	private List<Set<Risposta>> rispostedate;
 	private int index=0; 
 	private int numero;
 	private H1 testo;
 	SimpleTimer timer;
-	private RadioButtonGroup<Risposta> radioGroup;
-	private Button clear;
+	boolean sbagliato;
+	int giusten;
+	private CheckboxGroup<Risposta> radioGroup;
 	ActionBar navbar;
+	private int vero;
+	private H3 h;
 
 	public SvolgimentoView(UtenteService u,CorsoService c,QuizService q){
 		this.utenteS=u;
@@ -65,14 +75,8 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		this.precedente=new Button("precedente");
 		this.successivo=new Button("successivo");
 		this.consegna=new Button("Consegna");
-		H3 h=new H3("Domanda N° ");
-		this.navbar=new ActionBar(precedente,h);
-		navbar.AddButtonAtActionBar(successivo);
-		navbar.AddButtonAtActionBar(consegna);
-		precedente.setIcon(new Icon(VaadinIcon.ARROW_CIRCLE_LEFT_O));
-		successivo.setIcon(new Icon(VaadinIcon.ARROW_CIRCLE_RIGHT_O));
-		consegna.setIcon(new Icon(VaadinIcon.ARROW_CIRCLE_UP_O));
-		add(navbar);
+		this.h=new H3("Domanda N° ");
+
 
 	}
 
@@ -85,11 +89,13 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		if(!(this.quiz==null)){
 			domande=new ArrayList<Domanda>();
 			domande.addAll(this.quiz.getDomande());
-			rispostedate=new Risposta[domande.size()];
+			rispostedate=new ArrayList<Set<Risposta>>();
+			for(int i=0;i<domande.size();i++){
+				rispostedate.add(new HashSet<Risposta>());
+			}
 			if(!(domande.isEmpty())){
 				String tempo=String.valueOf(quiz.getTempo()*60);
 				timer = new SimpleTimer(new BigDecimal(tempo));
-				timer.setHours(true);
 				timer.start();
 				timer.addTimerEndEvent(e->{
 					Dialog dialog= new Dialog();
@@ -107,8 +113,13 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 						consegnaTest();
 					});
 				});
-				
-				add(timer);
+				this.navbar=new ActionBar(precedente,h,timer);
+				navbar.AddButtonAtActionBar(successivo);
+				navbar.AddButtonAtActionBar(consegna);
+				precedente.setIcon(new Icon(VaadinIcon.ARROW_CIRCLE_LEFT_O));
+				successivo.setIcon(new Icon(VaadinIcon.ARROW_CIRCLE_RIGHT_O));
+				consegna.setIcon(new Icon(VaadinIcon.ARROW_CIRCLE_UP_O));
+				add(navbar);
 				updateDomanda(index);
 				settaPulsanti();
 
@@ -121,24 +132,27 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 
 
 	private void settaPulsanti() {
+		if(index==0){
+			precedente.setEnabled(false);
+		}
+		if(domande.size()==1){
+			successivo.setEnabled(false);
+		}
+
 		precedente.addClickListener(e->{
-			if(index==0){
-				Notification.show("E' la prima domanda non puoi andare indietro");
-			}
-			else
-			{
-				index=index-1;
-				updateDomanda(index);
-			}
+			successivo.setEnabled(true);
+			index=index-1;
+			updateDomanda(index);
+			if(index==0)
+				precedente.setEnabled(false);
 		});
 		successivo.addClickListener(e->{
-			if(index==(domande.size()-1)){
-				Notification.show("E' l'ultima Domanda");
-			}
-			else{
-				index=index+1;
-				updateDomanda(index);
-			}
+			precedente.setEnabled(true);
+			index=index+1;
+			updateDomanda(index);
+			if(index==(domande.size()-1))
+				successivo.setEnabled(false);
+
 		});
 		consegna.addClickListener(e->{
 			Dialog dialog= new Dialog();
@@ -161,9 +175,9 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 
 
 	private void consegnaTest() {
-		if((!(testo==null))&&(!(radioGroup==null))&&(!(clear==null))){
+		if((!(testo==null))&&(!(radioGroup==null))){
 			timer.pause();
-			remove(testo,radioGroup,clear);
+			remove(testo,radioGroup);
 			H2 testo1=new H2("Il test è stato Consegnato");
 			Icon icon =new Icon(VaadinIcon.CHECK_CIRCLE_O);
 			icon.getStyle().set("color","#1fe805");
@@ -180,14 +194,28 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 
 
 	private void contaRisposte() {
-		int numerototale=this.rispostedate.length;
+		int numerototale=this.domande.size();
 		String numerototaleString=String.valueOf(numerototale);
 		int numerogiusto=0;
 		int numerosbagliate=0;
 		int numeronondate=0;
 		for(int i=0;i<numerototale;i++){
-			if(!(rispostedate[i]==null)){
-				if(rispostedate[i].getGiusta()==true){
+			giusten=0;
+			vero=0;
+			sbagliato=false;
+			for(Risposta re:domande.get(i).getRisposte()){
+				if(re.getGiusta().booleanValue())
+					giusten++;
+			}
+			if(!(rispostedate.get(i).isEmpty())){
+				for(Risposta r:rispostedate.get(i)){
+					if(r.getGiusta().booleanValue()){
+						vero++;
+					}
+					else
+						sbagliato=true;						
+				}
+				if((vero==giusten)&&(!sbagliato)){
 					numerogiusto++;
 				}
 				else
@@ -213,8 +241,86 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		nondate.add(numerototaleString);
 		VerticalLayout ver = new VerticalLayout();
 		ver.add(giuste,sbagliate,nondate);
+		if(quiz.getModalitaPercentuale()){
+			conteggioPercentuale(ver,numerogiusto,numerototale);
+		}
+		else
+		conteggioDomande(ver,numerogiusto,numerosbagliate,numerototale);
 		add(ver);
+	}
+
+	private void conteggioPercentuale(VerticalLayout ver, int numerogiusto, int numerototale) {
+		double per=((double)numerogiusto/(double)numerototale)*100;
+		H3 perct=new H3("la tua percentuale di accuratezza è : ");
+		perct.add(String.valueOf(per));
+		perct.add("%");
+		HorizontalLayout passagio=new HorizontalLayout();
+		passagio.setWidthFull();
+		passagio.setAlignItems(Alignment.CENTER);
+		H2 risultato=new H2();
+		H2 risultato2=new H2("");
+		if(per>=quiz.getSogliaPercentuale()){
+			risultato.add("PASSATO");
+			risultato.getStyle().set("color", "#19bf0a");
+			risultato.getStyle().set("font-weight", "900");
+			passagio.add(risultato,risultato2);
+			ver.add(perct,passagio);
+		}
+		else
+		{
+			risultato.add("NON");
+			risultato.getStyle().set("color", "#f50509");
+			risultato2.add(" Passato");
+			risultato.getStyle().set("font-weight", "900");
+			H3 dapassare=new H3("dovevi totalizzare almeno : ");
+			dapassare.add(String.valueOf(quiz.getSogliaPercentuale()));
+			dapassare.add("%");
+			passagio.add(risultato,risultato2);
+			ver.add(perct,passagio,dapassare);
+			
+		}
+		passagio.setVerticalComponentAlignment(Alignment.CENTER,risultato2);
+		risultato.getElement().getStyle().set("margin-left", "40%");
 		
+	}
+
+
+
+	private void conteggioDomande(VerticalLayout ver, int numerogiusto, int numerosbagliate, int numerototale) {
+		double valoreg=numerogiusto*quiz.getValoreGiusta();
+		double valores=numerosbagliate*quiz.getValoreSbagliata();
+		double valoretotale=numerototale*quiz.getValoreGiusta();
+		H3 totale =new H3();
+		totale.add(String.valueOf(valoreg-valores));
+		totale.add("/");
+		totale.add(String.valueOf(valoretotale));
+		HorizontalLayout passagio=new HorizontalLayout();
+		ver.add(totale);
+		passagio.setWidthFull();
+		passagio.setAlignItems(Alignment.CENTER);
+		H2 risultato=new H2();
+		H2 risultato2=new H2("");
+		if((valoreg-valores)>=quiz.getSoglia()){
+			risultato.add("PASSATO");
+			risultato.getStyle().set("color", "#19bf0a");
+			risultato.getStyle().set("font-weight", "900");
+			passagio.add(risultato,risultato2);
+			ver.add(passagio);
+		}
+		else
+		{
+			risultato.add("NON");
+			risultato.getStyle().set("color", "#f50509");
+			risultato2.add(" Passato");
+			risultato.getStyle().set("font-weight", "900");
+			H3 dapassare=new H3("dovevi totalizzare almeno : ");
+			dapassare.add(String.valueOf(quiz.getSoglia()));
+			passagio.add(risultato,risultato2);
+			ver.add(passagio,dapassare);
+			
+		}
+		passagio.setVerticalComponentAlignment(Alignment.CENTER,risultato2);
+		risultato.getElement().getStyle().set("margin-left", "40%");
 		
 		
 	}
@@ -232,7 +338,7 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		this.numero=i+1;
 		navbar.updateNdomanda(numero);
 		add(testo);
-		setAlignItems(Alignment.CENTER);
+		setAlignItems(Alignment.START);
 		creazioneRisposte(i);
 	}
 
@@ -243,27 +349,27 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		List<Risposta> risposte = new ArrayList<>();
 		risposte.addAll(domanda.getRisposte());
 		if(!(risposte.isEmpty())){
-			if(!(radioGroup==null)&&(!(clear==null))){
-				remove(radioGroup,clear);
+			if(!(radioGroup==null)){
+				remove(radioGroup);
 			}
-			radioGroup = new RadioButtonGroup<>();
-			radioGroup.setItems(risposte);
-			radioGroup.setRenderer(new TextRenderer<>(Risposta::getRisposta));
-			if(!(rispostedate[i]==null)){
-				radioGroup.setValue(rispostedate[i]);
+			radioGroup = new CheckboxGroup<>();
+			radioGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
+			radioGroup.setItems(risposte);		
+			radioGroup.setItemLabelGenerator(Risposta::getRisposta);
+			if(!(rispostedate.get(i).isEmpty())){
+				radioGroup.setValue(rispostedate.get(i));
 			}
-			radioGroup.addValueChangeListener(event -> {		
-				if (event.getValue() == null) {
+			radioGroup.addValueChangeListener(eve -> {		
+				if(!(eve.getValue()==null)){		
+					for(Risposta r:radioGroup.getSelectedItems()){		
+						rispostedate.get(i).add(r);
+					}
 				}
-				else {
-					rispostedate[i]=event.getValue();
+				if(radioGroup.getSelectedItems().isEmpty()){
+					rispostedate.get(i).clear();
 				}
 			});
-			 clear = new Button("Clear", event -> {
-				    radioGroup.setValue(null);
-				    rispostedate[i]=null;
-				});
-			add(radioGroup,clear);
+			add(radioGroup);
 		}
 
 	}
