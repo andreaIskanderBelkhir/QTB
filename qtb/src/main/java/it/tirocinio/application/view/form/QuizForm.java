@@ -132,6 +132,7 @@ public class QuizForm extends FormLayout{
 					quiz.setCorsoAppartenenza(corso);
 					quiz.setAttivato(false);
 					quiz.setDomande(new HashSet<Domanda>());
+				
 					quiz.setValoreGiusta(numbergiusto.getValue());
 					quiz.setValoreSbagliata(numbersbagliata.getValue());
 					quiz.setModalitaPercentuale(tempModalita);	

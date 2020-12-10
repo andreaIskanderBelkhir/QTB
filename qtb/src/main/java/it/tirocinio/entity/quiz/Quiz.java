@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -13,6 +14,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import it.tirocinio.entity.AbstractEntity;
+import it.tirocinio.entity.Utente;
 
 @Entity
 public class Quiz extends AbstractEntity implements Cloneable {
@@ -37,6 +39,7 @@ public class Quiz extends AbstractEntity implements Cloneable {
 	private Boolean modalitaPercentuale;
 	private double soglia;
 	private double sogliaPercentuale;
+	
 
 
 	public Boolean getModalitaPercentuale() {

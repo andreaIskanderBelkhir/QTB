@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.apache.commons.exec.DaemonExecutor;
 import org.jsoup.select.Evaluator.IsEmpty;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.flowingcode.vaadin.addons.simpletimer.SimpleTimer;
 import com.vaadin.flow.component.button.Button;
@@ -39,6 +41,7 @@ import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.backend.service.CorsoService;
 import it.tirocinio.backend.service.QuizService;
 import it.tirocinio.backend.service.UtenteService;
+import it.tirocinio.entity.Utente;
 import it.tirocinio.entity.quiz.Domanda;
 import it.tirocinio.entity.quiz.Quiz;
 import it.tirocinio.entity.quiz.Risposta;
@@ -67,6 +70,8 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 	ActionBar navbar;
 	private int vero;
 	private H3 h;
+	private String nome;
+	private Utente studente;
 
 	public SvolgimentoView(UtenteService u,CorsoService c,QuizService q){
 		this.utenteS=u;
@@ -76,7 +81,13 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		this.successivo=new Button("successivo");
 		this.consegna=new Button("Consegna");
 		this.h=new H3("Domanda N° ");
-
+		 Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		    if ( principal instanceof UserDetails){
+			  this.nome = ((UserDetails)principal).getUsername();
+	    	}
+		    studente = this.utenteS.findByName(nome);
+		    
+		    
 
 	}
 
@@ -124,6 +135,7 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 				settaPulsanti();
 
 			}
+			
 		}
 	}
 
@@ -265,6 +277,7 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			risultato.getStyle().set("font-weight", "900");
 			passagio.add(risultato,risultato2);
 			ver.add(perct,passagio);
+			this.utenteS.addQuiz(studente,quiz.getId());
 		}
 		else
 		{
@@ -301,11 +314,13 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		H2 risultato=new H2();
 		H2 risultato2=new H2("");
 		if((valoreg-valores)>=quiz.getSoglia()){
+			
 			risultato.add("PASSATO");
 			risultato.getStyle().set("color", "#19bf0a");
 			risultato.getStyle().set("font-weight", "900");
 			passagio.add(risultato,risultato2);
 			ver.add(passagio);
+			this.utenteS.addQuiz(studente,quiz.getId());
 		}
 		else
 		{

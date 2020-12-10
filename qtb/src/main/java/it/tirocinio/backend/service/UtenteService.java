@@ -2,6 +2,7 @@ package it.tirocinio.backend.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -53,10 +54,12 @@ public class UtenteService  {
 			admin.setNome("admin");
 			admin.setPassword(passwordencoder.encode("admin"));
 			admin.setRuolo("ADMIN");
+			admin.setQuizpassati(new ArrayList<Long>());
 			Utente prof = new Utente();
 			prof.setNome("prof");
 			prof.setPassword(passwordencoder.encode("sonoilprof"));
 			prof.setRuolo("PROFESSORE");
+			
 			Utente user = new Utente();
 			user.setNome("studente");
 			user.setPassword(passwordencoder.encode("stud"));
@@ -157,6 +160,12 @@ public class UtenteService  {
 		this.corsoS.eliminaQuiz(value);
 		this.DeleteQuizperdoc(value);
 
+	}
+
+	public void addQuiz(Utente studente, Long id) {		
+		studente.getQuizpassati().add(id);	
+		this.utenteRepository.save(studente);
+		
 	}
 
 
