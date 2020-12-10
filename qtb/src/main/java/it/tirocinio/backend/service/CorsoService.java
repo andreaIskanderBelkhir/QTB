@@ -41,7 +41,7 @@ public class CorsoService {
 		}
 		return lista;
 	}
-	
+
 	public List<Corso> findAll(String value) {
 		if(value==null||value.isEmpty()){
 			return this.findAllbyAdmin();
@@ -55,8 +55,10 @@ public class CorsoService {
 		List<Corso> co= nome.getCorsifrequentati();
 		List<Corso> lista = new ArrayList<>();
 		for(Corso c:co){
-			if(c.getDocente().equals(nome)){
-				lista.add(c);
+			if(c.getDocente()!=null){
+				if(c.getDocente().equals(nome)){
+					lista.add(c);
+				}
 			}
 		}
 		return lista;			
@@ -138,8 +140,10 @@ public class CorsoService {
 			List<Corso> co= findAll(filter.getValue());
 			List<Corso> lista = new ArrayList<>();
 			for(Corso c:co){
-				if(c.getDocente().getNome().equals(nome.getNome())){
-					lista.add(c);
+				if(c.getDocente()!=null){
+					if(c.getDocente().getNome().equals(nome.getNome())){
+						lista.add(c);
+					}
 				}
 			}
 			return lista;			

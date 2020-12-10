@@ -132,7 +132,7 @@ public class QuizForm extends FormLayout{
 					quiz.setCorsoAppartenenza(corso);
 					quiz.setAttivato(false);
 					quiz.setDomande(new HashSet<Domanda>());
-				
+
 					quiz.setValoreGiusta(numbergiusto.getValue());
 					quiz.setValoreSbagliata(numbersbagliata.getValue());
 					quiz.setModalitaPercentuale(tempModalita);	
@@ -207,28 +207,110 @@ public class QuizForm extends FormLayout{
 			TextField nomeQuiz = new TextField();
 			nomeQuiz.setValue(quizv.getNomeQuiz());
 			NumberField numberField = new NumberField();	
+			H3 hgiusto=new H3("Valore risposta esatta : ");
+			NumberField numbergiusto = new NumberField();
+			numbergiusto.setValue(quizv.getValoreGiusta());
+			H3 hsbagliata=new H3("Valore risposta sbagliata : ");
+			NumberField numbersbagliata= new NumberField();
+			numbersbagliata.setValue(quizv.getValoreSbagliata());
+			H3 hsogliaValore=new H3("Valore Soglia : ");
+			H3 hsogliaPercentuale=new H3("Valore Soglia (0~100)% : ");
+			RadioButtonGroup<String> modalita= new RadioButtonGroup<>();
+			modalita.setItems("valore","percentuale");
+			if(quizv.getModalitaPercentuale()){
+				modalita.setValue("percentuale");
+			}
+			else
+				modalita.setValue("valore");
+			H3 hmodalita =new H3("Modalità di superamento : ");		
+			NumberField numberSoglia = new NumberField();
+			numberSoglia.setValue(quizv.getSoglia());
+			NumberField numberPercentuale = new NumberField();
+			numberPercentuale.setValue(quizv.getSogliaPercentuale());
+			numberPercentuale.setPrefixComponent(new Icon(VaadinIcon.BOOK_PERCENT));
+			numberPercentuale.setMin(0);
+			numberPercentuale.setMax(100);
+			if(quizv.getModalitaPercentuale()){
+				tempModalita=true;
+				hsogliaPercentuale.setVisible(true);
+				numberPercentuale.setVisible(true);
+				hsogliaValore.setVisible(false);
+				hgiusto.setVisible(false);
+				hsbagliata.setVisible(false);
+				numberSoglia.setVisible(false);
+				numbergiusto.setVisible(false);
+				numbersbagliata.setVisible(false);
+			}
+			else{
+				tempModalita=false;
+				hsogliaPercentuale.setVisible(false);
+				numberPercentuale.setVisible(false);
+				hsogliaValore.setVisible(true);
+				hgiusto.setVisible(true);
+				hsbagliata.setVisible(true);
+				numberSoglia.setVisible(true);
+				numbergiusto.setVisible(true);
+				numbersbagliata.setVisible(true);
+
+			}
+			modalita.addValueChangeListener(e->{
+				if(e.getValue().equals("percentuale")){
+					tempModalita=true;
+					hsogliaPercentuale.setVisible(true);
+					numberPercentuale.setVisible(true);
+					hsogliaValore.setVisible(false);
+					hgiusto.setVisible(false);
+					hsbagliata.setVisible(false);
+					numberSoglia.setVisible(false);
+					numbergiusto.setVisible(false);
+					numbersbagliata.setVisible(false);
+
+				}
+				else
+				{
+					tempModalita=false;
+					hsogliaPercentuale.setVisible(false);
+					numberPercentuale.setVisible(false);
+					hsogliaValore.setVisible(true);
+					hgiusto.setVisible(true);
+					hsbagliata.setVisible(true);
+					numberSoglia.setVisible(true);
+					numbergiusto.setVisible(true);
+					numbersbagliata.setVisible(true);
+				}
+			});
 			numberField.setValue(quizv.getTempo());
 			binder.forField(nomeQuiz).withValidator(new StringLengthValidator(
 					"Please add the nome", 1, null)).bind(Quiz::getNomeQuiz,Quiz::setNomeQuiz);
 			save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 			save.addClickListener(e->{
-				Quiz quiz=quizv;
-				quiz.setNomeQuiz(nomeQuiz.getValue().trim());
-				binder.setBean(quiz);
-				if((binder.validate().isOk())){	
-					if(numberField.getValue()==null)
-					{
-						quiz.setTempo((double) 60);
-					}
-					else{
+				if((!(numberSoglia.isEmpty())) || (!(numberPercentuale.isEmpty()))){
+					Quiz quiz=quizv;
+					quiz.setNomeQuiz(nomeQuiz.getValue().trim());
+					binder.setBean(quiz);
+					if((binder.validate().isOk())){	
+						if(numberField.getValue()==null)
+						{
+							quiz.setTempo((double) 60);
+						}
+						else{
 
-						quiz.setTempo(numberField.getValue());
-					}
-					this.quizS.modificaQuiz(quiz,quizv);	
-					gridquiz.setItems(this.quizS.findAllByDocente(this.docente));
-					dialog.close();
-					binder.removeBean();
+							quiz.setTempo(numberField.getValue());
+						}
+						quiz.setValoreGiusta(numbergiusto.getValue());
+						quiz.setValoreSbagliata(numbersbagliata.getValue());
+						quiz.setModalitaPercentuale(tempModalita);	
+						if(tempModalita){
+							quiz.setSogliaPercentuale(numberPercentuale.getValue());
+						}
+						else
+							quiz.setSoglia(numberSoglia.getValue());
+						this.quizS.modificaQuiz(quiz,quizv);	
+						gridquiz.setItems(this.quizS.findAllByDocente(this.docente));
+						dialog.close();
+						binder.removeBean();
 
+					}
 				}
 			});
 			cancella.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -240,6 +322,11 @@ public class QuizForm extends FormLayout{
 			creaTitoloform(ver,"Modifica il quiz con ID : ",quizv);
 			creaRigaform(ver,hnome,nomeQuiz);
 			creaRigaform(ver,htempo,numberField);
+			creaRigaform(ver,hmodalita,modalita);
+			creaRigaform(ver, hgiusto,numbergiusto);
+			creaRigaform(ver, hsbagliata, numbersbagliata);
+			creaRigaform(ver, hsogliaValore,numberSoglia);
+			creaRigaform(ver, hsogliaPercentuale,numberPercentuale);
 			ver.add(pulsanti);
 			ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
 			dialog.add(ver);

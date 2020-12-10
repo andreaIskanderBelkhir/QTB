@@ -40,12 +40,10 @@ public class QuizView extends VerticalLayout{
 	private RispostaService rispostaS;
 	private Quiz quiz;
 	Grid<Quiz> gridquiz = new Grid<>(Quiz.class);
-	Grid<Domanda> griddomanda= new Grid<>(Domanda.class);
 	HorizontalLayout hor=new HorizontalLayout();
 	HorizontalLayout hor2=new HorizontalLayout();
 	ComboBox<Corso> corsi;
-	private DomandaForm domandaform;
-	private Button creazioneDbutton;
+
 
 	public QuizView(CorsoService s, UtenteService u,QuizService q,DomandaService d,RispostaService r){
 
@@ -77,7 +75,6 @@ public class QuizView extends VerticalLayout{
 		hor.setHeight("100%");
 		hor.setWidthFull();
 		ConfigureGridQ();
-		UpdateGridQ();
 		gridquiz.setSizeFull();
 		add(quizForm);
 		hor.add(gridquiz);
@@ -102,13 +99,17 @@ public class QuizView extends VerticalLayout{
 		gridquiz.setColumns("id","nomeQuiz");
 		gridquiz.setWidth("98%");
 		gridquiz.addColumn(quiz->{
-			Corso corso= quiz.getCorsoAppartenenza();
-			return corso==null ? "-": corso.getNomeCorso();
-		}).setHeader("corso del quiz");
-		gridquiz.addColumn(quiz->{
 			return quiz.getTempo();
-		}).setHeader("minuti a disposizione");
-		gridquiz.addComponentColumn(item-> createValited(gridquiz,item)).setHeader("attivato");
+		}).setHeader("Minuti a disposizione");
+		gridquiz.addColumn(quiz->{
+			if(quiz.getModalitaPercentuale()){
+				return "%";
+			}
+			else
+			return "Valore";
+			
+		}).setHeader("Modalità");
+		gridquiz.addComponentColumn(item-> createValited(gridquiz,item)).setHeader("Attivato");
 		gridquiz.asSingleSelect().addValueChangeListener(event->{
 			this.quiz=event.getValue();
 		});
