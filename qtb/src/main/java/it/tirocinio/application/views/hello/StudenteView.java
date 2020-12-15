@@ -69,8 +69,7 @@ public class StudenteView extends VerticalLayout {
 		configureGridQuiz();
 		gridcorsi.setItems(corsi);
 		iscrizioneCorsoForm= new IscrizioneCorsoForm(this.corsoS, this.utenteS,studente);
-		iscrizioneCorsoForm.setVisible(false);		
-		Button buttonaddCorso = new Button("isciviti ad un corso",e->iscrizioneCorsoForm.setVisible(true));
+		Button buttonaddCorso = new Button("isciviti ad un corso",e->iscrizioneCorsoForm.iscriviti(gridcorsi,studente));
 		H3 h=new H3("");
 		ActionBar navbar=new ActionBar(buttonaddCorso,h);
 		add(navbar);

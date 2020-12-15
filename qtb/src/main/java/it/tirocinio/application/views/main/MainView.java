@@ -38,6 +38,7 @@ import it.tirocinio.application.views.hello.DomandeView;
 import it.tirocinio.application.views.hello.ProfessoreView;
 import it.tirocinio.application.views.hello.QuizView;
 import it.tirocinio.application.views.hello.StudenteView;
+import it.tirocinio.application.views.hello.VisualizzaPassatiView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -144,7 +145,8 @@ public class MainView extends AppLayout {
         	createTab("Homepage", HomePageView.class),
         	createTab("Gestione Corsi",ProfessoreView.class),
         	createTab("Gestione Test",QuizView.class),
-        	createTab("Gestione Domande",DomandeView.class)
+        	createTab("Gestione Domande",DomandeView.class),
+        	createTab("Visualizza Passati",VisualizzaPassatiView.class)
         };
     }
     private Component[] createMenuItemsAdmin() {
@@ -154,6 +156,7 @@ public class MainView extends AppLayout {
         	createTab("Gestione Corsi",ProfessoreView.class),
         	createTab("Gestione Test",QuizView.class),
         	createTab("Gestione Domande",DomandeView.class),
+        	createTab("Visualizza Passati",VisualizzaPassatiView.class),
         	createTab("admin",AdminView.class),
         };
     }

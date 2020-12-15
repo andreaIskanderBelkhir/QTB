@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.exec.DaemonExecutor;
+
 import org.jsoup.select.Evaluator.IsEmpty;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,8 +34,6 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-
-import elemental.events.Event;
 import it.tirocinio.application.views.main.ActionBar;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.backend.service.CorsoService;
