@@ -61,7 +61,7 @@ public class RispostaForm extends FormLayout{
 			dialog.setCloseOnEsc(false);
 			dialog.setCloseOnOutsideClick(false);
 			TextField nomeRisposta = new TextField();
-			H3 hnome = new H3("Nome : ");
+			H3 hnome = new H3("Valore : ");
 			H3 hgiusto=new H3("Giusta ? ");
 			Checkbox giusto = new Checkbox();
 			giusto.setValue(false);
@@ -213,7 +213,7 @@ public class RispostaForm extends FormLayout{
 		HorizontalLayout h= new HorizontalLayout();
 		Div div1=new Div();
 		Div div2=new Div();
-		h.setWidth("395px");
+		h.setWidth("500px");
 		h.setMargin(false);
 		h.setSpacing(true);
 		h.setVerticalComponentAlignment(Alignment.CENTER,div1,div2);    

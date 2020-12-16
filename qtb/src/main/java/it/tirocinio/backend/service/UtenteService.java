@@ -64,7 +64,11 @@ public class UtenteService  {
 			user.setNome("studente");
 			user.setPassword(passwordencoder.encode("stud"));
 			user.setRuolo("USER");
-			List<Utente> utenti= Arrays.asList(admin,prof,user);
+			Utente user2 = new Utente();
+			user2.setNome("studente2");
+			user2.setPassword(passwordencoder.encode("stud2"));
+			user2.setRuolo("USER");
+			List<Utente> utenti= Arrays.asList(admin,prof,user,user2);
 			this.utenteRepository.saveAll(utenti);
 		}
 	}
@@ -169,6 +173,16 @@ public class UtenteService  {
 		studente.getQuizpassati().add(id);	
 		this.utenteRepository.save(studente);
 		
+	}
+
+	public List<Utente> findStudenti() {
+		List<Utente> ut=new ArrayList<>();
+		for(Utente u:this.findAll()){
+			if(u.getRuolo().equals("USER")){
+				ut.add(u);
+			}
+		}
+		return ut;
 	}
 
 

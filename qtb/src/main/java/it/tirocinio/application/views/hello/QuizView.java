@@ -62,6 +62,14 @@ public class QuizView extends VerticalLayout{
 		corsi=new ComboBox<>();
 		corsi.setItemLabelGenerator(Corso::getNomeCorso);
 		corsi.setItems(this.corsoS.findbyDocente(docente));
+		if(this.corsoS.findbyDocente(docente).isEmpty()){
+			corsi.setEnabled(false);
+		}
+		else
+		{
+			corsi.setPlaceholder("");
+			corsi.setOpened(true);
+		}
 		corsi.addValueChangeListener(e->{
 			UpdateGridQ();
 		});
@@ -96,7 +104,10 @@ public class QuizView extends VerticalLayout{
 
 
 	private void ConfigureGridQ() {
-		gridquiz.setColumns("id","nomeQuiz");
+		gridquiz.setColumns("id");
+		gridquiz.addColumn(e->{	
+		return e.getNomeQuiz();
+				}).setHeader("Nome test");
 		gridquiz.setWidth("98%");
 		gridquiz.addColumn(quiz->{
 			return quiz.getTempo();

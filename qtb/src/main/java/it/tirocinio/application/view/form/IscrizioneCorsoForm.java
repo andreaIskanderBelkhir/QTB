@@ -17,7 +17,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
-import com.vaadin.flow.data.binder.Binder;
+
 
 import it.tirocinio.backend.service.CorsoService;
 import it.tirocinio.backend.service.UtenteService;
@@ -29,6 +29,7 @@ public class IscrizioneCorsoForm extends FormLayout {
 	private Utente studente;
 	private CorsoService corsoS;
 	private UtenteService utenteS;
+	boolean empty;
 
 
 	public IscrizioneCorsoForm(CorsoService c,UtenteService u,Utente nomes){
@@ -42,11 +43,19 @@ public class IscrizioneCorsoForm extends FormLayout {
 		nomeCorso.setLabel("scegli un corso");
 		List<Corso> corsi= this.corsoS.findAllbyAdmin();
 		List<Corso> possibili= new ArrayList<Corso>();
+		
 		for(Corso c: corsi){		
 			if(!(this.corsoS.partecipa(c,studente))){
 				possibili.add(c);
 			}
 
+		}
+		
+		if(possibili.isEmpty()){
+			empty=true;
+		}
+		else{
+			empty=false;
 		}
 		nomeCorso.setItemLabelGenerator(Corso::getNomeCorso);
 		nomeCorso.setItems(possibili);	
@@ -64,6 +73,16 @@ public class IscrizioneCorsoForm extends FormLayout {
 		Button cancella = new Button("Cancella");
 		H3 hcorso=new H3("Scegli il corso : ");
 		PopulateBox();
+		if(empty){
+			nomeCorso.setPlaceholder("Nessun corso disponibile");
+			nomeCorso.setEnabled(false);
+			Notification.show("nessun corso disponibile");
+		}
+		else
+		{
+			
+			nomeCorso.setOpened(true);
+		}
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickListener(e->{
 			if((nomeCorso.getValue()==null)||(this.corsoS.partecipa(nomeCorso.getValue(),studente))){
@@ -110,7 +129,7 @@ public class IscrizioneCorsoForm extends FormLayout {
 		HorizontalLayout h= new HorizontalLayout();
 		Div div1=new Div();
 		Div div2=new Div();
-		h.setWidth("395px");
+		h.setWidth("500px");
 		h.setMargin(false);
 		h.setSpacing(true);
 		h.setVerticalComponentAlignment(Alignment.CENTER,div1,div2);    

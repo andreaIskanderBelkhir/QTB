@@ -210,7 +210,7 @@ public class CorsoForm extends HorizontalLayout {
 		HorizontalLayout h= new HorizontalLayout();
 		Div div1=new Div();
 		Div div2=new Div();
-		h.setWidth("395px");
+		h.setWidth("500px");
 		h.setMargin(false);
 		h.setSpacing(true);
 		h.setVerticalComponentAlignment(Alignment.CENTER,div1,div2);    

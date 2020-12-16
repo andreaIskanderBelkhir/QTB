@@ -74,7 +74,7 @@ public class StudenteView extends VerticalLayout {
 		ActionBar navbar=new ActionBar(buttonaddCorso,h);
 		add(navbar);
 		div2.setSizeFull();
-		div2.add("i tuoi corsi : ");
+		div2.add("i miei corsi : ");
 		HorizontalLayout hor2= new HorizontalLayout();
 		hor2.add(gridcorsi,gridQuiz);
 		div2.add(hor2);
@@ -85,10 +85,14 @@ public class StudenteView extends VerticalLayout {
 
 
 	private void configureGridQuiz() {
+		gridQuiz.setColumns();
+		gridQuiz.addColumn(e->{
+			return e.getNomeQuiz();
+		}).setHeader("Nome test");
 		gridQuiz.addComponentColumn(item-> createLink(gridQuiz,item));
 		gridQuiz.addColumn(e->{
-			return studente.getQuizpassati().contains(e.getId()) ? "PASSATO" : "Da passare" ;
-		}).setHeader("Svolto");
+			return studente.getQuizpassati().contains(e.getId()) ? "Svolto" : "non svolto" ;
+		}).setHeader("Stato");
 
 	}
 

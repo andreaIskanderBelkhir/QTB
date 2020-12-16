@@ -60,7 +60,7 @@ public class DomandaForm extends FormLayout{
 			TextField nomeDomanda = new TextField();
 			H3 hnome=new H3("Nome : ");
 			H3 htesto=new H3("Testo : ");
-			TextField descrizione= new TextField();
+			TextArea descrizione= new TextArea();
 			Button save = new Button("Salva");
 			Button cancella = new Button("Cancella");
 			binder.forField(nomeDomanda).withValidator(new StringLengthValidator(
@@ -74,16 +74,21 @@ public class DomandaForm extends FormLayout{
 				domanda.setDescrizionedomanda(descrizione.getValue());
 				domanda.setRisposte(new HashSet<>());
 				binder.setBean(domanda);
-				if(binder.validate().isOk()){
-					domanda.setQuizapparteneza(quiz);
-					quiz.getDomande().add(domanda);
-					this.domandaS.save(domanda);
-					dialog.close();
-					griddomanda.setItems(this.domandaS.findByQuiz(quiz));
-					binder.removeBean();
+				if(descrizione.getValue().length()<=255){
+					if(binder.validate().isOk()){
+						domanda.setQuizapparteneza(quiz);
+						quiz.getDomande().add(domanda);
+						this.domandaS.save(domanda);
+						dialog.close();
+						griddomanda.setItems(this.domandaS.findByQuiz(quiz));
+						binder.removeBean();
+					}
+					else
+						Notification.show("error inserire una domanda valida");
 				}
 				else
-					Notification.show("error inserire una domanda valido");
+					
+				Notification.show("usare un testo piu breve (max 255 char) attuali : "+descrizione.getValue().length());
 
 			});
 			cancella.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -133,6 +138,7 @@ public class DomandaForm extends FormLayout{
 					domanda.setDescrizionedomanda(descrizione.getValue());
 					binder.setBean(domanda);
 					if((binder.validate().isOk())){	
+
 						this.domandaS.modificaDomanda(domanda,domandav);	
 						griddomanda.setItems(this.domandaS.findByQuiz(domanda.getQuizapparteneza()));
 						dialog.close();					
@@ -181,7 +187,7 @@ public class DomandaForm extends FormLayout{
 				binder.setBean(domanda);
 				if(binder.validate().isOk()){
 					if(!(domanda.getRisposte().isEmpty())){
-							Notification.show("elimina prima le domande");
+						Notification.show("elimina prima le domande");
 					}
 					else{
 						this.quizS.eliminaDomanda(quiz,domanda);					
@@ -228,7 +234,7 @@ public class DomandaForm extends FormLayout{
 		HorizontalLayout h= new HorizontalLayout();
 		Div div1=new Div();
 		Div div2=new Div();
-		h.setWidth("395px");
+		h.setWidth("500px");
 		h.setMargin(false);
 		h.setSpacing(true);
 		h.setVerticalComponentAlignment(Alignment.CENTER,div1,div2);    
