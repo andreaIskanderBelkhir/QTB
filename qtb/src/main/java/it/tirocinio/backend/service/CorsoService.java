@@ -20,8 +20,10 @@ public class CorsoService {
 	private final UtenteRepository utenteRepository;
 	private CorsoRepository corsorep;
 
+
 	public CorsoService(UtenteRepository u,CorsoRepository c){
 		this.corsorep=c;
+
 		this.utenteRepository=u;
 	}
 
@@ -54,9 +56,18 @@ public class CorsoService {
 	public List<Corso> findbyDocente(Utente nome){
 		List<Corso> co= nome.getCorsifrequentati();
 		List<Corso> lista = new ArrayList<>();
-		for(Corso c:co){
-			if(c.getDocente()!=null){
-				if(c.getDocente().equals(nome)){
+		if(nome.getRuolo().equals("PROFESSORE")){
+			for(Corso c:co){
+				if(c.getDocente()!=null){
+					if(c.getDocente().equals(nome)){
+						lista.add(c);
+					}
+				}
+			}
+		}
+		if(nome.getRuolo().equals("ADMIN")){
+			for(Corso c:co){
+				if(c.getDocente()!=null){			
 					lista.add(c);
 				}
 			}
@@ -64,6 +75,36 @@ public class CorsoService {
 		return lista;			
 	}
 
+
+	public void addCandidato(Utente u, Corso c) {
+		List<Utente> iscritti = new ArrayList<>(); 
+		if(u==null){
+			return;
+		}
+		else{
+			for(Corso cor:findAll()){
+				if(cor.equals(c)){
+					if(c.getCandidati()==null){
+						List<Utente> iscrittinew =new ArrayList<>();
+						iscrittinew.add(u);
+						c.setCandidati(iscrittinew);
+						this.corsorep.save(c);
+					}
+					else
+					{
+						iscritti = c.getCandidati();
+						iscritti.add(u);
+						c.setCandidati(iscritti);
+						this.corsorep.save(c);
+					}
+				}
+			}
+
+		}
+
+		
+	}
+	
 	public void addStudente(Utente u,Corso c){
 		List<Utente> iscritti = new ArrayList<>(); 
 		if(u==null){
@@ -139,9 +180,18 @@ public class CorsoService {
 		else{
 			List<Corso> co= findAll(filter.getValue());
 			List<Corso> lista = new ArrayList<>();
-			for(Corso c:co){
-				if(c.getDocente()!=null){
-					if(c.getDocente().getNome().equals(nome.getNome())){
+			if(nome.getRuolo().equals("PROFESSORE")){
+				for(Corso c:co){
+					if(c.getDocente()!=null){
+						if(c.getDocente().getNome().equals(nome.getNome())){
+							lista.add(c);
+						}
+					}
+				}
+			}
+			if(nome.getRuolo().equals("ADMIN")){
+				for(Corso c:co){
+					if(c.getDocente()!=null){			
 						lista.add(c);
 					}
 				}
@@ -157,6 +207,75 @@ public class CorsoService {
 		this.corsorep.save(corso);
 
 	}
+
+	public void addStudenteRichiesta(Utente u, Corso c) {
+		List<Long> iscritti = new ArrayList<>(); 
+		if(u==null){
+			return;
+		}
+		else{
+			for(Corso cor:findAll()){
+				if(cor.equals(c)){
+					if(c.getUtentirischiesta()==null){
+						List<Long> iscrittinew =new ArrayList<>();
+						iscrittinew.add(u.getId());
+						c.setUtentirischiesta(iscrittinew);
+						this.corsorep.save(c);
+					}
+					else
+					{
+						iscritti = c.getUtentirischiesta();
+						iscritti.add(u.getId());
+						c.setUtentirischiesta(iscritti);
+						this.corsorep.save(c);
+					}
+				}
+			}
+
+		}
+
+	}
+
+	
+	
+	
+	public List<Utente> getStudenteRichiesta(List<Long> utentirischiesta) {
+		List<Utente> utenti=new ArrayList<>();
+		for(Long l:utentirischiesta){
+			if(findByIdUtente(l)!=null){
+				utenti.add(findByIdUtente(l));
+			}
+		}
+		return utenti;
+	}
+
+	public Utente findByIdUtente(Long id) {
+		// TODO Auto-generated method stub
+		List<Utente> ut=this.utenteRepository.findAll();
+		for(Utente u: ut){
+			if(u.getId().equals(id)){
+				return u;
+			}
+		}
+		return null;
+	}
+
+	public void removeStudenteApprovare(Corso corso, Utente u) {
+		corso.getUtentirischiesta().remove(u.getId());
+		this.corsorep.save(corso);
+
+	}
+
+	public Collection<Corso> findbySelezione() {
+		List<Corso> corsi=new ArrayList<>();
+		for(Corso c:findAll()){
+			if(c.getSelezione())
+				corsi.add(c);
+		}
+		return corsi;
+	}
+
+
 }
 
 

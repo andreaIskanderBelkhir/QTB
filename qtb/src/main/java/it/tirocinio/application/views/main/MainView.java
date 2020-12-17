@@ -38,6 +38,7 @@ import it.tirocinio.application.views.hello.DomandeView;
 import it.tirocinio.application.views.hello.IscrizioniView;
 import it.tirocinio.application.views.hello.ProfessoreView;
 import it.tirocinio.application.views.hello.QuizView;
+import it.tirocinio.application.views.hello.SelezioneView;
 import it.tirocinio.application.views.hello.StudenteView;
 import it.tirocinio.application.views.hello.VisualizzaPassatiView;
 
@@ -49,144 +50,159 @@ import it.tirocinio.application.views.hello.VisualizzaPassatiView;
 @PWA(name = "QTB", shortName = "QTB", enableInstallPrompt = false)
 public class MainView extends AppLayout {
 
-    private final Tabs menu;
-    private H1 viewTitle;
-    boolean hasUserRole=false;
-    boolean hasadminRole=false;
-    boolean hasProfRole=false;
-    private String nome;
+	private final Tabs menu;
+	private H1 viewTitle;
+	boolean hasUserRole=false;
+	boolean hasadminRole=false;
+	boolean hasProfRole=false;
+	boolean hasCandidatoRole=false;
+	private String nome;
 
-    public MainView() {
-        setPrimarySection(Section.DRAWER);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        this.hasUserRole = authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("ROLE_USER"));
-        this.hasadminRole = authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
-        this.hasProfRole = authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("ROLE_PROFESSORE"));
-        
+	public MainView() {
+		setPrimarySection(Section.DRAWER);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		this.hasUserRole = authentication.getAuthorities().stream()
+				.anyMatch(r -> r.getAuthority().equals("ROLE_USER"));
+		this.hasadminRole = authentication.getAuthorities().stream()
+				.anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+		this.hasProfRole = authentication.getAuthorities().stream()
+				.anyMatch(r -> r.getAuthority().equals("ROLE_PROFESSORE"));
+		this.hasCandidatoRole = authentication.getAuthorities().stream()
+				.anyMatch(r -> r.getAuthority().equals("ROLE_CANDIDATO"));
+
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if ( principal instanceof UserDetails){
 			this.nome = ((UserDetails)principal).getUsername();
 		}
-        
-        
-        addToNavbar(true, createHeaderContent());
-        
-        menu = createMenu();
-        addToDrawer(createDrawerContent(menu));
-    }
 
-    private Component createHeaderContent() {
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.setId("header");
-        layout.getThemeList().set("dark", true);
-        layout.setWidthFull();
-        layout.setSpacing(false);
-        layout.setAlignItems(FlexComponent.Alignment.CENTER);
-        layout.add(new DrawerToggle());
-        viewTitle = new H1();
-        layout.add(viewTitle);
-        Anchor logout = new Anchor("/logout");
-        Button buttonLogout =new Button("logout",new Icon(VaadinIcon.CLOSE));
-        buttonLogout.setIconAfterText(true);
-        logout.add(buttonLogout);
-        layout.expand(viewTitle);
-        Div div1 = new Div();      
-        div1.add("Username : ");
-        div1.add(this.nome + "  ");
-        layout.add(div1);
-        layout.add(new Image("images/user.png", "Avatar"));
- 
-        layout.add(logout);
-        return layout;
-    }
 
-    private Component createDrawerContent(Tabs menu) {
-        VerticalLayout layout = new VerticalLayout();
-        layout.setSizeFull();
-        layout.setPadding(false);
-        layout.setSpacing(false);
-        layout.getThemeList().set("spacing-s", true);
-        layout.setAlignItems(FlexComponent.Alignment.STRETCH);
-        HorizontalLayout logoLayout = new HorizontalLayout();
-        logoLayout.setId("logo");
-        logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new Image("images/logo.png", "QTB logo"));
-        logoLayout.add(new H1("QTB"));
-        layout.add(logoLayout, menu);
-        return layout;
-    }
+		addToNavbar(true, createHeaderContent());
 
-    private Tabs createMenu() {
-        final Tabs tabs = new Tabs();
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-        tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL);
-        tabs.setId("tabs");
-        if(this.hasUserRole)
-        tabs.add(createMenuItemsUser());
-        else
-        	if(this.hasProfRole)
-        		tabs.add(createMenuItemsProf());
-        	else
-        		if(this.hasadminRole)
-        			tabs.add(createMenuItemsAdmin());
-        return tabs;
-    }
+		menu = createMenu();
+		addToDrawer(createDrawerContent(menu));
+	}
 
-    private Component[] createMenuItemsUser() {
-        return new Tab[] {
-        	createTab("Homepage", HomePageView.class),
-        	createTab("I miei corsi",StudenteView.class)
-        };
-    }
-    private Component[] createMenuItemsProf() {
-        return new Tab[] {
-        	createTab("Homepage", HomePageView.class),
-        	createTab("Gestione Corsi",ProfessoreView.class),
-        	createTab("Gestione Test",QuizView.class),
-        	createTab("Gestione Domande",DomandeView.class),
-        	createTab("Gestione Iscrizioni",IscrizioniView.class),
-        	createTab("Visualizza Passati",VisualizzaPassatiView.class)
-        };
-    }
-    
-    private Component[] createMenuItemsAdmin() {
-        return new Tab[] {
-        	createTab("Homepage", HomePageView.class),
-        	createTab("I miei corsi",StudenteView.class),
-        	createTab("Gestione Corsi",ProfessoreView.class),
-        	createTab("Gestione Test",QuizView.class),
-        	createTab("Gestione Domande",DomandeView.class),
-        	createTab("Gestione Iscrizioni",IscrizioniView.class),
-        	createTab("Visualizza Passati",VisualizzaPassatiView.class),
-        	createTab("admin",AdminView.class),
-        };
-    }
+	private Component createHeaderContent() {
+		HorizontalLayout layout = new HorizontalLayout();
+		layout.setId("header");
+		layout.getThemeList().set("dark", true);
+		layout.setWidthFull();
+		layout.setSpacing(false);
+		layout.setAlignItems(FlexComponent.Alignment.CENTER);
+		layout.add(new DrawerToggle());
+		viewTitle = new H1();
+		layout.add(viewTitle);
+		Anchor logout = new Anchor("/logout");
+		Button buttonLogout =new Button("logout",new Icon(VaadinIcon.CLOSE));
+		buttonLogout.setIconAfterText(true);
+		logout.add(buttonLogout);
+		layout.expand(viewTitle);
+		Div div1 = new Div();      
+		div1.add("Username : ");
+		div1.add(this.nome + "  ");
+		layout.add(div1);
+		layout.add(new Image("images/user.png", "Avatar"));
 
-    private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
-        final Tab tab = new Tab();
-        tab.add(new RouterLink(text, navigationTarget));
-        ComponentUtil.setData(tab, Class.class, navigationTarget);
-        return tab;
-    }
+		layout.add(logout);
+		return layout;
+	}
 
-    @Override
-    protected void afterNavigation() {
-        super.afterNavigation();
-        getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
-        viewTitle.setText(getCurrentPageTitle());
-    }
+	private Component createDrawerContent(Tabs menu) {
+		VerticalLayout layout = new VerticalLayout();
+		layout.setSizeFull();
+		layout.setPadding(false);
+		layout.setSpacing(false);
+		layout.getThemeList().set("spacing-s", true);
+		layout.setAlignItems(FlexComponent.Alignment.STRETCH);
+		HorizontalLayout logoLayout = new HorizontalLayout();
+		logoLayout.setId("logo");
+		logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+		logoLayout.add(new Image("images/logo.png", "QTB logo"));
+		logoLayout.add(new H1("QTB"));
+		layout.add(logoLayout, menu);
+		return layout;
+	}
 
-    private Optional<Tab> getTabForComponent(Component component) {
-        return menu.getChildren()
-                .filter(tab -> ComponentUtil.getData(tab, Class.class)
-                        .equals(component.getClass()))
-                .findFirst().map(Tab.class::cast);
-    }
+	private Tabs createMenu() {
+		final Tabs tabs = new Tabs();
+		tabs.setOrientation(Tabs.Orientation.VERTICAL);
+		tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL);
+		tabs.setId("tabs");
+		if(this.hasUserRole)
+			tabs.add(createMenuItemsUser());
+		else
+			if(this.hasProfRole)
+				tabs.add(createMenuItemsProf());
+			else
+				if(this.hasadminRole)
+					tabs.add(createMenuItemsAdmin());
+				else
+					if(this.hasCandidatoRole)
+						tabs.add(createMenuItemsCandidato());
+		return tabs;
+	}
 
-    private String getCurrentPageTitle() {
-        return getContent().getClass().getAnnotation(PageTitle.class).value();
-    }
+	private Component[] createMenuItemsUser() {
+		return new Tab[] {
+				createTab("Homepage", HomePageView.class),
+				createTab("I miei corsi",StudenteView.class),
+		};
+	}
+	private Component[] createMenuItemsCandidato() {
+		return new Tab[] {
+				createTab("Homepage", HomePageView.class),
+				createTab("Selezione",SelezioneView.class),
+				
+		};
+	}
+	
+	private Component[] createMenuItemsProf() {
+		return new Tab[] {
+				createTab("Homepage", HomePageView.class),
+				createTab("Gestione Corsi",ProfessoreView.class),
+				createTab("Gestione Test",QuizView.class),
+				createTab("Gestione Domande",DomandeView.class),
+				createTab("Gestione Iscrizioni",IscrizioniView.class),
+				createTab("Visualizza Passati",VisualizzaPassatiView.class)
+		};
+	}
+
+	private Component[] createMenuItemsAdmin() {
+		return new Tab[] {
+				createTab("Homepage", HomePageView.class),
+				createTab("I miei corsi",StudenteView.class),
+				createTab("Gestione Corsi",ProfessoreView.class),
+				createTab("Gestione Test",QuizView.class),
+				createTab("Gestione Domande",DomandeView.class),
+				createTab("Gestione Iscrizioni",IscrizioniView.class),
+				createTab("Visualizza Passati",VisualizzaPassatiView.class),
+				createTab("Selezione",SelezioneView.class),
+				createTab("admin",AdminView.class),
+		};
+	}
+
+	private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
+		final Tab tab = new Tab();
+		tab.add(new RouterLink(text, navigationTarget));
+		ComponentUtil.setData(tab, Class.class, navigationTarget);
+		return tab;
+	}
+
+	@Override
+	protected void afterNavigation() {
+		super.afterNavigation();
+		getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
+		viewTitle.setText(getCurrentPageTitle());
+	}
+
+	private Optional<Tab> getTabForComponent(Component component) {
+		return menu.getChildren()
+				.filter(tab -> ComponentUtil.getData(tab, Class.class)
+						.equals(component.getClass()))
+				.findFirst().map(Tab.class::cast);
+	}
+
+	private String getCurrentPageTitle() {
+		return getContent().getClass().getAnnotation(PageTitle.class).value();
+	}
 }

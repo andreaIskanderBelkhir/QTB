@@ -123,6 +123,16 @@ public class QuizService {
 		
 		
 	}
+	public Collection<Quiz> findAllbySelezioneandAttivati(Corso corso) {
+		// TODO Auto-generated method stub
+		List<Quiz> quiz= new ArrayList<>();
+		for(Quiz q:corso.getQuizDelcorso()){
+			if(q.getAttivato()){
+				quiz.add(q);
+			}
+		}
+		return quiz;
+	}
 }
 
 

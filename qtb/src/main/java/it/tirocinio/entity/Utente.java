@@ -11,12 +11,14 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.ManyToAny;
 
 import it.tirocinio.entity.quiz.Corso;
 import it.tirocinio.entity.quiz.Quiz;
@@ -40,12 +42,28 @@ public class Utente  extends AbstractEntity implements Cloneable{
 	@OneToMany(mappedBy="docente",fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	private List<Corso> corsitenuti;
 	
+	@ManyToOne
+	private Corso corsoSelezione;
+	
 	@ElementCollection(targetClass=Long.class,fetch=FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> quizpassati;
 	
-
+ 
 	
+	
+	
+	
+	
+	
+	public Corso getCorsoSelezione() {
+		return corsoSelezione;
+	}
+
+	public void setCorsoSelezione(Corso corsoSelezione) {
+		this.corsoSelezione = corsoSelezione;
+	}
+
 	public List<Long> getQuizpassati() {
 		return quizpassati;
 	}

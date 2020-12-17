@@ -45,7 +45,7 @@ public class IscrizioneCorsoForm extends FormLayout {
 		List<Corso> possibili= new ArrayList<Corso>();
 		
 		for(Corso c: corsi){		
-			if(!(this.corsoS.partecipa(c,studente))){
+			if((!(this.corsoS.partecipa(c,studente))&&(!(c.getSelezione())))){
 				possibili.add(c);
 			}
 
@@ -89,9 +89,9 @@ public class IscrizioneCorsoForm extends FormLayout {
 				Notification.show("inserire un corso valido");
 			}
 			else{
-				corsoS.addStudente(studente, nomeCorso.getValue());
-				utenteS.AddCorso(nomeCorso.getValue(), studente);
+				corsoS.addStudenteRichiesta(studente, nomeCorso.getValue());
 				grid.setItems(stud.getCorsifrequentati());
+				Notification.show("il professore è stato avvertito ti prego di attendere");
 			}
 			dialog.close();
 
@@ -101,7 +101,7 @@ public class IscrizioneCorsoForm extends FormLayout {
 			dialog.close();
 		});
 		HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
-		creaTitoloform(vert,"Iscriviti ad un corso");
+		creaTitoloform(vert,"Fai domanda per un corso : ");
 		creaRigaform(vert,hcorso,nomeCorso);
 		vert.add(pulsanti);
 		vert.setHorizontalComponentAlignment(Alignment.END,pulsanti);

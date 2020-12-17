@@ -20,11 +20,11 @@ public class ActionBar extends HorizontalLayout {
 	private HorizontalLayout h=new HorizontalLayout();
 	private H3 numerocambio;
 
-	public ActionBar(Button button,H3 h){
+	public ActionBar(Button button,H3 h3){
 		setId("prof-navbar");
 		setPadding(true);
-		this.h.add(h);
-		h.getStyle().set("color", "#ffffff");
+		this.h.add(h3);
+		h3.getStyle().set("color", "#ffffff");
 		setVerticalComponentAlignment(Alignment.CENTER,h);
 		add(this.h);
 		button.setIcon(new Icon(VaadinIcon.PLUS));
@@ -60,6 +60,25 @@ public class ActionBar extends HorizontalLayout {
 		setVerticalComponentAlignment(Alignment.CENTER,button);
 		add(button);
 	}
+	public ActionBar(ComboBox<Corso> corsi,Button button) {
+		setId("prof-navbar");
+		setPadding(true);	
+		H3 h3 =new H3("Scegli azienda : ");
+		h3.getStyle().set("color", "#ffffff");
+		setVerticalComponentAlignment(Alignment.CENTER,corsi,h3);
+		corsi.getStyle().set("background-color", "#ffffff");	
+		add(h3,corsi);
+		button.setIcon(new Icon(VaadinIcon.PLUS));
+		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		button.getElement().getStyle().set("margin-left", "auto");
+		setVerticalComponentAlignment(Alignment.CENTER,button);
+		add(button);
+		
+	}
+	
+
+	
+	
 	public ActionBar(Button button, ComboBox<Quiz> quizs,int i) {
 		setId("prof-navbar");
 		setPadding(true);	

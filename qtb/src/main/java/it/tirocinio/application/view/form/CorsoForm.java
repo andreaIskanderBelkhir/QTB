@@ -66,12 +66,14 @@ public class CorsoForm extends HorizontalLayout {
 			corso.setDescrizioneCorso(descrizioneCorso.getValue().toString());
 			corso.setDocente(docente);	
 			corso.setQuizDelcorso(new ArrayList<Quiz>());
+			corso.setUtentirischiesta(new ArrayList<Long>());
+			corso.setSelezione(false);
 			binder.setBean(corso);
 			if((binder.validate().isOk()) && this.corsoS.corsoNonEsistente(corso)){	
 				this.corsoS.save(corso);
 				this.utenteS.AddCorso(corso,docente);	
 				dialog.close();
-				gridtenuti.setItems(this.corsoS.findAll());
+				gridtenuti.setItems(this.corsoS.findbyDocente(docente));
 				binder.removeBean();				
 			}
 			else
@@ -94,7 +96,6 @@ public class CorsoForm extends HorizontalLayout {
 		add(dialog);
 		dialog.open();
 	}
-
 
 	public void Modifica(Grid<Corso> gridtenuti,Corso corso){
 		if(!(corso==null)){
@@ -237,6 +238,35 @@ public class CorsoForm extends HorizontalLayout {
 		ver.add(h);
 
 	}
+	public void Setselezione(Grid<Corso> gridtenuti, Corso corso) {
+		if(corso!=null){
+			VerticalLayout ver = new VerticalLayout();
+			Dialog dialog = new Dialog();
+			dialog.setWidth("50%");
+			dialog.setCloseOnEsc(false);
+			dialog.setCloseOnOutsideClick(false);
+			Button save = new Button("Salva");
+			Button cancella = new Button("Cancella");
+			save.addThemeVariants(ButtonVariant.LUMO_ERROR);
+			save.addClickListener(e->{
+				corso.setSelezione(true);
+				this.corsoS.save(corso);
+				gridtenuti.setItems(this.corsoS.findbyDocente(docente));
+				dialog.close();
+				Notification.show("Corso verrà usato come selezione");
+			});
+			cancella.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+			cancella.addClickListener(e->{
+				dialog.close();
+			});	
+			HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
+			creaTitoloform(ver,"Usa come selezione : ");
+			ver.add(pulsanti);
+			ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
+			dialog.add(ver);
+			dialog.open();
+		}
+		else
+			Notification.show("Scegli un corso prima");
+	}
 }
-
-

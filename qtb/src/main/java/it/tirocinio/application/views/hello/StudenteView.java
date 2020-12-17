@@ -64,6 +64,7 @@ public class StudenteView extends VerticalLayout {
 			this.nome = ((UserDetails)principal).getUsername();
 		}
 		studente=this.utenteS.findByName(nome);
+
 		List<Corso> corsi=studente.getCorsifrequentati();
 		configureGridCorsi();
 		configureGridQuiz();
@@ -101,7 +102,7 @@ public class StudenteView extends VerticalLayout {
 		H2 h=new H2("PASSATO");
 		h.getStyle().set("color", "#19bf0a");
 		return h;
-		
+
 	}
 
 
@@ -114,7 +115,7 @@ public class StudenteView extends VerticalLayout {
 		if(studente.getQuizpassati().contains(item.getId())){
 			button.setVisible(false);
 		}
-		
+
 		return link;
 	}
 

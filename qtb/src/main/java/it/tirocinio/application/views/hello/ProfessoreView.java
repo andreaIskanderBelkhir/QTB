@@ -57,9 +57,11 @@ public class ProfessoreView extends VerticalLayout{
 		Button eliminaCbutton= new Button("Elimina",e->corsoForm.Elimina(gridtenuti, corso));
 		Button creazioneCbutton = new Button("Nuovo",e->corsoForm.Nuovo(gridtenuti));
 		Button modificaCbutton=new Button("Modifica",e->corsoForm.Modifica(gridtenuti,this.corso));
+		Button selezioneCbutton =new Button("Selezione",e->corsoForm.Setselezione(gridtenuti,this.corso));
 		TextField filter = new TextField();
 		configureFilter(filter);
-		ActionBar navbar=new ActionBar(creazioneCbutton,filter);
+		ActionBar navbar=new ActionBar(selezioneCbutton,filter);
+		navbar.AddButtonAtActionBar(creazioneCbutton);
 		navbar.AddButtonAtActionBar(modificaCbutton);
 		navbar.AddButtonAtActionBar(eliminaCbutton);
 		add(navbar);
@@ -99,7 +101,7 @@ public class ProfessoreView extends VerticalLayout{
 
 
 	private void updateGridCorsiAdmin(TextField filter) {
-		gridtenuti.setItems(this.corsoS.findAll(filter.getValue()));
+		gridtenuti.setItems(this.corsoS.findbyDocente(docente,filter));
 	}
 
 
@@ -114,6 +116,9 @@ public class ProfessoreView extends VerticalLayout{
 			return docente==null ? "-": docente.getNome();
 		}).setHeader("Docente del corso");
 		gridtenuti.getColumns().forEach(c->c.setAutoWidth(true));
+		gridtenuti.addColumn(corso->{
+			return corso.getSelezione() ? "SI": "";
+		}).setHeader("usato come selezione");
 		gridtenuti.asSingleSelect().addValueChangeListener(event->{
 			this.corso=event.getValue();
 		});

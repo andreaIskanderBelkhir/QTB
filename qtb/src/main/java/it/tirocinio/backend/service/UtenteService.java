@@ -83,6 +83,16 @@ public class UtenteService  {
 		}
 		return null;
 	}
+	public Utente findById(Long id) {
+		// TODO Auto-generated method stub
+		List<Utente> ut=findAll();
+		for(Utente u: ut){
+			if(u.getId().equals(id)){
+				return u;
+			}
+		}
+		return null;
+	}
 
 	public void AddCorso(Corso c,Utente utente){
 		List<Corso> corsinew = new ArrayList<>(); 
@@ -133,14 +143,13 @@ public class UtenteService  {
 		List<Utente> utenti=findByCorso(value);
 		for(Utente u:utenti){
 			if(!(u.getCorsifrequentati()==null)){
-				this.utenteRepository.delete(u);
+				
 				u.getCorsifrequentati().remove(value);
 				this.utenteRepository.save(u);
 			}
 		}
 
 	}
-
 
 
 	public void DeleteCorsoperdoc(Utente doc,Corso value) {
@@ -183,6 +192,12 @@ public class UtenteService  {
 			}
 		}
 		return ut;
+	}
+
+	public String encriptPassword(String string) {
+		return passwordencoder.encode(string);
+		
+		
 	}
 
 

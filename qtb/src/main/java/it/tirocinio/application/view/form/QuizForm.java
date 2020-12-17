@@ -125,7 +125,6 @@ public class QuizForm extends FormLayout{
 						quiz.setTempo((double) 60);
 					}
 					else{
-
 						quiz.setTempo(numberField.getValue());
 					}
 					quiz.setNomeQuiz(nomeQuiz.getValue().trim());

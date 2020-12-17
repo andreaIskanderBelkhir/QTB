@@ -54,6 +54,7 @@ public class IscriviForm extends FormLayout{
 			save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);			
 			save.addClickListener(e->{
 				for(Utente u:gridUtentinuovi.getSelectedItems()){
+					this.corsoS.removeStudenteApprovare(corso,u);
 					this.corsoS.addStudente(u, corso);
 					this.utenteS.AddCorso(corso, u);
 				}

@@ -1,5 +1,8 @@
 package it.tirocinio.application.views.hello;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -61,9 +64,12 @@ public class IscrizioniView extends VerticalLayout {
 
 
 	private void UpdateGridCorsi() {
-		gridcorsi.setItems(this.corsoS.findbyDocente(docente));
-		
-		
+		List<Corso> co=new ArrayList<Corso>();
+		for(Corso c:this.corsoS.findbyDocente(docente)){
+			if(!(c.getSelezione()))
+				co.add(c);
+		}
+		gridcorsi.setItems(co);		
 	}
 
 
@@ -72,6 +78,12 @@ public class IscrizioniView extends VerticalLayout {
 		gridUtenti.addColumn(utente->{
 			return utente.getNome();
 		}).setHeader("Nome");
+		gridUtenti.addColumn(u->{
+			if(corso.getUtentirischiesta().contains(u.getId())){
+				return "Da approvare";
+			}
+			return "";
+		});
 		
 	}
 
@@ -87,6 +99,8 @@ public class IscrizioniView extends VerticalLayout {
 
 
 	private void updateGridUtenti(Corso value) {
-		gridUtenti.setItems(this.utenteS.findByCorso(value));
+		List<Utente> utenti= this.utenteS.findByCorso(value);
+		utenti.addAll(this.corsoS.getStudenteRichiesta(value.getUtentirischiesta()));
+		gridUtenti.setItems(utenti);
 	}
 }
