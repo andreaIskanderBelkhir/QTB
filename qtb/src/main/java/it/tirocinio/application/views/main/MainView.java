@@ -163,6 +163,7 @@ public class MainView extends AppLayout {
 				createTab("Gestione Test",QuizView.class),
 				createTab("Gestione Domande",DomandeView.class),
 				createTab("Gestione Iscrizioni",IscrizioniView.class),
+				createTab("Gestione selezione",SelezioneView.class),
 				createTab("Visualizza Passati",VisualizzaPassatiView.class)
 		};
 	}
@@ -176,7 +177,7 @@ public class MainView extends AppLayout {
 				createTab("Gestione Domande",DomandeView.class),
 				createTab("Gestione Iscrizioni",IscrizioniView.class),
 				createTab("Visualizza Passati",VisualizzaPassatiView.class),
-				createTab("Selezione",SelezioneView.class),
+				createTab("Gestione selezione",SelezioneView.class),
 				createTab("admin",AdminView.class),
 		};
 	}

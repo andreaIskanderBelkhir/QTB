@@ -52,21 +52,21 @@ public class UtenteService  {
 		if(utenteRepository.count()==0){
 			Utente admin = new Utente();
 			admin.setNome("admin");
-			admin.setPassword(passwordencoder.encode("admin"));
+			admin.setPassword(passwordencoder.encode("a"));
 			admin.setRuolo("ADMIN");
 			admin.setQuizpassati(new ArrayList<Long>());
 			Utente prof = new Utente();
 			prof.setNome("prof");
-			prof.setPassword(passwordencoder.encode("sonoilprof"));
+			prof.setPassword(passwordencoder.encode("a"));
 			prof.setRuolo("PROFESSORE");
 			
 			Utente user = new Utente();
 			user.setNome("studente");
-			user.setPassword(passwordencoder.encode("stud"));
+			user.setPassword(passwordencoder.encode("a"));
 			user.setRuolo("USER");
 			Utente user2 = new Utente();
 			user2.setNome("studente2");
-			user2.setPassword(passwordencoder.encode("stud2"));
+			user2.setPassword(passwordencoder.encode("a"));
 			user2.setRuolo("USER");
 			List<Utente> utenti= Arrays.asList(admin,prof,user,user2);
 			this.utenteRepository.saveAll(utenti);
@@ -138,6 +138,19 @@ public class UtenteService  {
 		}
 		return corsi;
 	}
+	
+	public List<Utente> findByCorsoSelezione(Corso c) {
+		List<Utente> corsi= new ArrayList<>();
+		for(Utente u:findAll()){
+			if(u.getCorsoSelezione()!=null){
+				if(u.getCorsoSelezione().equals(c)){
+					corsi.add(u);
+				}
+			}
+			
+		}
+		return corsi;
+	}
 
 	public void DeleteCorso(Corso value) {
 		List<Utente> utenti=findByCorso(value);
@@ -168,7 +181,6 @@ public class UtenteService  {
 				c.getQuizDelcorso().remove(value);
 				this.utenteRepository.save(doc);
 			}
-
 		}
 
 	}
@@ -199,6 +211,8 @@ public class UtenteService  {
 		
 		
 	}
+
+
 
 
 }
