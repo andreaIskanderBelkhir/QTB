@@ -76,8 +76,10 @@ public class CorsoForm extends HorizontalLayout {
 				gridtenuti.setItems(this.corsoS.findbyDocente(docente));
 				binder.removeBean();				
 			}
-			else
+			else{
 				Notification.show("error inserire un corso valido");
+				Notification.show("prova con un altro nome");
+			}
 		});
 		cancella.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		cancella.addClickListener(e->{

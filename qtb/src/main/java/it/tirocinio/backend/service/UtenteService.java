@@ -2,8 +2,10 @@ package it.tirocinio.backend.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -55,6 +57,7 @@ public class UtenteService  {
 			admin.setPassword(passwordencoder.encode("a"));
 			admin.setRuolo("ADMIN");
 			admin.setQuizpassati(new ArrayList<Long>());
+			admin.setValoretesteffetuati(new HashMap<Long,Double>());		
 			Utente prof = new Utente();
 			prof.setNome("prof");
 			prof.setPassword(passwordencoder.encode("a"));
@@ -64,10 +67,12 @@ public class UtenteService  {
 			user.setNome("studente");
 			user.setPassword(passwordencoder.encode("a"));
 			user.setRuolo("USER");
+			user.setQuizpassati(new ArrayList<Long>());
 			Utente user2 = new Utente();
 			user2.setNome("studente2");
 			user2.setPassword(passwordencoder.encode("a"));
 			user2.setRuolo("USER");
+			user2.setQuizpassati(new ArrayList<Long>());
 			List<Utente> utenti= Arrays.asList(admin,prof,user,user2);
 			this.utenteRepository.saveAll(utenti);
 		}
@@ -190,11 +195,17 @@ public class UtenteService  {
 
 	}
 
-	public void addQuiz(Utente studente, Long id) {		
+	public void addQuizpassati(Utente studente, Long id) {		
 		studente.getQuizpassati().add(id);	
 		this.utenteRepository.save(studente);
 		
 	}
+	public void addQuizvalore(Utente studente, Long id,Double per) {
+		studente.getValoretesteffetuati().put(id.longValue(), per.doubleValue());
+		this.utenteRepository.save(studente);
+	}
+	
+	
 
 	public List<Utente> findStudenti() {
 		List<Utente> ut=new ArrayList<>();
@@ -211,6 +222,8 @@ public class UtenteService  {
 		
 		
 	}
+
+
 
 
 

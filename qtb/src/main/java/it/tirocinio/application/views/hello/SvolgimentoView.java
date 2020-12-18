@@ -79,13 +79,13 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		this.successivo=new Button("successivo");
 		this.consegna=new Button("Consegna");
 		this.h=new H3("Domanda N° ");
-		 Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		    if ( principal instanceof UserDetails){
-			  this.nome = ((UserDetails)principal).getUsername();
-	    	}
-		    studente = this.utenteS.findByName(nome);
-		    
-		    
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if ( principal instanceof UserDetails){
+			this.nome = ((UserDetails)principal).getUsername();
+		}
+		studente = this.utenteS.findByName(nome);
+
+
 
 	}
 
@@ -133,7 +133,7 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 				settaPulsanti();
 
 			}
-			
+
 		}
 	}
 
@@ -255,7 +255,7 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			conteggioPercentuale(ver,numerogiusto,numerototale);
 		}
 		else
-		conteggioDomande(ver,numerogiusto,numerosbagliate,numerototale);
+			conteggioDomande(ver,numerogiusto,numerosbagliate,numerototale);
 		add(ver);
 	}
 
@@ -275,7 +275,17 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			risultato.getStyle().set("font-weight", "900");
 			passagio.add(risultato,risultato2);
 			ver.add(perct,passagio);
-			this.utenteS.addQuiz(studente,quiz.getId());
+			this.utenteS.addQuizpassati(studente,quiz.getId());
+			if(studente.getValoretesteffetuati().get(quiz.getId())==null){
+				this.utenteS.addQuizvalore(studente, quiz.getId(),per);
+				
+			}
+			else{
+				if(studente.getValoretesteffetuati().get(quiz.getId())<per){
+					this.utenteS.addQuizvalore(studente,quiz.getId(),per);
+					
+				}
+			}
 		}
 		else
 		{
@@ -288,11 +298,21 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			dapassare.add("%");
 			passagio.add(risultato,risultato2);
 			ver.add(perct,passagio,dapassare);
-			
+			if(studente.getValoretesteffetuati().get(quiz.getId())==null){
+				this.utenteS.addQuizvalore(studente, quiz.getId(),per);
+				
+			}
+			else{
+				if(studente.getValoretesteffetuati().get(quiz.getId())<per){
+					this.utenteS.addQuizvalore(studente,quiz.getId(),per);
+					
+				}
+			}
+
 		}
 		passagio.setVerticalComponentAlignment(Alignment.CENTER,risultato2);
 		risultato.getElement().getStyle().set("margin-left", "40%");
-		
+
 	}
 
 
@@ -312,13 +332,23 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		H2 risultato=new H2();
 		H2 risultato2=new H2("");
 		if((valoreg-valores)>=quiz.getSoglia()){
-			
+
 			risultato.add("PASSATO");
 			risultato.getStyle().set("color", "#19bf0a");
 			risultato.getStyle().set("font-weight", "900");
 			passagio.add(risultato,risultato2);
 			ver.add(passagio);
-			this.utenteS.addQuiz(studente,quiz.getId());
+			this.utenteS.addQuizpassati(studente,quiz.getId());
+			if(studente.getValoretesteffetuati().get(quiz.getId())==null){
+				this.utenteS.addQuizvalore(studente, quiz.getId(),(valoreg-valores));
+				
+			}
+			else{
+				if(studente.getValoretesteffetuati().get(quiz.getId())<(valoreg-valores)){
+					this.utenteS.addQuizvalore(studente,quiz.getId(),(valoreg-valores));
+					
+				}
+			}
 		}
 		else
 		{
@@ -330,12 +360,22 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			dapassare.add(String.valueOf(quiz.getSoglia()));
 			passagio.add(risultato,risultato2);
 			ver.add(passagio,dapassare);
-			
+			if(studente.getValoretesteffetuati().get(quiz.getId())==null){
+				this.utenteS.addQuizvalore(studente, quiz.getId(),(valoreg-valores));
+				
+			}
+			else{
+				if(studente.getValoretesteffetuati().get(quiz.getId())<(valoreg-valores)){
+					this.utenteS.addQuizvalore(studente,quiz.getId(),(valoreg-valores));
+					
+				}
+			}
+
 		}
 		passagio.setVerticalComponentAlignment(Alignment.CENTER,risultato2);
 		risultato.getElement().getStyle().set("margin-left", "40%");
-		
-		
+
+
 	}
 
 

@@ -16,7 +16,7 @@ import it.tirocinio.entity.AbstractEntity;
 
 @Entity
 public class Domanda extends AbstractEntity implements Cloneable {
-	@Column(nullable=false,unique=true)
+	@Column(nullable=false)
 	private String nomedomanda;
 	private String descrizionedomanda;
 	

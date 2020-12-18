@@ -97,9 +97,12 @@ public class IscrizioniView extends VerticalLayout {
 		
 	}
 
-
 	private void updateGridUtenti(Corso value) {
 		List<Utente> utenti= this.utenteS.findByCorso(value);
+		if(value.getUtentirischiesta()==null){
+			
+		}
+		else
 		utenti.addAll(this.corsoS.getStudenteRichiesta(value.getUtentirischiesta()));
 		gridUtenti.setItems(utenti);
 	}

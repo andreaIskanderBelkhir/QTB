@@ -1,6 +1,8 @@
 package it.tirocinio.entity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -49,6 +51,11 @@ public class Utente  extends AbstractEntity implements Cloneable{
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<Long> quizpassati;
 	
+	@ElementCollection(targetClass=Double.class,fetch=FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
+	private Map<Long,Double> valoretesteffetuati;
+	
+	
  
 	
 	
@@ -56,6 +63,14 @@ public class Utente  extends AbstractEntity implements Cloneable{
 	
 	
 	
+	public Map<Long, Double> getValoretesteffetuati() {
+		return valoretesteffetuati;
+	}
+
+	public void setValoretesteffetuati(Map<Long, Double> valoretesteffetuati) {
+		this.valoretesteffetuati = valoretesteffetuati;
+	}
+
 	public Corso getCorsoSelezione() {
 		return corsoSelezione;
 	}

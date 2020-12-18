@@ -92,9 +92,23 @@ public class StudenteView extends VerticalLayout {
 		}).setHeader("Nome test");
 		gridQuiz.addComponentColumn(item-> createLink(gridQuiz,item));
 		gridQuiz.addColumn(e->{
-			return studente.getQuizpassati().contains(e.getId()) ? "Svolto" : "non svolto" ;
+			return studente.getQuizpassati().contains(e.getId()) ? "Passato" : "non passato" ;
 		}).setHeader("Stato");
+		gridQuiz.addColumn(e->{		
+			if(studente.getValoretesteffetuati().get(e.getId()) == null){
+				return "";
+			}
+			else{
+				String valore=studente.getValoretesteffetuati().get(e.getId()).toString();
+				if(e.getModalitaPercentuale()){
+					valore=valore+" %";
+				}
+				return valore;
+			}
 
+
+
+		}).setHeader("Valore migliore");
 	}
 
 

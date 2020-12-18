@@ -149,8 +149,11 @@ public class QuizForm extends FormLayout{
 						dialog.close();
 						binder.removeBean();
 					}
-					else
-						Notification.show("error inserire un quiz valido");
+					else{
+						Notification.show("error inserire un quiz valido ");
+						Notification.show("prova con un altro nome");
+					}
+
 				}
 
 				else
