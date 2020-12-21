@@ -99,8 +99,7 @@ public class UtenteService  {
 		return null;
 	}
 
-	public void AddCorso(Corso c,Utente utente){
-		List<Corso> corsinew = new ArrayList<>(); 
+	public void AddCorso(Corso c,Utente utente){	
 		if(c==null){
 			return;
 		}
@@ -109,16 +108,14 @@ public class UtenteService  {
 			for(Utente u:findAll()){
 				if(u.equals(utente)){
 					if(utente.getCorsifrequentati()==null){
-						List<Corso> corsofreqnew=new ArrayList<>();
-						corsofreqnew.add(c);
-						utente.setCorsifrequentati(corsofreqnew);
+						List<Corso> corsinew = new ArrayList<>(); 
+						corsinew.add(c);
+						utente.setCorsifrequentati(corsinew);
 						this.corsoS.addStudente(utente,c);
 						this.utenteRepository.save(utente);
 					}
-					else{
-						corsinew = utente.getCorsifrequentati();
-						corsinew.add(c);
-						utente.setCorsifrequentati(corsinew);
+					else{		
+						utente.getCorsifrequentati().add(c);
 						this.corsoS.addStudente(utente,c);
 						this.utenteRepository.save(utente);
 					}

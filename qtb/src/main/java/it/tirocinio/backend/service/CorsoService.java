@@ -106,7 +106,7 @@ public class CorsoService {
 	}
 	
 	public void addStudente(Utente u,Corso c){
-		List<Utente> iscritti = new ArrayList<>(); 
+		
 		if(u==null){
 			return;
 		}
@@ -114,16 +114,15 @@ public class CorsoService {
 			for(Corso cor:findAll()){
 				if(cor.equals(c)){
 					if(c.getUtentifreq()==null){
-						List<Utente> iscrittinew =new ArrayList<>();
-						iscrittinew.add(u);
-						c.setUtentifreq(iscrittinew);
+						List<Utente> iscritti = new ArrayList<>(); 
+						iscritti.add(u);
+						c.setUtentifreq(iscritti);
 						this.corsorep.save(c);
 					}
 					else
 					{
-						iscritti = c.getUtentifreq();
-						iscritti.add(u);
-						c.setUtentifreq(iscritti);
+						
+						c.getUtentifreq().add(u);
 						this.corsorep.save(c);
 					}
 				}
@@ -173,7 +172,7 @@ public class CorsoService {
 
 	}
 
-	public Collection<Corso> findbyDocente(Utente nome, TextField filter) {
+	public List<Corso> findbyDocente(Utente nome, TextField filter) {
 		if(filter.getValue()==null||filter.getValue().isEmpty()){
 			return findbyDocente(nome);
 		}

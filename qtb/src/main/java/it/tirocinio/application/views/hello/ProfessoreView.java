@@ -96,14 +96,11 @@ public class ProfessoreView extends VerticalLayout{
 
 
 		});
-
 	}
-
 
 	private void updateGridCorsiAdmin(TextField filter) {
 		gridtenuti.setItems(this.corsoS.findbyDocente(docente,filter));
 	}
-
 
 	private void configureGridCorsiAdmin() {
 		gridtenuti.setSizeFull();
