@@ -128,16 +128,17 @@ public class ProfessoreView extends VerticalLayout{
 		gridtenuti.setItems(this.corsoS.findbyDocente(docente,filter));
 
 	}
-
-
+	
 	private void configureGridCorsiDocente() {
 		gridtenuti.setSizeFull();
-
 		gridtenuti.removeColumnByKey("utentifreq");
 		gridtenuti.removeColumnByKey("docente");
 		gridtenuti.removeColumnByKey("quizDelcorso");
 		gridtenuti.setColumns("id","nomeCorso","descrizioneCorso");		
 		gridtenuti.getColumns().forEach(c->c.setAutoWidth(true));
+		gridtenuti.addColumn(corso->{
+			return corso.getSelezione() ? "SI": "";
+		}).setHeader("usato come selezione");
 		gridtenuti.asSingleSelect().addValueChangeListener(event->{
 			this.corso=event.getValue();
 		});

@@ -82,7 +82,21 @@ public class ActionBar extends HorizontalLayout {
 	public ActionBar(Button button, ComboBox<Quiz> quizs,int i) {
 		setId("prof-navbar");
 		setPadding(true);	
-		H3 h3 =new H3("seleziona Test : ");
+		H3 h3 =new H3("Test : ");
+		h3.getStyle().set("color", "#ffffff");
+		setVerticalComponentAlignment(Alignment.CENTER,quizs,h3);
+		quizs.getStyle().set("background-color", "#ffffff");	
+		add(h3,quizs);
+		button.setIcon(new Icon(VaadinIcon.PLUS));
+		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		button.getElement().getStyle().set("margin-left", "auto");
+		setVerticalComponentAlignment(Alignment.CENTER,button);
+		add(button);
+	}
+	public ActionBar(Button button, TextField quizs,int i) {
+		setId("prof-navbar");
+		setPadding(true);	
+		H3 h3 =new H3("Test : ");
 		h3.getStyle().set("color", "#ffffff");
 		setVerticalComponentAlignment(Alignment.CENTER,quizs,h3);
 		quizs.getStyle().set("background-color", "#ffffff");	

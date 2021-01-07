@@ -34,6 +34,7 @@ import com.vaadin.flow.theme.Theme;
 import it.tirocinio.application.views.main.MainView;
 import it.tirocinio.application.view.HomePageView;
 import it.tirocinio.application.views.hello.AdminView;
+import it.tirocinio.application.views.hello.Domande2view;
 import it.tirocinio.application.views.hello.DomandeView;
 import it.tirocinio.application.views.hello.IscrizioniView;
 import it.tirocinio.application.views.hello.ProfessoreView;
@@ -154,8 +155,7 @@ public class MainView extends AppLayout {
 				createTab("Selezione",SelezioneView.class),
 				
 		};
-	}
-	
+	}	
 	private Component[] createMenuItemsProf() {
 		return new Tab[] {
 				createTab("Homepage", HomePageView.class),
@@ -163,7 +163,7 @@ public class MainView extends AppLayout {
 				createTab("Gestione Test",QuizView.class),
 				createTab("Gestione Domande",DomandeView.class),
 				createTab("Gestione Iscrizioni",IscrizioniView.class),
-				createTab("Gestione selezione",SelezioneView.class),
+				createTab("Gestione Selezione",SelezioneView.class),
 				createTab("Visualizza Passati",VisualizzaPassatiView.class)
 		};
 	}
@@ -175,10 +175,11 @@ public class MainView extends AppLayout {
 				createTab("Gestione Corsi",ProfessoreView.class),
 				createTab("Gestione Test",QuizView.class),
 				createTab("Gestione Domande",DomandeView.class),
+				createTab("Gestione Domande 2",Domande2view.class),
 				createTab("Gestione Iscrizioni",IscrizioniView.class),
 				createTab("Visualizza Passati",VisualizzaPassatiView.class),
-				createTab("Gestione selezione",SelezioneView.class),
-				createTab("admin",AdminView.class),
+				createTab("Gestione Selezione",SelezioneView.class),
+				createTab("Admin",AdminView.class),
 		};
 	}
 
