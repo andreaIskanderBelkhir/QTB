@@ -13,21 +13,25 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 
 import it.tirocinio.backend.service.CorsoService;
+import it.tirocinio.backend.service.DomandaService;
 import it.tirocinio.backend.service.QuizService;
 import it.tirocinio.backend.service.UtenteService;
 import it.tirocinio.entity.Utente;
+import it.tirocinio.entity.quiz.Domanda;
 import it.tirocinio.entity.quiz.Quiz;
 
 public class ScegliTestForm extends FormLayout {
 	public QuizService quizS;
 	public UtenteService utenteS;
+	public DomandaService domandaS;
 	public Quiz test;
 	Grid<Quiz> gridquiz = new Grid<>(Quiz.class);
 
 
-	public ScegliTestForm(QuizService q,UtenteService u){
+	public ScegliTestForm(QuizService q,UtenteService u,DomandaService d){
 		this.quizS=q;
 		this.utenteS=u;
+		this.domandaS=d;
 		gridquiz.setColumns("id");
 		gridquiz.addColumn(quiz->{
 			return quiz.getNomeQuiz();	});
@@ -35,7 +39,7 @@ public class ScegliTestForm extends FormLayout {
 			this.test=event.getValue();
 		});
 	}
-	public void selezionaTest(Utente docente, ComboBox<Quiz> quizs){
+	public void selezionaTest(Utente docente, ComboBox<Quiz> quizs, Grid<Domanda> griddomanda){
 		gridquiz.setItems(this.quizS.findAllByDocente(docente));
 		VerticalLayout ver=new VerticalLayout();
 		Dialog dialog = new Dialog();
@@ -47,6 +51,7 @@ public class ScegliTestForm extends FormLayout {
 		save.addClickListener(e->{
 			if(test!=null){
 				quizs.setValue(test);
+				griddomanda.setItems(this.domandaS.findByQuiz(test));
 				dialog.close();
 				
 			}

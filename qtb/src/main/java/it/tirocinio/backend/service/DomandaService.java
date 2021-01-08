@@ -2,7 +2,9 @@ package it.tirocinio.backend.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import com.vaadin.ui.Notification;
 
 import it.tirocinio.backend.DomandaRepository;
 import it.tirocinio.backend.QuizRepository;
+import it.tirocinio.entity.Utente;
 import it.tirocinio.entity.quiz.Corso;
 import it.tirocinio.entity.quiz.Domanda;
 import it.tirocinio.entity.quiz.Quiz;
@@ -73,14 +76,24 @@ public class DomandaService {
 		
 	}
 
-	public List<Risposta> findRisposte(Domanda value) {
+	public Set<Risposta> findRisposte(Domanda value) {
 		
-		List<Risposta>lista= new ArrayList<>();
+		Set<Risposta>lista= new HashSet();
 		for(Domanda dom:findAll()){
 			if(dom.equals(value))
 				lista.addAll(dom.getRisposte());
 		}
 
 		return lista;	
+	}
+
+	public Domanda findById(Long id) {
+		List<Domanda> ut=findAll();
+		for(Domanda u: ut){
+			if(u.getId().equals(id)){
+				return u;
+			}
+		}
+		return null;
 	}
 }
