@@ -58,6 +58,21 @@ public class UtenteService  {
 			admin.setRuolo("ADMIN");
 			admin.setQuizpassati(new ArrayList<Long>());
 			admin.setValoretesteffetuati(new HashMap<Long,Double>());		
+			Corso corso= new Corso();
+			corso.setNomeCorso("TestCorso");
+			corso.setDescrizioneCorso("un test di popolamento");
+			corso.setDocente(admin);
+			corso.setQuizDelcorso(new ArrayList<Quiz>());
+			corso.setUtentirischiesta(new ArrayList<Long>());
+			corso.setSelezione(false);
+			
+			List<Corso> corsinew = new ArrayList<>(); 
+			corsinew.add(corso);
+			admin.setCorsifrequentati(corsinew);
+			List<Utente> utentinew = new ArrayList<>(); 
+			utentinew.add(admin);
+			corso.setUtentifreq(utentinew);
+			
 			Utente prof = new Utente();
 			prof.setNome("prof");
 			prof.setPassword(passwordencoder.encode("a"));
@@ -75,6 +90,7 @@ public class UtenteService  {
 			user2.setQuizpassati(new ArrayList<Long>());
 			List<Utente> utenti= Arrays.asList(admin,prof,user,user2);
 			this.utenteRepository.saveAll(utenti);
+			this.corsoS.save(corso);
 		}
 	}
 

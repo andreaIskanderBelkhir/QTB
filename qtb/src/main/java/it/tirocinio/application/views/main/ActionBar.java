@@ -94,18 +94,33 @@ public class ActionBar extends HorizontalLayout {
 		add(button);
 	}
 	public ActionBar(Button button, TextField quizs,int i) {
+		if(i==2){
 		setId("prof-navbar");
 		setPadding(true);	
 		H3 h3 =new H3("Test : ");
 		h3.getStyle().set("color", "#ffffff");
 		setVerticalComponentAlignment(Alignment.CENTER,quizs,h3);
 		quizs.getStyle().set("background-color", "#ffffff");	
-		add(h3,quizs);
-		button.setIcon(new Icon(VaadinIcon.PLUS));
+		add(h3,quizs);		
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-		button.getElement().getStyle().set("margin-left", "auto");
+		button.getElement().getStyle().set("margin-right", "auto");
 		setVerticalComponentAlignment(Alignment.CENTER,button);
 		add(button);
+		}
+		else{
+			setId("prof-navbar");
+			setPadding(true);	
+			H3 h3 =new H3("Test : ");
+			h3.getStyle().set("color", "#ffffff");
+			setVerticalComponentAlignment(Alignment.CENTER,quizs,h3);
+			quizs.getStyle().set("background-color", "#ffffff");	
+			add(h3,quizs);
+			button.setIcon(new Icon(VaadinIcon.PLUS));
+			button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+			button.getElement().getStyle().set("margin-left", "auto");
+			setVerticalComponentAlignment(Alignment.CENTER,button);
+			add(button);
+		}
 	}
 	public ActionBar(Button button, H3 h, SimpleTimer timer) {
 		setId("prof-navbar");
@@ -143,5 +158,11 @@ public class ActionBar extends HorizontalLayout {
 			this.h.add(this.numerocambio);
 		}
 
+	}
+	public void AddButtonAtActionBarSave(Button button) {
+		button.setIcon(new Icon(VaadinIcon.INBOX));
+		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);		
+		setVerticalComponentAlignment(Alignment.CENTER,button);
+		add(button);
 	}
 }

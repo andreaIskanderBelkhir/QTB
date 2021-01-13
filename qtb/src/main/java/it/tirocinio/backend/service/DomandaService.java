@@ -76,9 +76,8 @@ public class DomandaService {
 		
 	}
 
-	public Set<Risposta> findRisposte(Domanda value) {
-		
-		Set<Risposta>lista= new HashSet();
+	public List<Risposta> findRisposte(Domanda value) {	
+		List<Risposta>lista= new ArrayList<>();
 		for(Domanda dom:findAll()){
 			if(dom.equals(value))
 				lista.addAll(dom.getRisposte());

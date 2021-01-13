@@ -19,16 +19,23 @@ public class Domanda extends AbstractEntity implements Cloneable {
 	@Column(nullable=false)
 	private String nomedomanda;
 	private String descrizionedomanda;
+	private Boolean randomordine;
 	
+
 	@ManyToOne
 	private Quiz quizapparteneza;
 
 	@OneToMany(mappedBy="domandaApparteneza",fetch=FetchType.EAGER)
 	@Fetch(value = FetchMode.SUBSELECT)
-	private Set<Risposta> risposte;
+	private List<Risposta> risposte;
 
-
-	public Set<Risposta> getRisposte() {
+	public Boolean getRandomordine() {
+		return randomordine;
+	}
+	public void setRandomordine(Boolean randomordine) {
+		this.randomordine = randomordine;
+	}
+	public List<Risposta> getRisposte() {
 		return risposte;
 	}
 	public String getNomedomanda() {
@@ -43,7 +50,7 @@ public class Domanda extends AbstractEntity implements Cloneable {
 	public void setDescrizionedomanda(String descrizionedomanda) {
 		this.descrizionedomanda = descrizionedomanda;
 	}
-	public void setRisposte(Set<Risposta> risposte) {
+	public void setRisposte(List<Risposta> risposte) {
 		this.risposte = risposte;
 	}
 

@@ -72,7 +72,8 @@ public class DomandaForm extends FormLayout{
 				Domanda domanda = new Domanda();
 				domanda.setNomedomanda(nomeDomanda.getValue().trim());
 				domanda.setDescrizionedomanda(descrizione.getValue());
-				domanda.setRisposte(new HashSet<>());
+				domanda.setRisposte(new ArrayList());
+				domanda.setRandomordine(false);
 				binder.setBean(domanda);
 				if(descrizione.getValue().length()<=255){
 					if(binder.validate().isOk()){

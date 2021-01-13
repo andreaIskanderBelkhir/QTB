@@ -2,6 +2,8 @@ package it.tirocinio.application.views.hello;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -401,6 +403,9 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		Domanda domanda=domande.get(i);
 		List<Risposta> risposte = new ArrayList<>();
 		risposte.addAll(domanda.getRisposte());
+		if(domanda.getRandomordine()){
+			Collections.shuffle(risposte);
+		}
 		if(!(risposte.isEmpty())){
 			if(!(radioGroup==null)){
 				remove(radioGroup);

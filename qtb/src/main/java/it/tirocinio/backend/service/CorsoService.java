@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.stereotype.Service;
 
 import com.vaadin.flow.component.textfield.TextField;
@@ -26,6 +28,8 @@ public class CorsoService {
 
 		this.utenteRepository=u;
 	}
+
+
 
 	public List<Corso> findAll(){
 		return this.corsorep.findAll();
@@ -102,11 +106,11 @@ public class CorsoService {
 
 		}
 
-		
+
 	}
-	
+
 	public void addStudente(Utente u,Corso c){
-		
+
 		if(u==null){
 			return;
 		}
@@ -121,7 +125,7 @@ public class CorsoService {
 					}
 					else
 					{
-						
+
 						c.getUtentifreq().add(u);
 						this.corsorep.save(c);
 					}
@@ -235,9 +239,9 @@ public class CorsoService {
 
 	}
 
-	
-	
-	
+
+
+
 	public List<Utente> getStudenteRichiesta(List<Long> utentirischiesta) {
 		List<Utente> utenti=new ArrayList<>();
 		for(Long l:utentirischiesta){

@@ -196,7 +196,43 @@ public class RispostaForm extends FormLayout{
 		else
 			Notification.show("scegli la risposta prima");
 	}
-	
+	public  void Elimina(Risposta risposta) {
+		if(!(risposta==null)){
+		VerticalLayout ver = new VerticalLayout();
+		Dialog dialog = new Dialog();
+		dialog.setWidth("50%");
+		dialog.setCloseOnEsc(false);
+		dialog.setCloseOnOutsideClick(false);
+		Button save = new Button("Elimina");
+		Button cancella = new Button("Cancella");
+		save.addThemeVariants(ButtonVariant.LUMO_ERROR);
+		save.addClickListener(e->{
+				binder.setBean(risposta);
+				if((binder.validate().isOk())){	
+					this.domandaS.eliminaRisposta(risposta.getDomandaApparteneza(),risposta);
+					this.rispostaS.elimina(risposta);
+					
+					dialog.close();
+					binder.removeBean();
+				}
+				else
+					Notification.show("error inserire una risposta valido");	
+		});
+		cancella.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+		cancella.addClickListener(e->{	
+			dialog.close();
+		});		
+		HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
+		creaTitoloform(ver,"Eliminare la risposta con ID : ",risposta);
+		ver.add(pulsanti);
+		ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
+		dialog.add(ver);
+		add(dialog);
+		dialog.open();
+		}
+		else
+			Notification.show("scegli la risposta prima");
+	}
 	
 	HorizontalLayout creazionePulsanti(Button save,Button cancella){
 		HorizontalLayout pulsanti = new HorizontalLayout();
