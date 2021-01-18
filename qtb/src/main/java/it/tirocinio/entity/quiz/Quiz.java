@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -25,6 +26,7 @@ public class Quiz extends AbstractEntity implements Cloneable {
 
 
 	@ManyToOne
+	@JoinColumn(name="corso_appartenenza_id")
 	private Corso corsoAppartenenza;
 
 	private double tempo;

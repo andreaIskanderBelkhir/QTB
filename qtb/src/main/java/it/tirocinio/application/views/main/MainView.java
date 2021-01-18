@@ -162,6 +162,7 @@ public class MainView extends AppLayout {
 				createTab("Gestione Corsi",ProfessoreView.class),
 				createTab("Gestione Test",QuizView.class),
 				createTab("Gestione Domande",DomandeView.class),
+				createTab("Gestione Domande 2",Domande2view.class),
 				createTab("Gestione Iscrizioni",IscrizioniView.class),
 				createTab("Gestione Selezione",SelezioneView.class),
 				createTab("Visualizza Passati",VisualizzaPassatiView.class)

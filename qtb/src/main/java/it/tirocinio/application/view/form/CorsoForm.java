@@ -62,6 +62,7 @@ public class CorsoForm extends HorizontalLayout {
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickListener(e->{
 			Corso corso=new Corso();
+			
 			corso.setNomeCorso(nomeCorso.getValue().trim());
 			corso.setDescrizioneCorso(descrizioneCorso.getValue().toString());
 			corso.setDocente(docente);	

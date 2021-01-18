@@ -8,7 +8,7 @@ public class UtentePending extends AbstractEntity implements Cloneable {
 
 private String nome;
  private String email;
- private String descizione;
+ private String descrizione;
  private Boolean attivato;
  
  public Boolean getAttivato() {
@@ -37,9 +37,9 @@ public UtentePending(){
 		this.email = email;
 	}
 	public String getDescizione() {
-		return descizione;
+		return descrizione;
 	}
 	public void setDescizione(String descizione) {
-		this.descizione = descizione;
+		this.descrizione = descizione;
 	}
 }

@@ -27,11 +27,13 @@ public class UtenteService  {
 	private PasswordEncoder passwordencoder;
 	private CorsoRepository corsoR;
 	private CorsoService corsoS;
+	private QuizService quizS;
 
-	public UtenteService(UtenteRepository userRepository,PasswordEncoder pe,CorsoService c,CorsoRepository cr) {
+	public UtenteService(UtenteRepository userRepository,PasswordEncoder pe,CorsoService c,QuizService q,CorsoRepository cr) {
 		this.utenteRepository = userRepository;
 		this.corsoR=cr;
 		this.corsoS=c;
+		this.quizS=q;
 		this.passwordencoder=pe;
 	}
 
@@ -48,13 +50,13 @@ public class UtenteService  {
 	public long count(){
 		return utenteRepository.count();
 	}
-
+/* Rimuovere commenti per popolare se si rimuove liquibase
 	@PostConstruct
 	public void populateTestData() {
 		if(utenteRepository.count()==0){
 			Utente admin = new Utente();
 			admin.setNome("admin");
-			admin.setPassword(passwordencoder.encode("a"));
+			admin.setPassword("a");
 			admin.setRuolo("ADMIN");
 			admin.setQuizpassati(new ArrayList<Long>());
 			admin.setValoretesteffetuati(new HashMap<Long,Double>());		
@@ -73,11 +75,23 @@ public class UtenteService  {
 			utentinew.add(admin);
 			corso.setUtentifreq(utentinew);
 			
+			Quiz quiz=new Quiz();
+			quiz.setNomeQuiz("un test ");
+			quiz.setCorsoAppartenenza(corso);
+			quiz.setModalitaPercentuale(false);
+			quiz.setSoglia(0);
+			quiz.setSogliaPercentuale(0);
+			quiz.setAttivato(false);
+			quiz.setTempo(60.0);
+			quiz.setValoreGiusta(1);
+			quiz.setValoreSbagliata(0);
+			quiz.setDomande(new HashSet<>());
+			corso.getQuizDelcorso().add(quiz);
 			Utente prof = new Utente();
 			prof.setNome("prof");
 			prof.setPassword(passwordencoder.encode("a"));
 			prof.setRuolo("PROFESSORE");
-			
+		
 			Utente user = new Utente();
 			user.setNome("studente");
 			user.setPassword(passwordencoder.encode("a"));
@@ -91,8 +105,10 @@ public class UtenteService  {
 			List<Utente> utenti= Arrays.asList(admin,prof,user,user2);
 			this.utenteRepository.saveAll(utenti);
 			this.corsoS.save(corso);
+			this.quizS.save(quiz);
 		}
 	}
+*/
 
 	public Utente findByName(String nome) {
 		// TODO Auto-generated method stub

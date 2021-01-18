@@ -32,8 +32,9 @@ public class CorsoService {
 
 
 	public List<Corso> findAll(){
-		return this.corsorep.findAll();
+		return (List<Corso>) this.corsorep.findAll();
 	}
+	
 	public List<Corso> findAllbyAdmin(){
 		List<Corso> lista = new ArrayList<>();
 		for(Utente u:this.utenteRepository.findAll()){
@@ -48,15 +49,40 @@ public class CorsoService {
 		return lista;
 	}
 
-	public List<Corso> findAll(String value) {
-		if(value==null||value.isEmpty()){
-			return this.findAllbyAdmin();
+	public List<Corso> findAll(TextField filter) {
+		if(filter.getValue()==null||filter.getValue().isEmpty()){
+			return this.findAll();
 		}
 		else{
-			return this.corsorep.search(value);
+			return this.corsorep.search(filter.getValue());
 		}
 	}
-
+	public List<Corso> findbyDocente(Utente nome, TextField filter) {
+		if(filter.getValue()==null||filter.getValue().isEmpty()){
+			return findbyDocente(nome);
+		}
+		else{
+			List<Corso> co= findAll(filter);
+			List<Corso> lista = new ArrayList<>();
+			if(nome.getRuolo().equals("PROFESSORE")){
+				for(Corso c:co){
+					if(c.getDocente()!=null){
+						if(c.getDocente().getNome().equals(nome.getNome())){
+							lista.add(c);
+						}
+					}
+				}
+			}
+			if(nome.getRuolo().equals("ADMIN")){
+				for(Corso c:co){
+					if(c.getDocente()!=null){			
+						lista.add(c);
+					}
+				}
+			}
+			return lista;			
+		}
+	}
 	public List<Corso> findbyDocente(Utente nome){
 		List<Corso> co= nome.getCorsifrequentati();
 		List<Corso> lista = new ArrayList<>();
@@ -176,32 +202,7 @@ public class CorsoService {
 
 	}
 
-	public List<Corso> findbyDocente(Utente nome, TextField filter) {
-		if(filter.getValue()==null||filter.getValue().isEmpty()){
-			return findbyDocente(nome);
-		}
-		else{
-			List<Corso> co= findAll(filter.getValue());
-			List<Corso> lista = new ArrayList<>();
-			if(nome.getRuolo().equals("PROFESSORE")){
-				for(Corso c:co){
-					if(c.getDocente()!=null){
-						if(c.getDocente().getNome().equals(nome.getNome())){
-							lista.add(c);
-						}
-					}
-				}
-			}
-			if(nome.getRuolo().equals("ADMIN")){
-				for(Corso c:co){
-					if(c.getDocente()!=null){			
-						lista.add(c);
-					}
-				}
-			}
-			return lista;			
-		}
-	}
+
 
 	public void eliminaQuiz(Quiz quiz) {
 		Corso corso=quiz.getCorsoAppartenenza();
@@ -276,6 +277,19 @@ public class CorsoService {
 				corsi.add(c);
 		}
 		return corsi;
+	}
+
+
+
+	public boolean nonRichiesto(Corso c, Utente studente) {
+		List<Long> partecipanti=c.getUtentirischiesta();
+		Boolean ris=true;
+		for(Long u:partecipanti){
+			if(u.equals(studente.getId())){
+				return false;
+			}
+		}
+		return ris;
 	}
 
 
