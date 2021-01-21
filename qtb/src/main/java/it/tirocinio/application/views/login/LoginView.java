@@ -33,8 +33,8 @@ public class LoginView extends HorizontalLayout implements BeforeEnterObserver{
 		this.utenteDaApprovareService=utenteService;
 		UtenteDaApprovareForm registrazioneForm= new UtenteDaApprovareForm(utenteService);
 		setSizeFull();
-		H1 logintitle = new H1("QTB");
-		Image titleComponent = new Image("images/missing.jpg", "img");
+		H1 logintitle = new H1("Tester");
+		Image titleComponent = new Image("images/logo_tester.png", "img");
 		titleComponent.getStyle().set("padding", "5px");
 		titleComponent.getStyle().set("width", "300px");
 		titleComponent.getStyle().set("height", "250px");

@@ -34,7 +34,13 @@ public class ScegliTestForm extends FormLayout {
 		this.domandaS=d;
 		gridquiz.setColumns("id");
 		gridquiz.addColumn(quiz->{
-			return quiz.getNomeQuiz();	});
+			return quiz.getNomeQuiz();	}).setHeader("Nome test");
+		gridquiz.addColumn(quiz->{
+			return quiz.getCorsoAppartenenza().getNomeCorso();
+		}).setHeader("Nome corso");
+		gridquiz.addColumn(quiz->{
+			return quiz.getDomande().size();
+		}).setHeader("N° domande");
 		gridquiz.asSingleSelect().addValueChangeListener(event->{
 			this.test=event.getValue();
 		});
@@ -85,7 +91,7 @@ public class ScegliTestForm extends FormLayout {
 		return pulsanti;
 	}
 	private void creaTitoloform(VerticalLayout vert, String string) {
-		H1 h=new H1(string);
+		H3 h=new H3(string);
 		vert.setHorizontalComponentAlignment(Alignment.CENTER,h);
 		vert.add(h);
 	}

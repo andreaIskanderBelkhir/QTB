@@ -182,7 +182,7 @@ public class DomandaForm extends FormLayout{
 			dialog.setCloseOnEsc(false);
 			dialog.setCloseOnOutsideClick(false);
 			Button save = new Button("Elimina");
-			Button cancella = new Button("Cancella");
+			Button cancella = new Button("Annulla");
 			save.addThemeVariants(ButtonVariant.LUMO_ERROR);
 			save.addClickListener(e->{	
 				binder.setBean(domanda);
@@ -208,7 +208,7 @@ public class DomandaForm extends FormLayout{
 				dialog.close();
 			});	
 			HorizontalLayout pulsanti=creazionePulsanti(save, cancella);
-			creaTitoloform(ver,"Eliminare la domanda con ID : ",domanda);
+			creaTitoloform(ver,"Eliminare la domanda : ",domanda);
 			ver.add(pulsanti);
 			ver.setHorizontalComponentAlignment(Alignment.END,pulsanti);
 			dialog.add(ver);
@@ -249,15 +249,16 @@ public class DomandaForm extends FormLayout{
 		ver.add(h);
 	}
 	private void creaTitoloform(VerticalLayout vert, String string) {
-		H1 h=new H1(string);
+		H3 h=new H3(string);
 		vert.setHorizontalComponentAlignment(Alignment.CENTER,h);
 		vert.add(h);
 
 	}
 
 	private void creaTitoloform(VerticalLayout ver, String string, Domanda id) {
-		H1 h=new H1(string);
-		h.add(String.valueOf(id.getId()));
+		H3 h=new H3(string);
+		h.add(id.getNomedomanda());
+		h.add("  (ID : "+id.getId()+")");
 		ver.setHorizontalComponentAlignment(Alignment.CENTER,h);
 		ver.add(h);
 

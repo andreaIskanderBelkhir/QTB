@@ -48,7 +48,7 @@ import it.tirocinio.application.views.hello.VisualizzaPassatiView;
  */
 @JsModule("./styles/shared-styles.js")
 @CssImport("./styles/views/main/main-view.css")
-@PWA(name = "QTB", shortName = "QTB", enableInstallPrompt = false)
+@PWA(name = "Tester", shortName = "Tester", enableInstallPrompt = false)
 public class MainView extends AppLayout {
 
 	private final Tabs menu;
@@ -115,11 +115,11 @@ public class MainView extends AppLayout {
 		layout.setSpacing(false);
 		layout.getThemeList().set("spacing-s", true);
 		layout.setAlignItems(FlexComponent.Alignment.STRETCH);
-		HorizontalLayout logoLayout = new HorizontalLayout();
+		VerticalLayout logoLayout = new VerticalLayout();
 		logoLayout.setId("logo");
 		logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-		logoLayout.add(new Image("images/logo.png", "QTB logo"));
-		logoLayout.add(new H1("QTB"));
+		logoLayout.add(new Image("images/logo_tester.png", "Tester logo"));
+		
 		layout.add(logoLayout, menu);
 		return layout;
 	}

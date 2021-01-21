@@ -107,7 +107,6 @@ public class Domande2view extends VerticalLayout {
 		ActionBar navbar2=new ActionBar(selezionaTbutton,nomeQuizSopra,2);
 		navbar2.AddButtonAtActionBar(creazioneDbutton);
 		navbar2.AddButtonAtActionBarSave(modificaDbutton);
-
 		add(navbar2);
 
 		hor.setHeight("100%");
@@ -142,6 +141,7 @@ public class Domande2view extends VerticalLayout {
 		test.getDomande().add(dom);		
 		this.domanda=dom;
 		this.salvato=false;
+		dom.setId((long) (this.domandaS.findAll().size()+1));
 		updateviewDomanda(dom);
 		Notification.show("prima di aggiungere una risposta Salva");
 	}
@@ -201,7 +201,7 @@ public class Domande2view extends VerticalLayout {
 		griddomanda.addComponentColumn(item-> eliminatato(griddomanda,item)).setHeader("Elimina");
 		griddomanda.setWidth("98%");
 		griddomanda.asSingleSelect().addValueChangeListener(event->{	
-			this.domanda=event.getValue();	
+
 			if(event.getValue()!=null){
 				if(this.salvato==true){
 					this.domanda=event.getValue();
@@ -209,24 +209,41 @@ public class Domande2view extends VerticalLayout {
 				else
 				{
 					Dialog dia=new Dialog();
-					Button continua=new Button("continua senza salvare");
-					Button annulla=new Button("annulla");
+					Button salva=new Button("Salva");
+					Button continua=new Button("Esci senza salvare");
+					Button annulla=new Button("Annulla");
+					salva.addClickListener(e->{
+						salvaDomanda();
+						this.salvato=true;
+						updateviewDomanda(event.getValue());
+						dia.close();
+					});
+					salva.addThemeVariants(ButtonVariant.LUMO_ERROR);
 					continua.addClickListener(e->{
 						this.domanda=event.getValue();
 						this.salvato=true;
 						updateviewDomanda(event.getValue());
 						dia.close();
 					});
+					continua.addThemeVariants(ButtonVariant.LUMO_ERROR);
 					annulla.addClickListener(e->{
-						if(event.getOldValue()!=null){
-							this.domanda=event.getOldValue();
+						if(this.domandaS.findByQuiz(test).contains(this.domanda)){
+							if(event.getOldValue()!=null){
+								this.domanda=event.getOldValue();
+							}
 						}
+
 						dia.close();
 					});
 					VerticalLayout veer=new VerticalLayout();
 					HorizontalLayout horrr=new HorizontalLayout();
-					horrr.add(continua,annulla);
-					veer.add("ATTENZIONE non hai salvato");
+					horrr.add(salva,continua,annulla);
+					String st=new String(this.domanda.getNomedomanda());
+					String stid=new String(this.domanda.getId().toString());
+					String text=new String("La domanda "+st+" ID: "+stid+" contiene modifiche non salvate. Uscendo dall'editor le modifiche andranno perse");
+					H3 text1=new H3("Desideri salvare le modifiche?");
+					veer.add(text);
+					veer.add(text1);
 					veer.add(horrr);
 					dia.add(veer);
 					dia.open();
@@ -249,8 +266,10 @@ public class Domande2view extends VerticalLayout {
 			this.div2.getStyle().set("margin-left", "10px");
 			HorizontalLayout nomeDom=new HorizontalLayout();
 			this.div2.add(nomeDom);
+			HorizontalLayout nomepiuid=new HorizontalLayout();
 			H5 nomeh=new H5("Nome : ");	
 			nomeh.getStyle().set("margin-bottom", "20px");
+
 			TextField nomeDomandamod=new TextField();
 
 			nomeDomandamod.setValue(domanda.getNomedomanda());
@@ -258,8 +277,14 @@ public class Domande2view extends VerticalLayout {
 				this.salvato=false;
 				domanda.setNomedomanda(nomeDomandamod.getValue());
 			});
-			nomeDom.setVerticalComponentAlignment(Alignment.CENTER,nomeh,nomeDomandamod);   
-			nomeDom.add(nomeh,nomeDomandamod);
+			nomeDom.setVerticalComponentAlignment(Alignment.CENTER,nomeh,nomeDomandamod); 
+			nomepiuid.add(nomeh,nomeDomandamod);
+			H5 idh=new H5("Id : ");	
+			idh.getStyle().set("margin-bottom", "20px");
+			H5 idv=new H5(domanda.getId().toString());	
+			idv.getStyle().set("margin-bottom", "20px");
+			nomepiuid.add(idh,idv);
+			nomeDom.add(nomepiuid);
 
 			TextArea testoDomanda=new TextArea();
 			testoDomanda.setValue(domanda.getDescrizionedomanda());
@@ -290,7 +315,7 @@ public class Domande2view extends VerticalLayout {
 			VerticalLayout verti = new VerticalLayout();
 			this.div2.add(verti);
 			risposte=this.domandaS.findRisposte(domanda);
-			
+
 			for(Risposta r:risposte){
 				HorizontalLayout hor=new HorizontalLayout();
 				hor.setWidthFull();
@@ -348,7 +373,7 @@ public class Domande2view extends VerticalLayout {
 			this.rispostaS.save(domanda.getRisposte().get(i));
 			domanda.getRisposte().get(i+1).setId(l);	
 			this.rispostaS.save(domanda.getRisposte().get(i+1));
-			
+
 			updateviewDomanda(domanda);
 			Notification.show("down");
 		}
@@ -370,7 +395,7 @@ public class Domande2view extends VerticalLayout {
 			this.rispostaS.save(domanda.getRisposte().get(i));
 			domanda.getRisposte().get(i-1).setId(l);	
 			this.rispostaS.save(domanda.getRisposte().get(i-1));
-			
+
 			updateviewDomanda(domanda);
 			Notification.show("up");
 		}
@@ -400,12 +425,12 @@ public class Domande2view extends VerticalLayout {
 		testoR.setWidthFull();
 		testoR.addValueChangeListener(e->ri.setRisposta(testoR.getValue()));
 		risposte.add(ri);	
-		Button eliminaRbutton = new Button("X",e->{
+		Button eliminaRbutton = new Button(new Icon(VaadinIcon.CLOSE_CIRCLE_O),e->{
 			risposte.remove(ri);	
 			elimina(ri);
 		});
-		eliminaRbutton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-		eliminaRbutton.addThemeVariants(ButtonVariant.LUMO_SMALL);		
+		eliminaRbutton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
 
 		hor.add(giusto,testoR,eliminaRbutton);
 		verti.add(hor);
@@ -420,24 +445,45 @@ public class Domande2view extends VerticalLayout {
 
 
 	private void salvaDomanda() {
-		for(Risposta r:risposte){
-			domanda.getRisposte().add(r);
-			this.rispostaS.save(r);
-		}		
-		Long id=domanda.getId();
 		this.domandaS.save(domanda);
-		griddomanda.setItems(this.domandaS.findByQuiz(quizs.getValue()));
-		this.salvato=true;	
-		griddomanda.select(this.domandaS.findById(id));
-		Notification.show("salvato");
+		Boolean giusta=false;
+		for(Risposta r:risposte){
+			if(r.getGiusta()){
+				giusta=true;
+			}
+		}
+		if(giusta){
+			for(Risposta r:risposte){
+				domanda.getRisposte().add(r);
+				this.rispostaS.save(r);
+			}		
+			Long id=domanda.getId();
+			this.domandaS.save(domanda);
+			griddomanda.setItems(this.domandaS.findByQuiz(quizs.getValue()));
+			this.salvato=true;	
+			griddomanda.select(this.domandaS.findById(id));
+			Notification.show("salvato");
+		}
+		else{
+			Dialog dia=new Dialog();
+			H3 h=new H3("Impossibile salvare la domanda, aggiungere almeno una risposta corretta.");
+			Button annulla=new Button("Ok");
+			annulla.addClickListener(e->dia.close());
+			annulla.getStyle().set("margin-left", "325px");
+			VerticalLayout veer=new VerticalLayout();
+			veer.add(h,annulla);
+			dia.add(veer);
+			dia.open();
+			add(dia);
+			
+		}
 
 	}
-
-
 	private Button eliminatato(Grid<Domanda> griddomanda2, Domanda item) {
-		Button eliminaDbutton = new Button("X",e->domandaForm.Elimina(quizs.getValue(),item,griddomanda));
-		eliminaDbutton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-		eliminaDbutton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+		Button eliminaDbutton = new Button(new Icon(VaadinIcon.CLOSE_CIRCLE_O),e->domandaForm.Elimina(quizs.getValue(),item,griddomanda));
+
+		eliminaDbutton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
 		return eliminaDbutton;
 	}
 
