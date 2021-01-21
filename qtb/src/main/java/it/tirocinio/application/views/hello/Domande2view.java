@@ -141,7 +141,7 @@ public class Domande2view extends VerticalLayout {
 		test.getDomande().add(dom);		
 		this.domanda=dom;
 		this.salvato=false;
-		dom.setId((long) (this.domandaS.findAll().size()+1));
+		dom.setID((long) (this.domandaS.findAll().size()+1));
 		updateviewDomanda(dom);
 		Notification.show("prima di aggiungere una risposta Salva");
 	}
@@ -190,8 +190,8 @@ public class Domande2view extends VerticalLayout {
 	private void ConfigureGridD() {
 
 
-		griddomanda.setColumns("id");
-		griddomanda.getColumnByKey("id").setFlexGrow(0);
+		griddomanda.setColumns("ID");
+		griddomanda.getColumnByKey("ID").setFlexGrow(0);
 		griddomanda.addColumn(domanda->{
 			return domanda.getNomedomanda();
 		}).setHeader("Nome").setFlexGrow(0);
@@ -239,7 +239,7 @@ public class Domande2view extends VerticalLayout {
 					HorizontalLayout horrr=new HorizontalLayout();
 					horrr.add(salva,continua,annulla);
 					String st=new String(this.domanda.getNomedomanda());
-					String stid=new String(this.domanda.getId().toString());
+					String stid=new String(this.domanda.getID().toString());
 					String text=new String("La domanda "+st+" ID: "+stid+" contiene modifiche non salvate. Uscendo dall'editor le modifiche andranno perse");
 					H3 text1=new H3("Desideri salvare le modifiche?");
 					veer.add(text);
@@ -269,9 +269,9 @@ public class Domande2view extends VerticalLayout {
 			HorizontalLayout nomepiuid=new HorizontalLayout();
 			H5 nomeh=new H5("Nome : ");	
 			nomeh.getStyle().set("margin-bottom", "20px");
-
-			TextField nomeDomandamod=new TextField();
-
+			
+			TextArea nomeDomandamod=new TextArea();
+			nomeDomandamod.setHeight("60px");
 			nomeDomandamod.setValue(domanda.getNomedomanda());
 			nomeDomandamod.addValueChangeListener(e->{
 				this.salvato=false;
@@ -281,7 +281,7 @@ public class Domande2view extends VerticalLayout {
 			nomepiuid.add(nomeh,nomeDomandamod);
 			H5 idh=new H5("Id : ");	
 			idh.getStyle().set("margin-bottom", "20px");
-			H5 idv=new H5(domanda.getId().toString());	
+			H5 idv=new H5(domanda.getID().toString());	
 			idv.getStyle().set("margin-bottom", "20px");
 			nomepiuid.add(idh,idv);
 			nomeDom.add(nomepiuid);
@@ -325,7 +325,9 @@ public class Domande2view extends VerticalLayout {
 					this.salvato=false;	
 					r.setGiusta(giusto.getValue());
 				});
-				TextField testoR= new TextField();
+				giusto.getStyle().set("margin-top", "20px");
+				TextArea testoR= new TextArea();
+				testoR.setHeight("60px");
 				testoR.setValue(r.getRisposta());
 				testoR.getStyle().set("margin-left", "50px");
 				testoR.setWidthFull();
@@ -349,7 +351,7 @@ public class Domande2view extends VerticalLayout {
 				Icon up =new Icon(VaadinIcon.ARROW_UP);
 				up.addClickListener(e->saliUp(risposte.indexOf(r)));
 				Icon down =new Icon(VaadinIcon.ARROW_DOWN);
-				down.addClickListener(e->Notification.show("teste"));
+				
 				down.addClickListener(e->scendiDwn(risposte.indexOf(r)));
 				hor.add(giusto,testoR,eliminaRbutton,up,down);
 				verti.add(hor);
@@ -367,11 +369,11 @@ public class Domande2view extends VerticalLayout {
 	private void scendiDwn(int i) {
 		// TODO Auto-generated method stub
 		if(i!=(risposte.size()-1)){
-			Long l=domanda.getRisposte().get(i).getId();
-			Long l1=domanda.getRisposte().get(i+1).getId();
-			domanda.getRisposte().get(i).setId(l1);
+			Long l=domanda.getRisposte().get(i).getID();
+			Long l1=domanda.getRisposte().get(i+1).getID();
+			domanda.getRisposte().get(i).setID(l1);
 			this.rispostaS.save(domanda.getRisposte().get(i));
-			domanda.getRisposte().get(i+1).setId(l);	
+			domanda.getRisposte().get(i+1).setID(l);	
 			this.rispostaS.save(domanda.getRisposte().get(i+1));
 
 			updateviewDomanda(domanda);
@@ -389,11 +391,11 @@ public class Domande2view extends VerticalLayout {
 	private void saliUp(int i) {
 		// TODO Auto-generated method stub	
 		if(i!=0){
-			Long l=domanda.getRisposte().get(i).getId();
-			Long l1=domanda.getRisposte().get(i-1).getId();
-			domanda.getRisposte().get(i).setId(l1);
+			Long l=domanda.getRisposte().get(i).getID();
+			Long l1=domanda.getRisposte().get(i-1).getID();
+			domanda.getRisposte().get(i).setID(l1);
 			this.rispostaS.save(domanda.getRisposte().get(i));
-			domanda.getRisposte().get(i-1).setId(l);	
+			domanda.getRisposte().get(i-1).setID(l);	
 			this.rispostaS.save(domanda.getRisposte().get(i-1));
 
 			updateviewDomanda(domanda);
@@ -419,7 +421,8 @@ public class Domande2view extends VerticalLayout {
 		Checkbox giusto = new Checkbox();
 		giusto.setValue(false);
 		giusto.addClickListener(e->ri.setGiusta(giusto.getValue()));
-		TextField testoR= new TextField();
+		TextArea testoR= new TextArea();
+		testoR.setHeight("60px");
 		testoR.setValue("");
 		testoR.getStyle().set("margin-left", "50px");
 		testoR.setWidthFull();
@@ -457,7 +460,7 @@ public class Domande2view extends VerticalLayout {
 				domanda.getRisposte().add(r);
 				this.rispostaS.save(r);
 			}		
-			Long id=domanda.getId();
+			Long id=domanda.getID();
 			this.domandaS.save(domanda);
 			griddomanda.setItems(this.domandaS.findByQuiz(quizs.getValue()));
 			this.salvato=true;	

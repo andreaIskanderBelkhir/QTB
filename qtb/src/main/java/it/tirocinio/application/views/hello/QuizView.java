@@ -104,7 +104,7 @@ public class QuizView extends VerticalLayout{
 
 
 	private void ConfigureGridQ() {
-		gridquiz.setColumns("id");
+		gridquiz.setColumns("ID");
 		gridquiz.addColumn(e->{	
 		return e.getNomeQuiz();
 				}).setHeader("Nome test");

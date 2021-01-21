@@ -113,7 +113,7 @@ public class QuizService {
 	}
 	public Quiz findById(String para) {
 		for(Quiz q:findAll()){
-			if(q.getId().toString().equals(para)){
+			if(q.getID().toString().equals(para)){
 				return q;
 			}
 		}

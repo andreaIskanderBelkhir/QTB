@@ -120,7 +120,7 @@ public class Corso extends AbstractEntity implements Cloneable{
 			return false;
 		Corso altro =(Corso)o;
 		
-		return this.getId()==altro.getId();
+		return this.getID()==altro.getID();
 	}
 	@Override
 	public final int hashCode() {

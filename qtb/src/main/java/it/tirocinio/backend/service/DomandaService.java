@@ -89,7 +89,7 @@ public class DomandaService {
 	public Domanda findById(Long id) {
 		List<Domanda> ut=findAll();
 		for(Domanda u: ut){
-			if(u.getId().equals(id)){
+			if(u.getID().equals(id)){
 				return u;
 			}
 		}

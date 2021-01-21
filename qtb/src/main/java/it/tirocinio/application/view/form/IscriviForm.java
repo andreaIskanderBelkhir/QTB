@@ -31,7 +31,7 @@ public class IscriviForm extends FormLayout{
 	public IscriviForm(CorsoService s, UtenteService u){
 		this.corsoS=s;
 		this.utenteS=u;
-		gridUtentinuovi.setColumns("id");
+		gridUtentinuovi.setColumns("ID");
 		gridUtentinuovi.addColumn(utente->{
 			return utente.getNome();
 		}).setHeader("Nome");

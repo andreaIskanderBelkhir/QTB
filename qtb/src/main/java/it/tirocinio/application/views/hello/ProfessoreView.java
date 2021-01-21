@@ -107,7 +107,7 @@ public class ProfessoreView extends VerticalLayout{
 		gridtenuti.removeColumnByKey("utentifreq");
 		gridtenuti.removeColumnByKey("docente");
 		gridtenuti.removeColumnByKey("quizDelcorso");
-		gridtenuti.setColumns("id","nomeCorso","descrizioneCorso");	
+		gridtenuti.setColumns("ID","nomeCorso","descrizioneCorso");	
 		gridtenuti.addColumn(corso->{
 			Utente docente= corso.getDocente();
 			return docente==null ? "-": docente.getNome();
@@ -134,7 +134,7 @@ public class ProfessoreView extends VerticalLayout{
 		gridtenuti.removeColumnByKey("utentifreq");
 		gridtenuti.removeColumnByKey("docente");
 		gridtenuti.removeColumnByKey("quizDelcorso");
-		gridtenuti.setColumns("id","nomeCorso","descrizioneCorso");		
+		gridtenuti.setColumns("ID","nomeCorso","descrizioneCorso");		
 		gridtenuti.getColumns().forEach(c->c.setAutoWidth(true));
 		gridtenuti.addColumn(corso->{
 			return corso.getSelezione() ? "SI": "";

@@ -92,14 +92,14 @@ public class StudenteView extends VerticalLayout {
 		}).setHeader("Nome test");
 		gridQuiz.addComponentColumn(item-> createLink(gridQuiz,item));
 		gridQuiz.addColumn(e->{
-			return studente.getQuizpassati().contains(e.getId()) ? "Passato" : "non passato" ;
+			return studente.getQuizpassati().contains(e.getID()) ? "Passato" : "non passato" ;
 		}).setHeader("Stato");
 		gridQuiz.addColumn(e->{		
-			if(studente.getValoretesteffetuati().get(e.getId()) == null){
+			if(studente.getValoretesteffetuati().get(e.getID()) == null){
 				return "";
 			}
 			else{
-				String valore=studente.getValoretesteffetuati().get(e.getId()).toString();
+				String valore=studente.getValoretesteffetuati().get(e.getID()).toString();
 				if(e.getModalitaPercentuale()){
 					valore=valore+" %";
 				}
@@ -121,12 +121,12 @@ public class StudenteView extends VerticalLayout {
 
 
 	private Anchor createLink(Grid<Quiz> gridQuiz2, Quiz item) {
-		String a=new String("svolgimento/"+ item.getId().toString());
+		String a=new String("svolgimento/"+ item.getID().toString());
 		Anchor link=new Anchor(a);
 		Button button = new Button("Svolgi",new Icon(VaadinIcon.ARROW_FORWARD));
 		button.setIconAfterText(true);	
 		link.add(button);
-		if(studente.getQuizpassati().contains(item.getId())){
+		if(studente.getQuizpassati().contains(item.getID())){
 			button.setVisible(false);
 		}
 
@@ -135,13 +135,13 @@ public class StudenteView extends VerticalLayout {
 
 
 	private void configureGridCorsi() {
-		gridcorsi.removeColumnByKey("id");
+		gridcorsi.removeColumnByKey("ID");
 		gridcorsi.removeColumnByKey("utentifreq");
 		gridcorsi.removeColumnByKey("docente");
 		gridcorsi.removeColumnByKey("quizDelcorso");
 
 		gridcorsi.setColumns("nomeCorso");	
-		gridQuiz.removeColumnByKey("id");
+		gridQuiz.removeColumnByKey("ID");
 		gridQuiz.setColumns("nomeQuiz");
 		gridcorsi.asSingleSelect().addValueChangeListener(event->updateGridQuiz(event.getValue()));
 

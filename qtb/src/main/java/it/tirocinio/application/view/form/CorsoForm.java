@@ -236,7 +236,7 @@ public class CorsoForm extends HorizontalLayout {
 
 	private void creaTitoloform(VerticalLayout ver, String string, Corso corso) {
 		H1 h=new H1(string);
-		h.add(String.valueOf(corso.getId()));
+		h.add(String.valueOf(corso.getID()));
 		ver.setHorizontalComponentAlignment(Alignment.CENTER,h);
 		ver.add(h);
 

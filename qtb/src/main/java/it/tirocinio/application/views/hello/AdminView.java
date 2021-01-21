@@ -58,7 +58,7 @@ public class AdminView extends HorizontalLayout {
 
 
 	private void configureGrid() {
-		grid.removeColumnByKey("id");
+		grid.removeColumnByKey("ID");
 		grid.removeColumnByKey("attivato");
 		grid.setColumns("nome","email","descizione");
 		grid.addComponentColumn(item-> createValited(grid,item)).setHeader("convalida");

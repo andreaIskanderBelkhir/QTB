@@ -65,7 +65,7 @@ public class VisualizzaPassatiView extends VerticalLayout{
 		List<Utente> sup=this.utenteS.findByCorso(quiz.getCorsoAppartenenza());
 		List<Utente> superati=new ArrayList<Utente>();
 		for(Utente u:sup){
-			if(u.getQuizpassati().contains(quiz.getId())){
+			if(u.getQuizpassati().contains(quiz.getID())){
 				superati.add(u);
 			}
 		}
@@ -74,7 +74,7 @@ public class VisualizzaPassatiView extends VerticalLayout{
 	
 	private void ConfigureGridU(){
 		
-		gridutente.setColumns("id");
+		gridutente.setColumns("ID");
 		gridutente.addColumn(utente->{
 			return utente.getNome();
 		}).setHeader("Nome");
@@ -85,7 +85,7 @@ public class VisualizzaPassatiView extends VerticalLayout{
 
 	private Checkbox createCheck(Grid<Utente> gridutente2, Utente item,Quiz quiz) {
 		Checkbox check = new Checkbox();
-		if(item.getQuizpassati().contains(quiz.getId())){
+		if(item.getQuizpassati().contains(quiz.getID())){
 			check.setValue(true);
 		}
 		else

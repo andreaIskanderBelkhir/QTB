@@ -124,7 +124,7 @@ public class UtenteService  {
 		// TODO Auto-generated method stub
 		List<Utente> ut=findAll();
 		for(Utente u: ut){
-			if(u.getId().equals(id)){
+			if(u.getID().equals(id)){
 				return u;
 			}
 		}

@@ -74,12 +74,12 @@ public class IscrizioniView extends VerticalLayout {
 
 
 	private void ConfigureGridUtenti() {
-		gridUtenti.setColumns("id");
+		gridUtenti.setColumns("ID");
 		gridUtenti.addColumn(utente->{
 			return utente.getNome();
 		}).setHeader("Nome");
 		gridUtenti.addColumn(u->{
-			if(corso.getUtentirischiesta().contains(u.getId())){
+			if(corso.getUtentirischiesta().contains(u.getID())){
 				return "Da approvare";
 			}
 			return "";

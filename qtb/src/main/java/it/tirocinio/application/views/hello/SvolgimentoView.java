@@ -277,14 +277,14 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			risultato.getStyle().set("font-weight", "900");
 			passagio.add(risultato,risultato2);
 			ver.add(perct,passagio);
-			this.utenteS.addQuizpassati(studente,quiz.getId());
-			if(studente.getValoretesteffetuati().get(quiz.getId())==null){
-				this.utenteS.addQuizvalore(studente, quiz.getId(),per);
+			this.utenteS.addQuizpassati(studente,quiz.getID());
+			if(studente.getValoretesteffetuati().get(quiz.getID())==null){
+				this.utenteS.addQuizvalore(studente, quiz.getID(),per);
 				
 			}
 			else{
-				if(studente.getValoretesteffetuati().get(quiz.getId())<per){
-					this.utenteS.addQuizvalore(studente,quiz.getId(),per);
+				if(studente.getValoretesteffetuati().get(quiz.getID())<per){
+					this.utenteS.addQuizvalore(studente,quiz.getID(),per);
 					
 				}
 			}
@@ -300,13 +300,13 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			dapassare.add("%");
 			passagio.add(risultato,risultato2);
 			ver.add(perct,passagio,dapassare);
-			if(studente.getValoretesteffetuati().get(quiz.getId())==null){
-				this.utenteS.addQuizvalore(studente, quiz.getId(),per);
+			if(studente.getValoretesteffetuati().get(quiz.getID())==null){
+				this.utenteS.addQuizvalore(studente, quiz.getID(),per);
 				
 			}
 			else{
-				if(studente.getValoretesteffetuati().get(quiz.getId())<per){
-					this.utenteS.addQuizvalore(studente,quiz.getId(),per);
+				if(studente.getValoretesteffetuati().get(quiz.getID())<per){
+					this.utenteS.addQuizvalore(studente,quiz.getID(),per);
 					
 				}
 			}
@@ -340,14 +340,14 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			risultato.getStyle().set("font-weight", "900");
 			passagio.add(risultato,risultato2);
 			ver.add(passagio);
-			this.utenteS.addQuizpassati(studente,quiz.getId());
-			if(studente.getValoretesteffetuati().get(quiz.getId())==null){
-				this.utenteS.addQuizvalore(studente, quiz.getId(),(valoreg-valores));
+			this.utenteS.addQuizpassati(studente,quiz.getID());
+			if(studente.getValoretesteffetuati().get(quiz.getID())==null){
+				this.utenteS.addQuizvalore(studente, quiz.getID(),(valoreg-valores));
 				
 			}
 			else{
-				if(studente.getValoretesteffetuati().get(quiz.getId())<(valoreg-valores)){
-					this.utenteS.addQuizvalore(studente,quiz.getId(),(valoreg-valores));
+				if(studente.getValoretesteffetuati().get(quiz.getID())<(valoreg-valores)){
+					this.utenteS.addQuizvalore(studente,quiz.getID(),(valoreg-valores));
 					
 				}
 			}
@@ -362,13 +362,13 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			dapassare.add(String.valueOf(quiz.getSoglia()));
 			passagio.add(risultato,risultato2);
 			ver.add(passagio,dapassare);
-			if(studente.getValoretesteffetuati().get(quiz.getId())==null){
-				this.utenteS.addQuizvalore(studente, quiz.getId(),(valoreg-valores));
+			if(studente.getValoretesteffetuati().get(quiz.getID())==null){
+				this.utenteS.addQuizvalore(studente, quiz.getID(),(valoreg-valores));
 				
 			}
 			else{
-				if(studente.getValoretesteffetuati().get(quiz.getId())<(valoreg-valores)){
-					this.utenteS.addQuizvalore(studente,quiz.getId(),(valoreg-valores));
+				if(studente.getValoretesteffetuati().get(quiz.getID())<(valoreg-valores)){
+					this.utenteS.addQuizvalore(studente,quiz.getID(),(valoreg-valores));
 					
 				}
 			}

@@ -32,7 +32,7 @@ public class ScegliTestForm extends FormLayout {
 		this.quizS=q;
 		this.utenteS=u;
 		this.domandaS=d;
-		gridquiz.setColumns("id");
+		gridquiz.setColumns("ID");
 		gridquiz.addColumn(quiz->{
 			return quiz.getNomeQuiz();	}).setHeader("Nome test");
 		gridquiz.addColumn(quiz->{

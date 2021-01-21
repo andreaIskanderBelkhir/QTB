@@ -421,7 +421,7 @@ public class QuizForm extends FormLayout{
 
 	private void creaTitoloform(VerticalLayout ver, String string, Quiz id) {
 		H1 h=new H1(string);
-		h.add(String.valueOf(id.getId()));
+		h.add(String.valueOf(id.getID()));
 		ver.setHorizontalComponentAlignment(Alignment.CENTER,h);
 		ver.add(h);
 

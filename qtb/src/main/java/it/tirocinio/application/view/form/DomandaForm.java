@@ -258,7 +258,7 @@ public class DomandaForm extends FormLayout{
 	private void creaTitoloform(VerticalLayout ver, String string, Domanda id) {
 		H3 h=new H3(string);
 		h.add(id.getNomedomanda());
-		h.add("  (ID : "+id.getId()+")");
+		h.add("  (ID : "+id.getID()+")");
 		ver.setHorizontalComponentAlignment(Alignment.CENTER,h);
 		ver.add(h);
 

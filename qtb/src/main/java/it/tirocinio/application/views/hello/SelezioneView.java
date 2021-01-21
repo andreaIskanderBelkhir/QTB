@@ -132,7 +132,7 @@ public class SelezioneView extends VerticalLayout{
 			List<Utente> sup=this.utenteS.findByCorsoSelezione(quiz.getCorsoAppartenenza());
 			List<Utente> superati=new ArrayList<Utente>();
 			for(Utente u:sup){
-				if(u.getQuizpassati().contains(quiz.getId())){
+				if(u.getQuizpassati().contains(quiz.getID())){
 					superati.add(u);
 				}
 			}
@@ -151,12 +151,12 @@ public class SelezioneView extends VerticalLayout{
 
 	}
 	private Anchor createLink(Grid<Quiz> gridQuiz2, Quiz item) {
-		String a=new String("svolgimento/"+ item.getId().toString());
+		String a=new String("svolgimento/"+ item.getID().toString());
 		Anchor link=new Anchor(a);
 		Button button = new Button("Svolgi",new Icon(VaadinIcon.ARROW_FORWARD));
 		button.setIconAfterText(true);	
 		link.add(button);
-		if(docente.getQuizpassati().contains(item.getId())){
+		if(docente.getQuizpassati().contains(item.getID())){
 			button.setVisible(false);
 		}	
 		return link;

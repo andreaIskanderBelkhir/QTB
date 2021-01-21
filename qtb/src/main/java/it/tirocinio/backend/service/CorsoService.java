@@ -222,14 +222,14 @@ public class CorsoService {
 				if(cor.equals(c)){
 					if(c.getUtentirischiesta()==null){
 						List<Long> iscrittinew =new ArrayList<>();
-						iscrittinew.add(u.getId());
+						iscrittinew.add(u.getID());
 						c.setUtentirischiesta(iscrittinew);
 						this.corsorep.save(c);
 					}
 					else
 					{
 						iscritti = c.getUtentirischiesta();
-						iscritti.add(u.getId());
+						iscritti.add(u.getID());
 						c.setUtentirischiesta(iscritti);
 						this.corsorep.save(c);
 					}
@@ -257,7 +257,7 @@ public class CorsoService {
 		// TODO Auto-generated method stub
 		List<Utente> ut=this.utenteRepository.findAll();
 		for(Utente u: ut){
-			if(u.getId().equals(id)){
+			if(u.getID().equals(id)){
 				return u;
 			}
 		}
@@ -265,7 +265,7 @@ public class CorsoService {
 	}
 
 	public void removeStudenteApprovare(Corso corso, Utente u) {
-		corso.getUtentirischiesta().remove(u.getId());
+		corso.getUtentirischiesta().remove(u.getID());
 		this.corsorep.save(corso);
 
 	}
@@ -285,7 +285,7 @@ public class CorsoService {
 		List<Long> partecipanti=c.getUtentirischiesta();
 		Boolean ris=true;
 		for(Long u:partecipanti){
-			if(u.equals(studente.getId())){
+			if(u.equals(studente.getID())){
 				return false;
 			}
 		}

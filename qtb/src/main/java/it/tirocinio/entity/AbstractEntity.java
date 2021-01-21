@@ -16,11 +16,11 @@ public abstract class AbstractEntity implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	public Long getId() {
+	public Long getID() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setID(Long id) {
 		this.id = id;
 	}
 	@Override
