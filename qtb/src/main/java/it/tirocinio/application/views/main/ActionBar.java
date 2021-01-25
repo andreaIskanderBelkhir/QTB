@@ -25,6 +25,7 @@ public class ActionBar extends HorizontalLayout {
 		setPadding(true);
 		this.h.add(h3);
 		h3.getStyle().set("color", "#ffffff");
+		h3.getStyle().set("margin-bottom", "30px");
 		setVerticalComponentAlignment(Alignment.CENTER,h);
 		add(this.h);
 		button.setIcon(new Icon(VaadinIcon.PLUS));
@@ -51,6 +52,7 @@ public class ActionBar extends HorizontalLayout {
 		setPadding(true);	
 		H3 h3 =new H3("seleziona corso : ");
 		h3.getStyle().set("color", "#ffffff");
+		h3.getStyle().set("margin-bottom", "30px");
 		setVerticalComponentAlignment(Alignment.CENTER,corsi,h3);
 		corsi.getStyle().set("background-color", "#ffffff");	
 		add(h3,corsi);
@@ -65,6 +67,7 @@ public class ActionBar extends HorizontalLayout {
 		setPadding(true);	
 		H3 h3 =new H3("Scegli azienda : ");
 		h3.getStyle().set("color", "#ffffff");
+		h3.getStyle().set("margin-bottom", "30px");
 		setVerticalComponentAlignment(Alignment.CENTER,corsi,h3);
 		corsi.getStyle().set("background-color", "#ffffff");	
 		add(h3,corsi);
@@ -84,6 +87,7 @@ public class ActionBar extends HorizontalLayout {
 		setPadding(true);	
 		H3 h3 =new H3("Test : ");
 		h3.getStyle().set("color", "#ffffff");
+		h3.getStyle().set("margin-bottom", "30px");
 		setVerticalComponentAlignment(Alignment.CENTER,quizs,h3);
 		quizs.getStyle().set("background-color", "#ffffff");	
 		add(h3,quizs);
@@ -99,6 +103,7 @@ public class ActionBar extends HorizontalLayout {
 		setPadding(true);	
 		H3 h3 =new H3("Test : ");
 		h3.getStyle().set("color", "#ffffff");
+		h3.getStyle().set("margin-bottom", "30px");
 		setVerticalComponentAlignment(Alignment.CENTER,quizs,h3);
 		quizs.getStyle().set("background-color", "#ffffff");	
 		add(h3,quizs);		
@@ -112,6 +117,7 @@ public class ActionBar extends HorizontalLayout {
 			setPadding(true);	
 			H3 h3 =new H3("Test : ");
 			h3.getStyle().set("color", "#ffffff");
+			h3.getStyle().set("margin-bottom", "30px");
 			setVerticalComponentAlignment(Alignment.CENTER,quizs,h3);
 			quizs.getStyle().set("background-color", "#ffffff");	
 			add(h3,quizs);
@@ -127,6 +133,7 @@ public class ActionBar extends HorizontalLayout {
 		setPadding(true);
 		this.h.add(h);
 		h.getStyle().set("color", "#ffffff");
+		h.getStyle().set("margin-bottom", "30px");
 		timer.setHours(true);	
 		timer.setFractions(false);
 		timer.getStyle().set("color", "#ffffff");
@@ -154,6 +161,7 @@ public class ActionBar extends HorizontalLayout {
 		if(numero!=0){
 			numerocambio = new H3(a);
 			this.numerocambio.getStyle().set("color", "#ffffff");
+			this.numerocambio.getStyle().set("margin-bottom", "30px");
 			setVerticalComponentAlignment(Alignment.CENTER,this.numerocambio);
 			this.h.add(this.numerocambio);
 		}

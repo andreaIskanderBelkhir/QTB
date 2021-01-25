@@ -202,7 +202,6 @@ public class UtenteService  {
 	public void DeleteCorsoperdoc(Utente doc,Corso value) {
 		doc.getCorsifrequentati().remove(value);
 		value.setDocente(null);
-		this.corsoR.save(value);
 		this.utenteRepository.save(doc);
 		
 	}
@@ -216,7 +215,6 @@ public class UtenteService  {
 				this.utenteRepository.save(doc);
 			}
 		}
-
 	}
 	public void eliminaQuiz(Quiz value) {
 		this.corsoS.eliminaQuiz(value);

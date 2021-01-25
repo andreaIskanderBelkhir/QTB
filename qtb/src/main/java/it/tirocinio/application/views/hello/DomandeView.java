@@ -102,7 +102,7 @@ public class DomandeView extends VerticalLayout {
 	}
 
 	private void ConfigureGridR() {
-		gridrisposta.setColumns("id","risposta");
+		gridrisposta.setColumns("ID","risposta");
 		gridrisposta.addComponentColumn(item-> createCheck(gridrisposta,item)).setHeader("Corretta");	
 		gridrisposta.asSingleSelect().addValueChangeListener(event->{
 			this.risposta=event.getValue();	
@@ -126,7 +126,7 @@ public class DomandeView extends VerticalLayout {
 			}	
 	}
 	private void ConfigureGridD() {
-		griddomanda.setColumns("id");
+		griddomanda.setColumns("ID");
 		griddomanda.addColumn(domanda->{
 			return domanda.getNomedomanda();
 		}).setHeader("Nome");

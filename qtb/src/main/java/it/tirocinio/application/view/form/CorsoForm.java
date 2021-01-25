@@ -167,9 +167,10 @@ public class CorsoForm extends HorizontalLayout {
 				binder.setBean(corso);
 				if(binder.validate().isOk()){					
 					if(corso.getQuizDelcorso().isEmpty()){
+						this.corsoS.elimina(corso);	
 						this.utenteS.DeleteCorsoperdoc(docente,corso);
-						this.utenteS.DeleteCorso(corso);				
-						this.corsoS.elimina(corso);				
+						this.utenteS.DeleteCorso(corso);										
+						this.utenteS.save(docente);
 						dialog.close();
 						gridtenuti.setItems(this.corsoS.findbyDocente(docente));
 						binder.removeBean();

@@ -2,6 +2,7 @@ package it.tirocinio.application.view.form;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -41,6 +42,26 @@ public class ScegliTestForm extends FormLayout {
 		gridquiz.addColumn(quiz->{
 			return quiz.getDomande().size();
 		}).setHeader("N° domande");
+		gridquiz.addColumn(quiz->{
+			return quiz.getTempo();
+		}).setHeader("Minuti a disposizione");
+		gridquiz.addColumn(quiz->{
+			if(quiz.getModalitaPercentuale()){
+				return "%";
+			}
+			else
+			return "Valore";
+			
+		}).setHeader("Modalità");
+		gridquiz.addColumn(quiz->{
+			if(quiz.getModalitaPercentuale()){
+				return quiz.getSogliaPercentuale();
+			}
+			else
+			return quiz.getSoglia();
+		}).setHeader("Soglia");
+		
+		gridquiz.addComponentColumn(item-> createValited(gridquiz,item)).setHeader("Attivato");
 		gridquiz.asSingleSelect().addValueChangeListener(event->{
 			this.test=event.getValue();
 		});
@@ -49,7 +70,7 @@ public class ScegliTestForm extends FormLayout {
 		gridquiz.setItems(this.quizS.findAllByDocente(docente));
 		VerticalLayout ver=new VerticalLayout();
 		Dialog dialog = new Dialog();
-		dialog.setWidth("50%");
+		dialog.setWidth("80%");
 		dialog.setCloseOnEsc(false);
 		dialog.setCloseOnOutsideClick(false);
 		Button save = new Button("Scegli");		
@@ -58,8 +79,7 @@ public class ScegliTestForm extends FormLayout {
 			if(test!=null){
 				quizs.setValue(test);
 				griddomanda.setItems(this.domandaS.findByQuiz(test));
-				dialog.close();
-				
+				dialog.close();				
 			}
 		}
 				);
@@ -94,5 +114,12 @@ public class ScegliTestForm extends FormLayout {
 		H3 h=new H3(string);
 		vert.setHorizontalComponentAlignment(Alignment.CENTER,h);
 		vert.add(h);
+	}
+	@SuppressWarnings("unchecked")
+	private Checkbox createValited(Grid<Quiz> grid2, Quiz item) {
+		Checkbox check = new Checkbox();
+		check.setValue(item.getAttivato());
+		check.setEnabled(false);
+		return check;
 	}
 }

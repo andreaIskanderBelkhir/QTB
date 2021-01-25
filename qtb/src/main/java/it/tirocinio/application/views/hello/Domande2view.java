@@ -141,7 +141,7 @@ public class Domande2view extends VerticalLayout {
 		test.getDomande().add(dom);		
 		this.domanda=dom;
 		this.salvato=false;
-		dom.setID((long) (this.domandaS.findAll().size()+1));
+		this.domandaS.save(dom);
 		updateviewDomanda(dom);
 		Notification.show("prima di aggiungere una risposta Salva");
 	}
@@ -335,7 +335,7 @@ public class Domande2view extends VerticalLayout {
 					this.salvato=false;	
 					r.setRisposta(testoR.getValue());
 				});
-				Button eliminaRbutton = new Button("X",e->{
+				Button eliminaRbutton = new Button(new Icon(VaadinIcon.CLOSE_CIRCLE_O),e->{
 					giusto.setEnabled(false);
 					testoR.setReadOnly(true);
 					testoR.setValue("ELIMINATO salva per aggiornare");
@@ -345,13 +345,15 @@ public class Domande2view extends VerticalLayout {
 					this.domandaS.save(domanda);
 					elimina(r);
 				});
+				eliminaRbutton.getStyle().set("margin-top", "20px");
 				eliminaRbutton.addClickListener(e->eliminaRbutton.setEnabled(false));
 				eliminaRbutton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-				eliminaRbutton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+				
 				Icon up =new Icon(VaadinIcon.ARROW_UP);
 				up.addClickListener(e->saliUp(risposte.indexOf(r)));
 				Icon down =new Icon(VaadinIcon.ARROW_DOWN);
-				
+				up.getStyle().set("margin-top", "20px");
+				down.getStyle().set("margin-top", "20px");
 				down.addClickListener(e->scendiDwn(risposte.indexOf(r)));
 				hor.add(giusto,testoR,eliminaRbutton,up,down);
 				verti.add(hor);
@@ -421,6 +423,7 @@ public class Domande2view extends VerticalLayout {
 		Checkbox giusto = new Checkbox();
 		giusto.setValue(false);
 		giusto.addClickListener(e->ri.setGiusta(giusto.getValue()));
+		giusto.getStyle().set("margin-top", "20px");
 		TextArea testoR= new TextArea();
 		testoR.setHeight("60px");
 		testoR.setValue("");

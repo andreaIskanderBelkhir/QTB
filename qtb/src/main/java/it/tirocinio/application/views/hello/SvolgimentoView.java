@@ -398,7 +398,6 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 	}
 
 
-
 	private void creazioneRisposte(int i) {
 		Domanda domanda=domande.get(i);
 		List<Risposta> risposte = new ArrayList<>();
