@@ -45,7 +45,7 @@ public class IscrizioneCorsoForm extends FormLayout {
 		List<Corso> possibili= new ArrayList<Corso>();
 		
 		for(Corso c: corsi){		
-			if((!(this.corsoS.partecipa(c,studente))&&(this.corsoS.nonRichiesto(c,studente))&&(!(c.getSelezione())))){
+			if((c.getDocente().getCorsifrequentati().contains(c))&&(!(this.corsoS.partecipa(c,studente))&&(this.corsoS.nonRichiesto(c,studente))&&(!(c.getSelezione())))){
 				possibili.add(c);
 			}
 		}

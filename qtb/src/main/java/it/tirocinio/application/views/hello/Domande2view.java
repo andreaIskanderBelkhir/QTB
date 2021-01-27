@@ -130,20 +130,24 @@ public class Domande2view extends VerticalLayout {
 
 
 	private void nuovaDomanda() {
-		this.div2.removeAll();
-		//domandaForm.Nuovo(quizs.getValue(),griddomanda);
-		Domanda dom =new Domanda();
-		dom.setNomedomanda("");
-		dom.setDescrizionedomanda("");
-		dom.setRisposte(new ArrayList());
-		dom.setQuizapparteneza(test);
-		dom.setRandomordine(false);
-		test.getDomande().add(dom);		
-		this.domanda=dom;
-		this.salvato=false;
-		this.domandaS.save(dom);
-		updateviewDomanda(dom);
-		Notification.show("prima di aggiungere una risposta Salva");
+		if(!(quizs.isEmpty())){
+			this.div2.removeAll();
+			//domandaForm.Nuovo(quizs.getValue(),griddomanda);
+			Domanda dom =new Domanda();
+			dom.setNomedomanda("");
+			dom.setDescrizionedomanda("");
+			dom.setRisposte(new ArrayList());
+			dom.setQuizapparteneza(test);
+			dom.setRandomordine(false);
+			test.getDomande().add(dom);		
+			this.domanda=dom;
+			this.salvato=false;
+			this.domandaS.save(dom);
+			updateviewDomanda(dom);
+
+		}
+		else
+			Notification.show("selezionare un test prima");
 	}
 
 
@@ -220,6 +224,7 @@ public class Domande2view extends VerticalLayout {
 					});
 					salva.addThemeVariants(ButtonVariant.LUMO_ERROR);
 					continua.addClickListener(e->{
+
 						this.domanda=event.getValue();
 						this.salvato=true;
 						updateviewDomanda(event.getValue());
@@ -269,9 +274,9 @@ public class Domande2view extends VerticalLayout {
 			HorizontalLayout nomepiuid=new HorizontalLayout();
 			H5 nomeh=new H5("Nome : ");	
 			nomeh.getStyle().set("margin-bottom", "20px");
-			
-			TextArea nomeDomandamod=new TextArea();
-			nomeDomandamod.setHeight("60px");
+
+			TextField nomeDomandamod=new TextField();
+
 			nomeDomandamod.setValue(domanda.getNomedomanda());
 			nomeDomandamod.addValueChangeListener(e->{
 				this.salvato=false;
@@ -305,6 +310,7 @@ public class Domande2view extends VerticalLayout {
 			});
 			random.getStyle().set("margin-top", "25px");
 			h2.setAlignItems(Alignment.CENTER);
+			h2.getStyle().set("margin-left", "205px");
 			h2.add(h0,random);
 			HorizontalLayout h=new HorizontalLayout();
 			H5 h31=new H5("Corretta");			
@@ -336,19 +342,17 @@ public class Domande2view extends VerticalLayout {
 					r.setRisposta(testoR.getValue());
 				});
 				Button eliminaRbutton = new Button(new Icon(VaadinIcon.CLOSE_CIRCLE_O),e->{
-					giusto.setEnabled(false);
-					testoR.setReadOnly(true);
-					testoR.setValue("ELIMINATO salva per aggiornare");
 
 					risposte.remove(r);
 					domanda.setRisposte(risposte);
 					this.domandaS.save(domanda);
 					elimina(r);
+					updateviewDomanda(domanda);
 				});
 				eliminaRbutton.getStyle().set("margin-top", "20px");
 				eliminaRbutton.addClickListener(e->eliminaRbutton.setEnabled(false));
 				eliminaRbutton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-				
+
 				Icon up =new Icon(VaadinIcon.ARROW_UP);
 				up.addClickListener(e->saliUp(risposte.indexOf(r)));
 				Icon down =new Icon(VaadinIcon.ARROW_DOWN);
@@ -413,7 +417,7 @@ public class Domande2view extends VerticalLayout {
 
 	private void creaRisposta(VerticalLayout verti) {
 		this.salvato=false;	
-		Notification.show("aggiungi una risposta e poi salva (se crei piu di una risposta nuova per volta solo la prima verra salvata) ");
+
 		HorizontalLayout hor=new HorizontalLayout();
 		Risposta ri=new Risposta();
 		ri.setRisposta("");
@@ -451,45 +455,51 @@ public class Domande2view extends VerticalLayout {
 
 
 	private void salvaDomanda() {
-		this.domandaS.save(domanda);
-		Boolean giusta=false;
-		for(Risposta r:risposte){
-			if(r.getGiusta()){
-				giusta=true;
+		if(domanda!=null){
+			if(domandaS.domandaNonEsiste(domanda)){
+				this.domandaS.save(domanda);
+				Boolean giusta=false;
+				for(Risposta r:risposte){
+					if(r.getGiusta()){
+						giusta=true;
+					}
+				}
+				if(giusta){
+					for(Risposta r:risposte){
+						domanda.getRisposte().add(r);
+						this.rispostaS.save(r);
+					}		
+					Long id=domanda.getID();
+					this.domandaS.save(domanda);
+					griddomanda.setItems(this.domandaS.findByQuiz(quizs.getValue()));
+					this.salvato=true;	
+					griddomanda.select(this.domandaS.findById(id));
+					Notification.show("salvato");
+				}
+				else{
+					Dialog dia=new Dialog();
+					H3 h=new H3("Impossibile salvare la domanda, aggiungere almeno una risposta corretta.");
+					Button annulla=new Button("Ok");
+					annulla.addClickListener(e->dia.close());
+					annulla.getStyle().set("margin-left", "325px");
+					VerticalLayout veer=new VerticalLayout();
+					veer.add(h,annulla);
+					dia.add(veer);
+					dia.open();
+					add(dia);
+				}
 			}
+			else
+				Notification.show("errore inserire un nuovo nome alla domanda");
 		}
-		if(giusta){
-			for(Risposta r:risposte){
-				domanda.getRisposte().add(r);
-				this.rispostaS.save(r);
-			}		
-			Long id=domanda.getID();
-			this.domandaS.save(domanda);
-			griddomanda.setItems(this.domandaS.findByQuiz(quizs.getValue()));
-			this.salvato=true;	
-			griddomanda.select(this.domandaS.findById(id));
-			Notification.show("salvato");
-		}
-		else{
-			Dialog dia=new Dialog();
-			H3 h=new H3("Impossibile salvare la domanda, aggiungere almeno una risposta corretta.");
-			Button annulla=new Button("Ok");
-			annulla.addClickListener(e->dia.close());
-			annulla.getStyle().set("margin-left", "325px");
-			VerticalLayout veer=new VerticalLayout();
-			veer.add(h,annulla);
-			dia.add(veer);
-			dia.open();
-			add(dia);
-			
-		}
-
+		else
+			Notification.show("selezionare una domanda prima");
 	}
 	private Button eliminatato(Grid<Domanda> griddomanda2, Domanda item) {
 		Button eliminaDbutton = new Button(new Icon(VaadinIcon.CLOSE_CIRCLE_O),e->domandaForm.Elimina(quizs.getValue(),item,griddomanda));
 
 		eliminaDbutton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-
+		this.div2.removeAll();
 		return eliminaDbutton;
 	}
 

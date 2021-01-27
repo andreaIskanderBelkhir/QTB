@@ -50,11 +50,13 @@ public class DomandaService {
 	}
 
 	public boolean domandaNonEsiste(Domanda domanda) {
+		Boolean b=true;
 		for(Domanda c:findAll()){
 			if(c.getNomedomanda().equals(domanda.getNomedomanda()))
-				return false;
+				if(!(c.getID().equals(domanda.getID())))
+				b=false;
 		}
-		return true;
+		return b;
 	}
 
 	public void modificaDomanda(Domanda domanda, Domanda domandavecchia) {

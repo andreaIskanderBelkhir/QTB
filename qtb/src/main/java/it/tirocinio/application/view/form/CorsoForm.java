@@ -166,17 +166,17 @@ public class CorsoForm extends HorizontalLayout {
 			if(!(corso==null)){
 				binder.setBean(corso);
 				if(binder.validate().isOk()){					
-					if(corso.getQuizDelcorso().isEmpty()){
-						this.corsoS.elimina(corso);	
+					if(corso.getQuizDelcorso().isEmpty()){				
 						this.utenteS.DeleteCorsoperdoc(docente,corso);
 						this.utenteS.DeleteCorso(corso);										
+						this.corsoS.elimina(corso);	
 						this.utenteS.save(docente);
 						dialog.close();
 						gridtenuti.setItems(this.corsoS.findbyDocente(docente));
 						binder.removeBean();
 					}
 					else
-						Notification.show("elimina i quiz prima");
+						Notification.show("elimina i test prima");
 				}
 				else{
 					Notification.show("error inserire un corso valido");

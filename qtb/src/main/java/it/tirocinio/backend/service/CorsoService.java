@@ -34,7 +34,7 @@ public class CorsoService {
 	public List<Corso> findAll(){
 		return (List<Corso>) this.corsorep.findAll();
 	}
-	
+
 	public List<Corso> findAllbyAdmin(){
 		List<Corso> lista = new ArrayList<>();
 		for(Utente u:this.utenteRepository.findAll()){
@@ -68,15 +68,19 @@ public class CorsoService {
 				for(Corso c:co){
 					if(c.getDocente()!=null){
 						if(c.getDocente().getNome().equals(nome.getNome())){
-							lista.add(c);
+							if(c.getDocente().getCorsifrequentati().contains(c)){
+								lista.add(c);
+							}
 						}
 					}
 				}
 			}
 			if(nome.getRuolo().equals("ADMIN")){
 				for(Corso c:co){
-					if(c.getDocente()!=null){			
-						lista.add(c);
+					if(c.getDocente()!=null){		
+						if(c.getDocente().getCorsifrequentati().contains(c)){
+							lista.add(c);
+						}
 					}
 				}
 			}
@@ -209,7 +213,6 @@ public class CorsoService {
 		this.corsorep.delete(corso);
 		corso.getQuizDelcorso().remove(quiz);
 		this.corsorep.save(corso);
-
 	}
 
 	public void addStudenteRichiesta(Utente u, Corso c) {

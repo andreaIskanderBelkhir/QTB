@@ -188,7 +188,7 @@ public class DomandaForm extends FormLayout{
 				binder.setBean(domanda);
 				if(binder.validate().isOk()){
 					if(!(domanda.getRisposte().isEmpty())){
-						Notification.show("elimina prima le domande");
+						Notification.show("elimina prima le risposte");
 					}
 					else{
 						this.quizS.eliminaDomanda(quiz,domanda);					

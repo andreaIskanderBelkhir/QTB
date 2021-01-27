@@ -119,10 +119,7 @@ public class QuizService {
 		}
 		return null;
 	}
-	public void eliminaDomande(Quiz value) {
-		
-		
-	}
+	
 	public Collection<Quiz> findAllbySelezioneandAttivati(Corso corso) {
 		// TODO Auto-generated method stub
 		List<Quiz> quiz= new ArrayList<>();

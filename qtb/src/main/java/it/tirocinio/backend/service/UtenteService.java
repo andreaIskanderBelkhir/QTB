@@ -189,20 +189,25 @@ public class UtenteService  {
 	public void DeleteCorso(Corso value) {
 		List<Utente> utenti=findByCorso(value);
 		for(Utente u:utenti){
-			if(!(u.getCorsifrequentati()==null)){
+			if(!(u.getCorsifrequentati()==null)){	
 				
-				u.getCorsifrequentati().remove(value);
-				this.utenteRepository.save(u);
+				u.getCorsifrequentati().remove(value);		
+				
 			}
 		}
+		Utente ut=value.getDocente();
+		ut.getCorsifrequentati().remove(value);
+		
 
 	}
 
 
 	public void DeleteCorsoperdoc(Utente doc,Corso value) {
-		doc.getCorsifrequentati().remove(value);
-		value.setDocente(null);
-		this.utenteRepository.save(doc);
+		
+		doc.getCorsitenuti().remove(value);
+		this.save(doc);
+		
+		
 		
 	}
 
