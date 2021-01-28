@@ -21,6 +21,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -68,7 +69,7 @@ public class Domande2view extends VerticalLayout {
 	Grid<Domanda> griddomanda= new Grid<>(Domanda.class);
 	Grid<Risposta> gridrisposta= new Grid<>(Risposta.class);
 	ComboBox<Quiz> quizs ;
-	TextField nomeQuizSopra;
+	Label nomeQuizSopra;
 	private DomandaForm domandaForm;
 	private RispostaForm rispostaForm;
 	private Div div2;
@@ -94,8 +95,12 @@ public class Domande2view extends VerticalLayout {
 		quizs.addClassName("my-combo");
 		quizs.setReadOnly(true);
 		quizs.addValueChangeListener(e->updatetextfield());
-		nomeQuizSopra=new TextField();
-		nomeQuizSopra.setReadOnly(true);
+		
+		nomeQuizSopra=new Label();
+		nomeQuizSopra.setWidth("200px");
+		nomeQuizSopra.add(" ");
+		nomeQuizSopra.getStyle().set("background-color", "#ffffff");	
+
 
 		this.domandaForm=new DomandaForm(domandaS, corsoS, quizS, docente);
 		this.rispostaForm=new RispostaForm(quizS, corsoS, domandaS, rispostaS, utenteS);
@@ -107,8 +112,8 @@ public class Domande2view extends VerticalLayout {
 		ActionBar navbar2=new ActionBar(selezionaTbutton,nomeQuizSopra,2);
 		navbar2.AddButtonAtActionBar(creazioneDbutton);
 		navbar2.AddButtonAtActionBarSave(modificaDbutton);
+		updatetextfield();
 		add(navbar2);
-
 		hor.setHeight("100%");
 		hor.setWidthFull();
 		ConfigureGridD();
@@ -137,12 +142,13 @@ public class Domande2view extends VerticalLayout {
 			dom.setNomedomanda("");
 			dom.setDescrizionedomanda("");
 			dom.setRisposte(new ArrayList());
+			
 			dom.setQuizapparteneza(test);
 			dom.setRandomordine(false);
+			
 			test.getDomande().add(dom);		
 			this.domanda=dom;
 			this.salvato=false;
-			this.domandaS.save(dom);
 			updateviewDomanda(dom);
 
 		}
@@ -169,8 +175,11 @@ public class Domande2view extends VerticalLayout {
 		if(!(testForm.test==null)){
 			this.test=testForm.test;
 			String a=new String(this.test.getNomeQuiz()+"("+ this.test.getCorsoAppartenenza().getNomeCorso()+ ")");
-			nomeQuizSopra.setValue(a);
+			nomeQuizSopra.removeAll();
+			nomeQuizSopra.add(a);
 		}
+		else
+			nomeQuizSopra.add("·");
 	}
 
 
@@ -244,7 +253,14 @@ public class Domande2view extends VerticalLayout {
 					HorizontalLayout horrr=new HorizontalLayout();
 					horrr.add(salva,continua,annulla);
 					String st=new String(this.domanda.getNomedomanda());
-					String stid=new String(this.domanda.getID().toString());
+					String stid=new String();
+					if(this.domanda.getID()==null){
+						stid.concat("nuova domanda");
+					}
+					else{
+						stid.concat(this.domanda.getID().toString());
+					}
+					
 					String text=new String("La domanda "+st+" ID: "+stid+" contiene modifiche non salvate. Uscendo dall'editor le modifiche andranno perse");
 					H3 text1=new H3("Desideri salvare le modifiche?");
 					veer.add(text);
@@ -286,7 +302,13 @@ public class Domande2view extends VerticalLayout {
 			nomepiuid.add(nomeh,nomeDomandamod);
 			H5 idh=new H5("Id : ");	
 			idh.getStyle().set("margin-bottom", "20px");
-			H5 idv=new H5(domanda.getID().toString());	
+			H5 idv=new H5();
+			if(domanda.getID()==null){
+				idv.add("nuova domanda");
+			}
+			else{
+				idv.add(domanda.getID().toString());
+			}
 			idv.getStyle().set("margin-bottom", "20px");
 			nomepiuid.add(idh,idv);
 			nomeDom.add(nomepiuid);
@@ -321,7 +343,18 @@ public class Domande2view extends VerticalLayout {
 			VerticalLayout verti = new VerticalLayout();
 			this.div2.add(verti);
 			risposte=this.domandaS.findRisposte(domanda);
-
+            if(risposte.isEmpty()){
+            	Risposta risp1=new Risposta();
+    			risp1.setRisposta("");
+    			risp1.setDomandaApparteneza(domanda);
+    			risp1.setGiusta(false);
+    			Risposta risp2=new Risposta();	
+    			risp2.setRisposta("");
+    			risp2.setDomandaApparteneza(domanda);
+    			risp2.setGiusta(false);
+    			risposte.add(risp1);
+    			risposte.add(risp2);
+            }
 			for(Risposta r:risposte){
 				HorizontalLayout hor=new HorizontalLayout();
 				hor.setWidthFull();

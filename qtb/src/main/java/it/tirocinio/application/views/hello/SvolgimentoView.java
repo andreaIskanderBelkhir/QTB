@@ -24,6 +24,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -46,7 +47,7 @@ import it.tirocinio.entity.quiz.Domanda;
 import it.tirocinio.entity.quiz.Quiz;
 import it.tirocinio.entity.quiz.Risposta;
 
-@Route(value = "svolgimento", layout = MainView.class)
+@Route(value = "svolgimento")
 @PageTitle("svolgimento Test")
 @CssImport("./styles/views/hello/hello-view.css")
 public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<String> {
@@ -80,7 +81,7 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 		this.precedente=new Button("precedente");
 		this.successivo=new Button("successivo");
 		this.consegna=new Button("Consegna");
-		this.h=new H3("Domanda N° ");
+
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if ( principal instanceof UserDetails){
 			this.nome = ((UserDetails)principal).getUsername();
@@ -97,6 +98,8 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 	public void setParameter(BeforeEvent event, String parameter) {
 		this.para=parameter;
 		vedi();
+
+		this.h=new H3("("+quiz.getNomeQuiz()+") Domanda °");
 		if(!(this.quiz==null)){
 			domande=new ArrayList<Domanda>();
 			domande.addAll(this.quiz.getDomande());
@@ -167,20 +170,56 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 
 		});
 		consegna.addClickListener(e->{
-			Dialog dialog= new Dialog();
-			Button consegna=new Button("Consegna");
-			Button annulla=new Button("Torna indietro");
-			HorizontalLayout hor=new HorizontalLayout();
-			hor.add(consegna,annulla);
-			dialog.add(hor);
-			add(dialog);
-			dialog.open();
-			annulla.addClickListener(m-> dialog.close());
-			consegna.addClickListener(m->{
-				dialog.close();
-				navbar.updateNdomanda(0);
-				consegnaTest();
-			});
+			List listdo=new ArrayList<>();
+			for(int i=0;i<this.domande.size();i++){
+				if(rispostedate.get(i).isEmpty()){
+					listdo.add(i);
+				}
+			}
+			if(!(listdo.isEmpty())){
+				Dialog dialog2=new Dialog();
+				Button consegna2=new Button("Avanti");
+				Button annulla2=new Button("Torna indietro");
+				HorizontalLayout hor2=new HorizontalLayout();
+				H3 h0=new H3("Alcune domande non hanno risposta vuoi andare avanti con la consegna?");
+				dialog2.add(h0);
+				for(int i=0;i<listdo.size();i++){
+					H5 h00=new H5("la domanda "+(i+1)+" non ha risposta");
+					dialog2.add(h00);
+				}
+				dialog2.add(hor2);
+				H5 h5=new H5("");
+				hor2.setAlignItems(Alignment.END);
+				hor2.add(h5,consegna2,annulla2);
+				hor2.expand(h5);
+				add(dialog2);
+				dialog2.open();
+				annulla2.addClickListener(m-> dialog2.close());
+				consegna2.addClickListener(m->{
+					dialog2.close();
+					Dialog dialog= new Dialog();
+					dialog.setWidth("500px");
+					dialog.setHeight("200px");
+					Button consegna=new Button("Consegna");
+					Button annulla=new Button("Torna indietro");
+					HorizontalLayout hor=new HorizontalLayout();
+					H3 h01=new H3("Sei sicuro di voler consegnare ?");
+					dialog.add(h01,hor);
+					H5 h6=new H5("");
+					hor.getStyle().set("margin-top", "50px");
+					hor.setAlignItems(Alignment.END);
+					hor.add(h6,consegna,annulla);
+					hor.expand(h6);
+					dialog.open();
+					annulla.addClickListener(l-> dialog.close());
+					consegna.addClickListener(l->{
+						dialog.close();
+						navbar.updateNdomanda(0);
+						consegnaTest();
+					});
+				});		
+			}
+			
 		});
 	}
 
@@ -280,12 +319,12 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			this.utenteS.addQuizpassati(studente,quiz.getID());
 			if(studente.getValoretesteffetuati().get(quiz.getID())==null){
 				this.utenteS.addQuizvalore(studente, quiz.getID(),per);
-				
+
 			}
 			else{
 				if(studente.getValoretesteffetuati().get(quiz.getID())<per){
 					this.utenteS.addQuizvalore(studente,quiz.getID(),per);
-					
+
 				}
 			}
 		}
@@ -302,12 +341,12 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			ver.add(perct,passagio,dapassare);
 			if(studente.getValoretesteffetuati().get(quiz.getID())==null){
 				this.utenteS.addQuizvalore(studente, quiz.getID(),per);
-				
+
 			}
 			else{
 				if(studente.getValoretesteffetuati().get(quiz.getID())<per){
 					this.utenteS.addQuizvalore(studente,quiz.getID(),per);
-					
+
 				}
 			}
 
@@ -343,12 +382,12 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			this.utenteS.addQuizpassati(studente,quiz.getID());
 			if(studente.getValoretesteffetuati().get(quiz.getID())==null){
 				this.utenteS.addQuizvalore(studente, quiz.getID(),(valoreg-valores));
-				
+
 			}
 			else{
 				if(studente.getValoretesteffetuati().get(quiz.getID())<(valoreg-valores)){
 					this.utenteS.addQuizvalore(studente,quiz.getID(),(valoreg-valores));
-					
+
 				}
 			}
 		}
@@ -364,12 +403,12 @@ public class SvolgimentoView extends VerticalLayout implements HasUrlParameter<S
 			ver.add(passagio,dapassare);
 			if(studente.getValoretesteffetuati().get(quiz.getID())==null){
 				this.utenteS.addQuizvalore(studente, quiz.getID(),(valoreg-valores));
-				
+
 			}
 			else{
 				if(studente.getValoretesteffetuati().get(quiz.getID())<(valoreg-valores)){
 					this.utenteS.addQuizvalore(studente,quiz.getID(),(valoreg-valores));
-					
+
 				}
 			}
 

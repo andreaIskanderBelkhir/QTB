@@ -28,6 +28,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import com.vaadin.server.Sizeable.Unit;
 
 import it.tirocinio.backend.service.CorsoService;
 import it.tirocinio.backend.service.QuizService;
@@ -61,17 +62,21 @@ public class QuizForm extends FormLayout{
 			dialog.setCloseOnEsc(false);
 			dialog.setCloseOnOutsideClick(false);
 			dialog.setWidth("50%");
-			tempModalita=false;
+			tempModalita=true;
 			H3 hnome=new H3("Nome : ");	
 			TextField nomeQuiz = new TextField();
+			nomeQuiz.setWidth("200px");
 			Button save = new Button("Salva");
 			Button cancella = new Button("Cancella");
 			H3 htempo=new H3("Tempo a diposizione : ");
 			NumberField numberField = new NumberField();
+			numberField.setWidth("200px");
 			H3 hgiusto=new H3("Valore risposta esatta : ");
 			NumberField numbergiusto = new NumberField();
+			numbergiusto.setWidth("200px");
 			H3 hsbagliata=new H3("Valore risposta sbagliata : ");
 			NumberField numbersbagliata= new NumberField();
+			numbersbagliata.setWidth("200px");
 			numberField.setValue((double) 60);
 			numbergiusto.setValue((double) 1);
 			numbersbagliata.setValue((double) 0.5);
@@ -79,15 +84,21 @@ public class QuizForm extends FormLayout{
 			H3 hsogliaPercentuale=new H3("Valore Soglia (0~100)% : ");
 			RadioButtonGroup<String> modalita= new RadioButtonGroup<>();
 			modalita.setItems("valore","percentuale");
-			modalita.setValue("valore");
+			modalita.setValue("percentuale");
 			H3 hmodalita =new H3("Modalità di superamento : ");		
 			NumberField numberSoglia = new NumberField();
+			numberSoglia.setWidth("200px");
 			NumberField numberPercentuale = new NumberField();
+			numberPercentuale.setWidth("200px");
 			numberPercentuale.setPrefixComponent(new Icon(VaadinIcon.BOOK_PERCENT));
 			numberPercentuale.setMin(0);
 			numberPercentuale.setMax(100);
-			hsogliaPercentuale.setVisible(false);
-			numberPercentuale.setVisible(false);
+			hsogliaValore.setVisible(false);
+			hgiusto.setVisible(false);
+			hsbagliata.setVisible(false);
+			numberSoglia.setVisible(false);
+			numbergiusto.setVisible(false);
+			numbersbagliata.setVisible(false);
 			modalita.addValueChangeListener(e->{
 				if(e.getValue().equals("percentuale")){
 					tempModalita=true;
@@ -208,6 +219,7 @@ public class QuizForm extends FormLayout{
 			H3 htempo=new H3("Tempo a diposizione : ");
 			TextField nomeQuiz = new TextField();
 			nomeQuiz.setValue(quizv.getNomeQuiz());
+			
 			NumberField numberField = new NumberField();	
 			H3 hgiusto=new H3("Valore risposta esatta : ");
 			NumberField numbergiusto = new NumberField();
@@ -406,8 +418,9 @@ public class QuizForm extends FormLayout{
 		h.expand(div1);
 		div1.add(string);
 		component.getElement().getStyle().set("margin-left", "auto");
+		
 		div2.add(component);	
-		div1.getElement().getStyle().set("margin-right", "60px");
+		div1.getElement().getStyle().set("margin-right", "70px");
 		h.setAlignItems(Alignment.CENTER);
 		h.add(div1,div2);
 		ver.add(h);

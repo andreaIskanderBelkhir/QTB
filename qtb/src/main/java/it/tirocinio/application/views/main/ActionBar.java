@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -82,15 +83,32 @@ public class ActionBar extends HorizontalLayout {
 
 	
 	
-	public ActionBar(Button button, ComboBox<Quiz> quizs,int i) {
+	public ActionBar(Button button, Label nomeQuizSopra,int i) {
 		setId("prof-navbar");
 		setPadding(true);	
 		H3 h3 =new H3("Test : ");
 		h3.getStyle().set("color", "#ffffff");
 		h3.getStyle().set("margin-bottom", "30px");
-		setVerticalComponentAlignment(Alignment.CENTER,quizs,h3);
-		quizs.getStyle().set("background-color", "#ffffff");	
-		add(h3,quizs);
+		setVerticalComponentAlignment(Alignment.CENTER,nomeQuizSopra,h3);
+		nomeQuizSopra.getStyle().set("background-color", "#ffffff");	
+		nomeQuizSopra.setVisible(true);
+		add(h3,nomeQuizSopra);
+		button.setIcon(new Icon(VaadinIcon.PLUS));
+		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		button.getElement().getStyle().set("margin-left", "20px");
+		button.getElement().getStyle().set("margin-right", "auto");
+		setVerticalComponentAlignment(Alignment.CENTER,button);
+		add(button);
+	}
+	public ActionBar(Button button,ComboBox nomeQuizSopra,int i) {
+		setId("prof-navbar");
+		setPadding(true);	
+		H3 h3 =new H3("Test : ");
+		h3.getStyle().set("color", "#ffffff");
+		h3.getStyle().set("margin-bottom", "30px");
+		setVerticalComponentAlignment(Alignment.CENTER,nomeQuizSopra,h3);
+		nomeQuizSopra.getStyle().set("background-color", "#ffffff");	
+		add(h3,nomeQuizSopra);
 		button.setIcon(new Icon(VaadinIcon.PLUS));
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		button.getElement().getStyle().set("margin-left", "auto");
